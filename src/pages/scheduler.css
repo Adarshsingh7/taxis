@@ -1,0 +1,28 @@
+/** @format */
+
+@import '../../node_modules/@syncfusion/ej2-base/styles/material.css';
+@import '../../node_modules/@syncfusion/ej2-buttons/styles/material.css';
+@import '../../node_modules/@syncfusion/ej2-calendars/styles/material.css';
+@import '../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
+@import '../../node_modules/@syncfusion/ej2-inputs/styles/material.css';
+@import '../../node_modules/@syncfusion/ej2-lists/styles/material.css';
+@import '../../node_modules/@syncfusion/ej2-navigations/styles/material.css';
+@import '../../node_modules/@syncfusion/ej2-popups/styles/material.css';
+@import '../../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css';
+@import '../../node_modules/@syncfusion/ej2-react-schedule/styles/material.css';
+
+.event-color-red {
+	background-color: red !important;
+	color: white; /* Adjust text color as needed */
+}
+
+.event-color-blue {
+	background-color: blue !important;
+	color: white; /* Adjust text color as needed */
+}
+
+.e-schedule .e-schedule-header-container {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
