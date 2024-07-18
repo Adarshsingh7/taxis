@@ -22,7 +22,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import 'dayjs/locale/en-gb';
 
 function Booking({ bookingData, id }) {
-	const { updateValue, onBooking, deleteBooking } = useBooking();
+	const { updateValue, onBooking, deleteBooking, onUpdateBooking } =
+		useBooking();
 	const [isPhoneModelActive, setIsPhoneModelActive] = useState(false);
 	const [isRepeatBookingModelActive, setIsRepeatBookingModelActive] =
 		useState(false);
@@ -40,10 +41,17 @@ function Booking({ bookingData, id }) {
 		updateData('PickupAddress', bookingData.DestinationAddress);
 		updateData('PickupPostCode', bookingData.DestinationPostCode);
 	}
+	console.log(bookingData.updateByName);
 
-	function handleSubmit(e) {
+	async function handleSubmit(e) {
 		e.preventDefault();
-		onBooking(id).then(({ status }) => {
+		let res;
+		if (bookingData.bookingType === 'current') {
+			res = onUpdateBooking(id);
+		} else {
+			res = onBooking(id);
+		}
+		res.then(({ status }) => {
 			if (status !== 'success') {
 				setSnackbarMessage('Failed to create booking');
 				setIsQuoteSnackbarActive(true);
@@ -62,6 +70,7 @@ function Booking({ bookingData, id }) {
 		updateData('PickupAddress', pickupAddress);
 		updateData('PickupPostCode', pickupPostCode);
 	}
+
 	function handleAddDestination(destinationAddress, destinationPostCode) {
 		updateData('DestinationAddress', destinationAddress);
 		updateData('DestinationPostCode', destinationPostCode);
@@ -82,7 +91,7 @@ function Booking({ bookingData, id }) {
 			priceFromBase: bookingData.changeFromBase,
 		});
 		if (quote.status === 'success') {
-			updateData('Price', quote.totalPrice);
+			updateData('Price', +quote.totalPrice);
 			setIsQuoteDialogActive(true);
 			setQuote(quote);
 		} else {
@@ -116,7 +125,11 @@ function Booking({ bookingData, id }) {
 	}, []);
 
 	useEffect(() => {
-		updateData('bookedByName', currentUser?.fullName);
+		if (bookingData.bookingType === 'current') {
+			updateData('bookedById', currentUser?.fullName);
+		} else {
+			updateData('bookedByName', currentUser?.fullName);
+		}
 	}, [isAuth]);
 
 	if (!bookingData) return null;
@@ -971,14 +984,22 @@ const AddEditViaComponent = ({ onSet, id }) => {
 
 	const handleAddVia = () => {
 		if (newViaAddress || newViaPostcode) {
-			setVias([
-				...vias,
-				{ address: newViaAddress, postcode: newViaPostcode, id: vias.length },
+			setVias((prevVias) => [
+				...prevVias,
+				{
+					address: newViaAddress,
+					postcode: newViaPostcode,
+					viaSequence: prevVias.length,
+				},
 			]);
 			setNewViaAddress('');
 			setNewViaPostcode('');
 		}
 	};
+
+	function handleSetVias(viasArray) {
+		setVias(viasArray.map((via, index) => ({ ...via, viaSequence: index })));
+	}
 
 	function handleSave() {
 		updateValue(id, 'vias', vias);
@@ -989,6 +1010,7 @@ const AddEditViaComponent = ({ onSet, id }) => {
 		setNewViaAddress(address);
 		setNewViaPostcode(postcode);
 	}
+	console.log(vias);
 
 	return (
 		<div className='bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto'>
@@ -1012,7 +1034,7 @@ const AddEditViaComponent = ({ onSet, id }) => {
 			<div className='space-y-2 mb-4 max-h-[30vh] overflow-auto'>
 				<Dragger
 					items={vias}
-					setItems={setVias}
+					setItems={handleSetVias}
 					Child={VIABar}
 				/>
 			</div>

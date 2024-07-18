@@ -37,13 +37,13 @@ const Dragger = ({ items, setItems, Child }) => {
 	};
 
 	const handleDelete = (id) => {
-		const newItems = items.filter((item) => item.id !== id);
+		const newItems = items.filter((item) => item.viaSequence !== id);
 		setItems(newItems);
 	};
 
 	const handleEdit = (updatedItem) => {
 		const newItems = items.map((item) =>
-			item.id === updatedItem.id ? updatedItem : item
+			item.viaSequence === updatedItem.viaSequence ? updatedItem : item
 		);
 		setItems(newItems);
 		setEditingItem(null);
@@ -114,10 +114,10 @@ const Dragger = ({ items, setItems, Child }) => {
 					<Child
 						data={item}
 						onEdit={handleEdit}
-						isEditing={editingItem?.id === item.id}
+						isEditing={editingItem?.viaSequence === item.viaSequence}
 						setEditingItem={setEditingItem}
 					/>
-					<button onClick={() => handleDelete(item.id)}>
+					<button onClick={() => handleDelete(item.viaSequence)}>
 						<CancelIcon fontSize='5px' />
 					</button>
 				</div>

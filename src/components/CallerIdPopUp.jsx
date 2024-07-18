@@ -10,6 +10,8 @@ function CallerIdPopUp() {
 	const { callerId, insertData } = useBooking();
 	const [open, setOpen] = useState(callerId.length ? true : false);
 	const navigate = useNavigate();
+	const isEmpty =
+		callerId.Current?.length === 0 && callerId.Previous?.length === 0;
 
 	function filterFiled(data) {
 		return {
@@ -21,7 +23,7 @@ function CallerIdPopUp() {
 			PickupDateTime: data.PickupDateTime || new Date(),
 			returnTime: '',
 			isReturn: false,
-			vias: [],
+			vias: data.Vias || [],
 			Passengers: data.Passengers || 1,
 			hours: data.hours || 0,
 			minutes: data.minutes || 20,
@@ -29,6 +31,9 @@ function CallerIdPopUp() {
 			isAllDay: false,
 			PassengerName: data.PassengerName || '',
 			PhoneNumber: data.PhoneNumber || '',
+			bookingId: data.BookingId || '',
+			bookingType: data.type || '',
+			updateByName: '',
 			Email: data.Email || '',
 			repeatBooking: false,
 			recurrenceRule: '',
@@ -57,13 +62,23 @@ function CallerIdPopUp() {
 
 	// the simple use effect to open the popup or modal
 	useEffect(() => {
-		if (callerId.Telephone) {
+		if (callerId.Telephone && !isEmpty) {
 			setOpen(true);
 		}
-	}, [callerId]);
+		if (isEmpty) {
+			insertData(
+				filterFiled({
+					PhoneNumber: callerId.Telephone,
+					PickupDateTime: new Date(Date.now() + 60 * 60 * 1000),
+				})
+			);
+			navigate('/pusher');
+		}
+	}, [callerId, isEmpty]);
 
 	function handleSubmit(data) {
 		insertData(filterFiled(data));
+		console.log(filterFiled(data));
 
 		navigate('/pusher');
 		setOpen(false);
@@ -74,11 +89,13 @@ function CallerIdPopUp() {
 			open={open}
 			setOpen={setOpen}
 		>
-			<CallerTable
-				bookings={callerId}
-				onConfirm={handleSubmit}
-				onSet={setOpen}
-			/>
+			{!isEmpty && (
+				<CallerTable
+					bookings={callerId}
+					onConfirm={handleSubmit}
+					onSet={setOpen}
+				/>
+			)}
 		</Modal>
 	);
 }

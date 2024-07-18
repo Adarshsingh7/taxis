@@ -1,6 +1,6 @@
 /** @format */
 import { createContext, useEffect, useReducer, useState } from 'react';
-import { getBookingData, makeBooking } from './../utils/apiReq';
+import { getBookingData, makeBooking, updateBooking } from './../utils/apiReq';
 import Pusher from 'pusher-js';
 import { useAuth } from '../hooks/useAuth';
 
@@ -113,6 +113,7 @@ function BookingProvider({ children }) {
 	}
 
 	function insertData(data) {
+		console.log(data);
 		dispacher({ type: 'addData', payload: data });
 	}
 
@@ -123,6 +124,17 @@ function BookingProvider({ children }) {
 	async function onBooking(itemIndex) {
 		const targetBooking = data[itemIndex];
 		const res = await makeBooking(targetBooking);
+		if (res.status === 'success') {
+			dispacher({ type: 'endBooking', payload: { itemIndex } });
+			return { status: 'success' };
+		} else {
+			return { status: 'error', message: res.message };
+		}
+	}
+
+	async function onUpdateBooking(itemIndex) {
+		const targetBooking = data[itemIndex];
+		const res = await updateBooking(targetBooking);
 		if (res.status === 'success') {
 			dispacher({ type: 'endBooking', payload: { itemIndex } });
 			return { status: 'success' };
@@ -142,6 +154,7 @@ function BookingProvider({ children }) {
 		function handleBind(data) {
 			try {
 				const parsedData = JSON.parse(data.message);
+				console.log(parsedData);
 				setCallerId(parsedData);
 			} catch (error) {
 				console.error('Failed to parse message data:', error);
@@ -171,6 +184,7 @@ function BookingProvider({ children }) {
 				deleteBooking,
 				insertData,
 				callerTab: data,
+				onUpdateBooking,
 				addVia,
 			}}
 		>

@@ -36,7 +36,7 @@ function filterData(data) {
 		phoneNumber: data.PhoneNumber,
 		pickupAddress: data.PickupAddress,
 		pickupDateTime:
-		data.PickupDateTime || new Date().toISOString().slice(0, 16),
+			data.PickupDateTime || new Date().toISOString().slice(0, 16),
 		pickupPostCode: data.PickupPostCode,
 		destinationAddress: data.DestinationAddress,
 		destinationPostCode: data.DestinationPostCode,
@@ -50,6 +50,8 @@ function filterData(data) {
 		vias: data.vias || [],
 		accountNumber: data.accountNumber,
 		bookedByName: data.bookedByName || '',
+		bookingId: data.bookingId || null,
+		updatedByName: data.updatedByName || '',
 	});
 }
 
@@ -128,7 +130,6 @@ async function handlePostReq(URL, data) {
 async function makeBooking(data) {
 	const URL = BASE + '/api/Bookings/Create';
 	const filteredData = filterData(data);
-	console.log(data);
 	return await handlePostReq(URL, filteredData);
 }
 
@@ -201,6 +202,12 @@ async function getAccountList() {
 	}
 }
 
+async function updateBooking(data) {
+	const URL = BASE + '/api/Bookings/Update';
+	const filteredData = filterData(data);
+	return await handlePostReq(URL, filteredData);
+}
+
 export {
 	getBookingData,
 	makeBooking,
@@ -209,4 +216,5 @@ export {
 	getAllDrivers,
 	getPostal,
 	getAccountList,
+	updateBooking,
 };

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import 'tailwindcss/tailwind.css';
 
 const BookingTable = ({ bookings, onConfirm, onSet }) => {
-	const [activeTab, setActiveTab] = useState('current-bookings');
+	const [activeTab, setActiveTab] = useState('previous-bookings');
 	const [selectedRow, setSelectedRow] = useState(null);
 	const isEmpty =
 		bookings.Current.length === 0 && bookings.Previous.length === 0;
@@ -24,7 +24,8 @@ const BookingTable = ({ bookings, onConfirm, onSet }) => {
 				activeTab === 'current-bookings'
 					? bookings.Current[selectedRow]
 					: bookings.Previous[selectedRow];
-
+			selectedBooking.type =
+				activeTab === 'current-bookings' ? 'current' : 'previous';
 			onConfirm(selectedBooking);
 		} else {
 			alert('No row selected');
@@ -126,15 +127,17 @@ const BookingTable = ({ bookings, onConfirm, onSet }) => {
 function CurrentTable({ bookings, selectedRow, selectRow }) {
 	const rows = ['Pickup Address', 'Destination Address', 'Name', 'Price'];
 
-	if (bookings.length === 0) 
-		return <div>No bookings</div>;
+	if (bookings.length === 0) return <div>No bookings</div>;
 
 	return (
 		<table className='min-w-full table-auto'>
 			<thead>
 				<tr>
 					{rows.map((row, index) => (
-						<th key={index} className='px-4 py-2 uppercase' >
+						<th
+							key={index}
+							className='px-4 py-2 uppercase'
+						>
 							{row}
 						</th>
 					))}
