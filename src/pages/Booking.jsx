@@ -129,6 +129,23 @@ function Booking({ bookingData, id }) {
 		updateData('bookedByName', currentUser?.fullName);
 	}, [isAuth]);
 
+	function convertDateToInputFormat(dateStr) {
+		// Parse the input date string
+		let dateObj = new Date(dateStr);
+
+		// Get the individual components
+		let year = dateObj.getFullYear();
+		let month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+		let day = String(dateObj.getDate()).padStart(2, '0');
+		let hours = String(dateObj.getHours()).padStart(2, '0');
+		let minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+		// Format the date for datetime-local input
+		let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+		return formattedDate;
+	}
+
 	if (!bookingData) return null;
 
 	return (
@@ -199,7 +216,7 @@ function Booking({ bookingData, id }) {
 
 					<div className='flex items-center justify-between mb-4'>
 						<div className='flex gap-5 flex-col md:flex-row'>
-							<LocalizationProvider
+							{/* <LocalizationProvider
 								dateAdapter={AdapterDayjs}
 								adapterLocale='en-gb'
 							>
@@ -217,17 +234,20 @@ function Booking({ bookingData, id }) {
 											setIsQuoteSnackbarActive(true);
 											return bookingData.PickupDateTime;
 										}
-										return updateData('PickupDateTime', newVal);
+										console.log(newVal, new Date(newVal));
+										return updateData('PickupDateTime', new Date(newVal));
 									}}
 								/>
-							</LocalizationProvider>
-							{/* <input
+							</LocalizationProvider> */}
+							<input
 								required
 								type='datetime-local'
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-								value={currDate(bookingData.PickupDateTime)}
-								onChange={(e) => updateData('PickupDateTime', e.target.value)}
-							/> */}
+								value={convertDateToInputFormat(bookingData.PickupDateTime)}
+								onChange={(e) => {
+									updateData('PickupDateTime', new Date(e.target.value));
+								}}
+							/>
 
 							{bookingData.returnBooking ? (
 								// <input

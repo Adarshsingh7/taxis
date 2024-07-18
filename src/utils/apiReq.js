@@ -25,7 +25,12 @@ function convertDateString(inputDateString) {
 
 function parseDatetimeIsoFromLocale(dateTime) {
 	if (!dateTime) return null;
-	const dt = new Date(dateTime);
+	const dt = new Intl.DateTimeFormat('en-GB', {
+		dateStyle: 'full',
+		timeStyle: 'long',
+		timeZone: 'Europe/London',
+	}).format(dateTime);
+
 	return (
 		dt.getFullYear() +
 		'-' +
@@ -51,9 +56,7 @@ function filterData(data) {
 		scope: data.scope,
 		phoneNumber: data.PhoneNumber,
 		pickupAddress: data.PickupAddress,
-		pickupDateTime: parseDatetimeIsoFromLocale(
-			data.PickupDateTime || new Date().toISOString().slice(0, 16)
-		),
+		pickupDateTime: data.PickupDateTime,
 		pickupPostCode: data.PickupPostCode,
 		destinationAddress: data.DestinationAddress,
 		destinationPostCode: data.DestinationPostCode,
@@ -63,7 +66,7 @@ function filterData(data) {
 		priceAccount: data.priceAccount || 0,
 		chargeFromBase: data.chargeFromBase || false,
 		userId: data.userId || null,
-		returnDateTime: parseDatetimeIsoFromLocale(data.returnTime) || null,
+		returnDateTime: data.returnTime || null,
 		vias: data.vias || [],
 		accountNumber: data.accountNumber,
 		bookedByName: data.bookedByName || '',
