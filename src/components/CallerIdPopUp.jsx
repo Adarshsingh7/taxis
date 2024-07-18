@@ -69,7 +69,6 @@ function CallerIdPopUp() {
 			insertData(
 				filterFiled({
 					PhoneNumber: callerId.Telephone,
-					PickupDateTime: new Date(Date.now() + 60 * 60 * 1000),
 				})
 			);
 			navigate('/pusher');
