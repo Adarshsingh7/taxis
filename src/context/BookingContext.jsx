@@ -49,7 +49,7 @@ const initState = [
 			sat: false,
 		},
 		details: '',
-		Price: '',
+		Price: 0,
 		scope: 0,
 		chargeFromBase: false,
 		paymentStatus: 0,

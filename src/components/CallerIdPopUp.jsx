@@ -52,7 +52,7 @@ function CallerIdPopUp() {
 			details: '',
 			scope: 0,
 			accountNumber: 0,
-			Price: data.Price,
+			Price: data.Price || 0,
 			chargeFromBase: false,
 			paymentStatus: 0,
 			priceAccount: data.priceAccount || 0,
