@@ -41,12 +41,13 @@ function Booking({ bookingData, id }) {
 		updateData('PickupAddress', bookingData.DestinationAddress);
 		updateData('PickupPostCode', bookingData.DestinationPostCode);
 	}
-	console.log(bookingData.updateByName);
 
 	async function handleSubmit(e) {
 		e.preventDefault();
 		let res;
 		if (bookingData.bookingType === 'current') {
+			console.log(currentUser.fullName);
+			updateData('updatedByName', currentUser.fullName);
 			res = onUpdateBooking(id);
 		} else {
 			res = onBooking(id);
@@ -125,11 +126,7 @@ function Booking({ bookingData, id }) {
 	}, []);
 
 	useEffect(() => {
-		if (bookingData.bookingType === 'current') {
-			updateData('bookedById', currentUser?.fullName);
-		} else {
-			updateData('bookedByName', currentUser?.fullName);
-		}
+		updateData('bookedByName', currentUser?.fullName);
 	}, [isAuth]);
 
 	if (!bookingData) return null;
