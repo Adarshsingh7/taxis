@@ -205,7 +205,7 @@ function Booking({ bookingData, id }) {
 							>
 								<DateTimePicker
 									label='Pickup Date'
-									value={dayjs(new Date(bookingData.PickupDateTime))}
+									value={dayjs(bookingData.PickupDateTime)}
 									onChange={(newVal) => {
 										if (
 											bookingData.returnTime &&
