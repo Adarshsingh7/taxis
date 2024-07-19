@@ -11,7 +11,7 @@ const BookingTable = ({ bookings, onConfirm, onSet }) => {
 
 	const handleTabClick = (tab) => {
 		setActiveTab(tab);
-		setSelectedRow(null); // Reset selected row when switching tabs
+		setSelectedRow(null);
 	};
 
 	const selectRow = (index) => {
@@ -26,6 +26,10 @@ const BookingTable = ({ bookings, onConfirm, onSet }) => {
 					: bookings.Previous[selectedRow];
 			selectedBooking.type =
 				activeTab === 'current-bookings' ? 'current' : 'previous';
+			selectedBooking.PickupDateTime =
+				activeTab === 'current-bookings'
+					? selectedBooking.PickupDateTime
+					: new Date();
 			onConfirm(selectedBooking);
 		} else {
 			alert('No row selected');
@@ -125,7 +129,21 @@ const BookingTable = ({ bookings, onConfirm, onSet }) => {
 };
 
 function CurrentTable({ bookings, selectedRow, selectRow }) {
-	const rows = ['Pickup Address', 'Destination Address', 'Name', 'Price'];
+	const rows = [
+		'Date',
+		'Pickup Address',
+		'Destination Address',
+		'Name',
+		'Price',
+	];
+	const formatDate = (dateStr) => {
+		const d = new Date(dateStr);
+		return `${('0' + d.getDate()).slice(-2)}/${('0' + (d.getMonth() + 1)).slice(
+			-2
+		)}/${d.getFullYear().toString().slice(-2)} ${('0' + d.getHours()).slice(
+			-2
+		)}:${('0' + d.getMinutes()).slice(-2)}`;
+	};
 
 	if (bookings.length === 0) return <div>No bookings</div>;
 
@@ -152,6 +170,9 @@ function CurrentTable({ bookings, selectedRow, selectRow }) {
 						}`}
 						onClick={() => selectRow(index)}
 					>
+						<td className='border px-4 py-2 whitespace-nowrap'>
+							{formatDate(booking.PickupDateTime)}
+						</td>
 						<td className='border px-4 py-2'>{booking.PickupAddress}</td>
 						<td className='border px-4 py-2'>{booking.DestinationAddress}</td>
 						<td className='border px-4 py-2'>{booking.PassengerName}</td>
