@@ -18,6 +18,16 @@ const BookingTable = ({ bookings, onConfirm, onSet }) => {
 		setSelectedRow(index);
 	};
 
+	const formatDate = (dateStr) => {
+		const date = new Date(dateStr);
+		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+			2,
+			'0'
+		)}-${String(date.getDate()).padStart(2, '0')}T${String(
+			date.getHours()
+		).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+	};
+
 	const confirmSelection = () => {
 		if (selectedRow !== null) {
 			const selectedBooking =
@@ -28,8 +38,8 @@ const BookingTable = ({ bookings, onConfirm, onSet }) => {
 				activeTab === 'current-bookings' ? 'current' : 'previous';
 			selectedBooking.PickupDateTime =
 				activeTab === 'current-bookings'
-					? selectedBooking.PickupDateTime
-					: new Date();
+					? formatDate(selectedBooking.PickupDateTime)
+					: formatDate(new Date());
 			onConfirm(selectedBooking);
 		} else {
 			alert('No row selected');
