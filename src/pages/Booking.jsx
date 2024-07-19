@@ -46,7 +46,6 @@ function Booking({ bookingData, id }) {
 		e.preventDefault();
 		let res;
 		if (bookingData.bookingType === 'current') {
-			console.log(currentUser.fullName);
 			updateData('updatedByName', currentUser.fullName);
 			res = onUpdateBooking(id);
 		} else {
@@ -57,7 +56,7 @@ function Booking({ bookingData, id }) {
 				setSnackbarMessage('Failed to create booking');
 				setIsQuoteSnackbarActive(true);
 			} else {
-				setSnackbarMessage('booking created create');
+				setSnackbarMessage('booking created successfully');
 				setIsQuoteSnackbarActive(true);
 			}
 		});
