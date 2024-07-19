@@ -126,7 +126,12 @@ function Booking({ bookingData, id }) {
 	}, []);
 
 	useEffect(() => {
-		updateData('bookedByName', currentUser?.fullName);
+		if (!currentUser.fullName) return;
+		if (bookingData.bookingType === 'current') {
+			updateData('updatedByName', currentUser.fullName);
+		} else {
+			updateData('bookedByName', currentUser?.fullName);
+		}
 	}, [isAuth]);
 
 	function convertDateToInputFormat(dateStr) {
@@ -245,7 +250,9 @@ function Booking({ bookingData, id }) {
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 								value={convertDateToInputFormat(bookingData.PickupDateTime)}
 								onChange={(e) => {
-									updateData('PickupDateTime', new Date(e.target.value));
+									console.log(e.target.value);
+									updateData('PickupDateTime', e.target.value);
+									return e.target.value;
 								}}
 							/>
 

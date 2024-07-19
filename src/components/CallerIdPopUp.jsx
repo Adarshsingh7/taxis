@@ -12,6 +12,15 @@ function CallerIdPopUp() {
 	const navigate = useNavigate();
 	const isEmpty =
 		callerId.Current?.length === 0 && callerId.Previous?.length === 0;
+	const formatDate = (dateStr) => {
+		const date = new Date(dateStr);
+		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+			2,
+			'0'
+		)}-${String(date.getDate()).padStart(2, '0')}T${String(
+			date.getHours()
+		).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+	};
 
 	function filterFiled(data) {
 		return {
@@ -20,10 +29,16 @@ function CallerIdPopUp() {
 			PickupPostCode: data.PickupPostCode || '',
 			DestinationAddress: data.DestinationAddress || '',
 			DestinationPostCode: data.DestinationPostCode || '',
-			PickupDateTime: data.PickupDateTime || new Date(),
+			PickupDateTime: data.PickupDateTime || formatDate(new Date()),
 			returnTime: '',
 			isReturn: false,
-			vias: data.Vias || [],
+			vias:
+				data?.Vias?.map((el) => ({
+					viaSequence: el.ViaSequence,
+					postcode: el.PostCode,
+					address: el.Address,
+					id: el.Id,
+				})) || [],
 			Passengers: data.Passengers || 1,
 			hours: data.hours || 0,
 			minutes: data.minutes || 20,

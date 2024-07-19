@@ -23,27 +23,6 @@ function convertDateString(inputDateString) {
 	return outputDateString;
 }
 
-function parseDatetimeIsoFromLocale(dateTime) {
-	if (!dateTime) return null;
-	const dt = new Intl.DateTimeFormat('en-GB', {
-		dateStyle: 'full',
-		timeStyle: 'long',
-		timeZone: 'Europe/London',
-	}).format(dateTime);
-
-	return (
-		dt.getFullYear() +
-		'-' +
-		(dt.getMonth() + 1).toString().padStart(2, '0') +
-		'-' +
-		dt.getDate().toString().padStart(2, '0') +
-		'T' +
-		dt.getHours().toString().padStart(2, '0') +
-		':' +
-		dt.getMinutes().toString().padStart(2, '0')
-	);
-}
-
 function filterData(data) {
 	return JSON.stringify({
 		details: data.details,
@@ -150,6 +129,8 @@ async function handlePostReq(URL, data) {
 async function makeBooking(data) {
 	const URL = BASE + '/api/Bookings/Create';
 	const filteredData = filterData(data);
+	console.log(filterData(data));
+	console.log(data);
 	return await handlePostReq(URL, filteredData);
 }
 

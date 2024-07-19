@@ -14,6 +14,16 @@ const channel = pusher.subscribe('my-channel');
 
 const BookingContext = createContext();
 
+const formatDate = (dateStr) => {
+	const date = new Date(dateStr);
+	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+		2,
+		'0'
+	)}-${String(date.getDate()).padStart(2, '0')}T${String(
+		date.getHours()
+	).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+};
+
 const initState = [
 	{
 		returnBooking: false,
@@ -22,7 +32,7 @@ const initState = [
 		PickupPostCode: '',
 		DestinationAddress: '',
 		DestinationPostCode: '',
-		PickupDateTime: new Date(),
+		PickupDateTime: formatDate(new Date()),
 		returnTime: '',
 		isReturn: false,
 		vias: [],
@@ -167,12 +177,12 @@ function BookingProvider({ children }) {
 	}, [currentUser]);
 
 	// this use effect will refresh the booking every single minute
-	useEffect(() => {
-		const refreshData = setInterval(getBookingData, 1000 * 60);
-		return () => {
-			clearInterval(refreshData);
-		};
-	}, []);
+	// useEffect(() => {
+	// 	const refreshData = setInterval(getBookingData, 1000 * 60);
+	// 	return () => {
+	// 		clearInterval(refreshData);
+	// 	};
+	// }, []);
 
 	return (
 		<BookingContext.Provider
