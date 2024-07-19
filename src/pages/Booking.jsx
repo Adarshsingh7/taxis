@@ -149,6 +149,15 @@ function Booking({ bookingData, id }) {
 
 		return formattedDate;
 	}
+	function formatDate(dateStr) {
+		const date = new Date(dateStr);
+		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+			2,
+			'0'
+		)}-${String(date.getDate()).padStart(2, '0')}T${String(
+			date.getHours()
+		).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+	}
 
 	if (!bookingData) return null;
 
@@ -249,7 +258,6 @@ function Booking({ bookingData, id }) {
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 								value={convertDateToInputFormat(bookingData.PickupDateTime)}
 								onChange={(e) => {
-									console.log(e.target.value);
 									updateData('PickupDateTime', e.target.value);
 									return e.target.value;
 								}}
@@ -291,9 +299,15 @@ function Booking({ bookingData, id }) {
 								<Switch
 									color='error'
 									checked={bookingData.returnBooking}
-									onClick={() =>
-										updateData('returnBooking', !bookingData.returnBooking)
-									}
+									onClick={() => {
+										!bookingData.returnBooking
+											? updateData(
+													'returnTime',
+													formatDate(Date.now() + 1 * 60 * 60 * 1000)
+											  )
+											: null;
+										updateData('returnBooking', !bookingData.returnBooking);
+									}}
 								/>
 							</div>
 							<></>
@@ -1033,7 +1047,6 @@ const AddEditViaComponent = ({ onSet, id }) => {
 		setNewViaAddress(address);
 		setNewViaPostcode(postcode);
 	}
-	console.log(vias);
 
 	return (
 		<div className='bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto'>
