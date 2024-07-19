@@ -256,34 +256,34 @@ function Booking({ bookingData, id }) {
 							/>
 
 							{bookingData.returnBooking ? (
-								// <input
-								// 	disabled={bookingData.returnBooking ? false : true}
-								// 	required
-								// 	type='datetime-local'
-								// 	value={bookingData.returnTime}
-								// 	onChange={(e) => updateData('returnTime', e.target.value)}
-								// 	className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-								// />
-								<LocalizationProvider
-									dateAdapter={AdapterDayjs}
-									adapterLocale='en-gb'
-								>
-									<DateTimePicker
-										label='Return Date'
-										value={dayjs(new Date(bookingData.returnTime))}
-										onChange={(newVal) => {
-											if (bookingData.PickupDateTime > newVal) {
-												setIsQuoteSnackbarActive(true);
-												setSnackbarMessage(
-													'return time cannot be less than the pickup time'
-												);
-												return bookingData.returnTime;
-											}
-											return updateData('returnTime', newVal);
-										}}
-									/>
-								</LocalizationProvider>
-							) : null}
+								<input
+									disabled={bookingData.returnBooking ? false : true}
+									required
+									type='datetime-local'
+									value={bookingData.returnTime}
+									onChange={(e) => updateData('returnTime', e.target.value)}
+									className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
+								/>
+							) : // <LocalizationProvider
+							// 	dateAdapter={AdapterDayjs}
+							// 	adapterLocale='en-gb'
+							// >
+							// 	<DateTimePicker
+							// 		label='Return Date'
+							// 		value={dayjs(new Date(bookingData.returnTime))}
+							// 		onChange={(newVal) => {
+							// 			if (bookingData.PickupDateTime > newVal) {
+							// 				setIsQuoteSnackbarActive(true);
+							// 				setSnackbarMessage(
+							// 					'return time cannot be less than the pickup time'
+							// 				);
+							// 				return bookingData.returnTime;
+							// 			}
+							// 			return updateData('returnTime', newVal);
+							// 		}}
+							// 	/>
+							// </LocalizationProvider>
+							null}
 						</div>
 						<div className='flex gap-5 flex-col md:flex-row justify-between'>
 							<div>
