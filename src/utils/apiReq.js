@@ -210,6 +210,17 @@ async function updateBooking(data) {
 	return await handlePostReq(URL, filteredData);
 }
 
+async function deleteSchedulerBooking(data) {
+	const URL = BASE + '/api/Bookings/Cancel';
+	return await handlePostReq(URL, {
+		bookingId: data.bookingId,
+		cancelledByName: data.cancelledByName,
+		actionByUserId: data.actionByUserId,
+		cancelBlock: false,
+		cancelledOnArrival: false,
+	});
+}
+
 export {
 	getBookingData,
 	makeBooking,
@@ -219,4 +230,5 @@ export {
 	getPostal,
 	getAccountList,
 	updateBooking,
+	deleteSchedulerBooking,
 };

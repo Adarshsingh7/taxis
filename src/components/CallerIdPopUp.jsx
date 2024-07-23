@@ -8,7 +8,6 @@ import CallerTable from './CallerTable';
 
 function CallerIdPopUp() {
 	const { callerId, insertData, onRemoveCaller } = useBooking();
-	console.log(callerId);
 	const [open, setOpen] = useState(callerId.length ? true : false);
 	const navigate = useNavigate();
 	const isEmpty =

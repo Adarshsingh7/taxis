@@ -1,6 +1,10 @@
 /** @format */
 import { createContext, useEffect, useReducer, useState } from 'react';
-import { makeBooking, updateBooking } from './../utils/apiReq';
+import {
+	makeBooking,
+	updateBooking,
+	deleteSchedulerBooking,
+} from './../utils/apiReq';
 import Pusher from 'pusher-js';
 import { useAuth } from '../hooks/useAuth';
 
@@ -179,6 +183,15 @@ function BookingProvider({ children }) {
 		setCallerId(filteredCaller);
 	}
 
+	async function onDeleteBooking(bookingId) {
+		const res = await deleteSchedulerBooking({
+			bookingId,
+			cancelledByName: currentUser.fullName,
+			actionByUserId: currentUser.id,
+		});
+		return res;
+	}
+
 	// this use effect will refresh the booking every single minute
 	// useEffect(() => {
 	// 	const refreshData = setInterval(getBookingData, 1000 * 60);
@@ -200,6 +213,7 @@ function BookingProvider({ children }) {
 				callerTab: data,
 				onUpdateBooking,
 				addVia,
+				onDeleteBooking,
 			}}
 		>
 			{children}

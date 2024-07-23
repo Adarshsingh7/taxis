@@ -19,7 +19,7 @@ import ProtectedRoute from '../utils/Protected';
 import { getBookingData } from '../utils/apiReq';
 import { useEffect, useState } from 'react';
 import Snackbar from '../components/SnackBar';
-import { useNavigate } from 'react-router-dom';
+import { useBooking } from '../hooks/useBooking';
 
 const AceScheduler = () => {
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -28,6 +28,7 @@ const AceScheduler = () => {
 	const [snackbarMessage, setSnackBarMessage] = useState('');
 	const [data, setData] = useState();
 	const [selectedBookingData, setSelectedBookingData] = useState();
+	const { onDeleteBooking } = useBooking();
 
 	const fieldsData = {
 		id: 'bookingId',
@@ -72,6 +73,26 @@ const AceScheduler = () => {
 		setDialogOpen(true);
 	};
 
+	function handleDeleteBooking(bookingId) {
+		onDeleteBooking(bookingId).then((res) => {
+			if (res.status === 'success') {
+				setDialogOpen(false);
+				getBookingData().then((data) => {
+					if (data.status === 'success') {
+						setData(data.bookings);
+						localStorage.setItem('bookings', JSON.stringify(data.bookings));
+						setSnackBarMessage('Booking Refreshed');
+					} else {
+						setSnackBarMessage(data.message);
+					}
+					setOpen(true);
+				});
+			} else {
+				alert('failed to delete');
+			}
+		});
+	}
+
 	return (
 		<ProtectedRoute>
 			<Snackbar
@@ -96,6 +117,7 @@ const AceScheduler = () => {
 						<CustomDialog
 							closeDialog={() => setDialogOpen(false)}
 							data={selectedBookingData}
+							onDeleteBooking={handleDeleteBooking}
 						/>
 					</Modal>
 				)}

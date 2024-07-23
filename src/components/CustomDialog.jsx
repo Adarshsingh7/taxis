@@ -5,12 +5,8 @@ import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { useBooking } from '../hooks/useBooking';
 
-function CustomDialog({ closeDialog, data }) {
+function CustomDialog({ closeDialog, data, onDeleteBooking }) {
 	const { insertData } = useBooking();
-
-	// function handleEditBooking() {
-
-	// }
 
 	return (
 		<div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
@@ -63,6 +59,7 @@ function CustomDialog({ closeDialog, data }) {
 					<BookingButton
 						text='Cancel Booking'
 						color='red'
+						onClick={() => onDeleteBooking(data.bookingId)}
 					/>
 				</div>
 			</div>
