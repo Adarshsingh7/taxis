@@ -1,6 +1,6 @@
 /** @format */
 import { createContext, useEffect, useReducer, useState } from 'react';
-import { getBookingData, makeBooking, updateBooking } from './../utils/apiReq';
+import { makeBooking, updateBooking } from './../utils/apiReq';
 import Pusher from 'pusher-js';
 import { useAuth } from '../hooks/useAuth';
 
@@ -164,8 +164,14 @@ function BookingProvider({ children }) {
 		function handleBind(data) {
 			try {
 				const parsedData = JSON.parse(data.message);
-				console.log(parsedData);
-				setCallerId(parsedData);
+				if (
+					parsedData.Current.length === 0 &&
+					parsedData.Previous.length === 0
+				) {
+					insertData({ ...initState[0], PhoneNumber: parsedData.Telephone });
+				} else {
+					setCallerId(parsedData);
+				}
 			} catch (error) {
 				console.error('Failed to parse message data:', error);
 			}

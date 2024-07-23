@@ -80,14 +80,6 @@ function CallerIdPopUp() {
 		if (callerId.Telephone && !isEmpty) {
 			setOpen(true);
 		}
-		if (isEmpty) {
-			insertData(
-				filterFiled({
-					PhoneNumber: callerId.Telephone,
-				})
-			);
-			navigate('/pusher');
-		}
 	}, [callerId, isEmpty]);
 
 	function handleSubmit(data) {

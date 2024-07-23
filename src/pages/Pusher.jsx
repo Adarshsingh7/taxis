@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 import { useEffect, useState } from 'react';
 import { useBooking } from '../hooks/useBooking';
 import Booking from './Booking';
-import PageNotFound from './PageNotFound';
 
 export default function Pusher() {
 	const { callerTab, insertValue } = useBooking();
@@ -55,16 +54,12 @@ export default function Pusher() {
 				</Tabs>
 
 				<Box>
-					{callerTab.length === 0 ? (
-						<PageNotFound message='No New Callers Found' />
-					) : (
-						<Booking
-							bookingData={callerTab[value]}
-							key={value}
-							insertValue={insertValue}
-							id={value}
-						/>
-					)}
+					<Booking
+						bookingData={callerTab[value]}
+						key={value}
+						insertValue={insertValue}
+						id={value}
+					/>
 				</Box>
 			</Box>
 		</Box>
