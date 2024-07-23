@@ -12,13 +12,7 @@ import { makeBookingQuoteRequest, getAllDrivers } from '../utils/apiReq';
 import SimpleSnackbar from '../components/SnackBar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Loader from './../components/Loader';
-import dayjs from 'dayjs';
 import { useAuth } from './../hooks/useAuth';
-
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
 import 'dayjs/locale/en-gb';
 
 function Booking({ bookingData, id }) {
@@ -125,11 +119,11 @@ function Booking({ bookingData, id }) {
 	}, []);
 
 	useEffect(() => {
-		if (!currentUser.fullName) return;
+		if (!currentUser && !currentUser.fullName) return;
 		if (bookingData.bookingType === 'current') {
 			updateData('updatedByName', currentUser.fullName);
 		} else {
-			updateData('bookedByName', currentUser?.fullName);
+			updateData('bookedByName', currentUser.fullName);
 		}
 	}, [isAuth]);
 
@@ -475,7 +469,7 @@ function Booking({ bookingData, id }) {
 								placeholder='Hours'
 								required
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-								value={bookingData.hours}
+								value={Math.floor(bookingData.durationText / 60)}
 								onChange={(e) =>
 									updateData(
 										'hours',
@@ -498,7 +492,7 @@ function Booking({ bookingData, id }) {
 								type='number'
 								required
 								placeholder='Minutes'
-								value={bookingData.minutes}
+								value={Math.floor(bookingData.durationText % 60)}
 								onChange={(e) =>
 									updateData(
 										'minutes',

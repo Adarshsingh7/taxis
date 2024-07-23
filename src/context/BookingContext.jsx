@@ -170,6 +170,7 @@ function BookingProvider({ children }) {
 				) {
 					insertData({ ...initState[0], PhoneNumber: parsedData.Telephone });
 				} else {
+					console.log(parsedData);
 					setCallerId(parsedData);
 				}
 			} catch (error) {
