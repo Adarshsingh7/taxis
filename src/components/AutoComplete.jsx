@@ -4,7 +4,14 @@ import { useState, useEffect, useRef } from 'react';
 import { getPoi, getPostal } from '../utils/apiReq';
 import { TextField } from '@mui/material';
 
-const Autocomplete = ({ placeholder, onPushChange, onChange, value, type }) => {
+const Autocomplete = ({
+	placeholder,
+	onPushChange,
+	onChange,
+	value,
+	type,
+	required,
+}) => {
 	const [inputValue, setInputValue] = useState(value || '');
 	const [options, setOptions] = useState([]);
 	const [showOptions, setShowOptions] = useState(false);
@@ -116,7 +123,7 @@ const Autocomplete = ({ placeholder, onPushChange, onChange, value, type }) => {
 				autoComplete='off'
 				ref={inputRef}
 				label={placeholder}
-				required
+				required={required}
 				onBlur={handleBlur}
 				onFocus={handleFocus}
 				value={inputValue}

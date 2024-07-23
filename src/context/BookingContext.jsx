@@ -49,15 +49,6 @@ const initState = [
 		frequency: 'none',
 		repeatEnd: 'never',
 		repeatEndValue: '',
-		selectedDays: {
-			sun: false,
-			mon: false,
-			tue: false,
-			wed: false,
-			thu: false,
-			fri: true,
-			sat: false,
-		},
 		details: '',
 		Price: 0,
 		scope: 0,
@@ -116,7 +107,7 @@ function reducer(state, action) {
 function BookingProvider({ children }) {
 	const { currentUser, isAuth } = useAuth();
 	const [data, dispacher] = useReducer(reducer, initState);
-	const [callerId, setCallerId] = useState({});
+	const [callerId, setCallerId] = useState([]);
 
 	function updateValue(itemIndex, property, value) {
 		dispacher({ type: 'updateValue', payload: { itemIndex, value, property } });
@@ -171,7 +162,7 @@ function BookingProvider({ children }) {
 					insertData({ ...initState[0], PhoneNumber: parsedData.Telephone });
 				} else {
 					console.log(parsedData);
-					setCallerId(parsedData);
+					setCallerId((prev) => [...prev, parsedData]);
 				}
 			} catch (error) {
 				console.error('Failed to parse message data:', error);
@@ -182,6 +173,11 @@ function BookingProvider({ children }) {
 			channel.unbind('my-event', handleBind);
 		};
 	}, [currentUser]);
+
+	function onRemoveCaller() {
+		const filteredCaller = callerId.filter((_, idx) => idx !== 0);
+		setCallerId(filteredCaller);
+	}
 
 	// this use effect will refresh the booking every single minute
 	// useEffect(() => {
@@ -196,6 +192,7 @@ function BookingProvider({ children }) {
 			value={{
 				data,
 				callerId,
+				onRemoveCaller,
 				updateValue,
 				onBooking,
 				deleteBooking,

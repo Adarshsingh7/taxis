@@ -13,7 +13,12 @@ const style = {
 	boxShadow: 24,
 };
 
-export default function BasicModal({ children, open, setOpen }) {
+export default function BasicModal({
+	children,
+	open,
+	setOpen,
+	disableEscapeKeyDown = false,
+}) {
 	// const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 
@@ -22,6 +27,7 @@ export default function BasicModal({ children, open, setOpen }) {
 			<Modal
 				open={open}
 				onClose={handleClose}
+				disableEscapeKeyDown={disableEscapeKeyDown}
 				aria-labelledby='modal-modal-title'
 				aria-describedby='modal-modal-description'
 				BackdropProps={{

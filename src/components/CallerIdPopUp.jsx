@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import CallerTable from './CallerTable';
 
 function CallerIdPopUp() {
-	const { callerId, insertData } = useBooking();
+	const { callerId, insertData, onRemoveCaller } = useBooking();
+	console.log(callerId);
 	const [open, setOpen] = useState(callerId.length ? true : false);
 	const navigate = useNavigate();
 	const isEmpty =
-		callerId.Current?.length === 0 && callerId.Previous?.length === 0;
+		callerId[0]?.Current?.length === 0 && callerId[0]?.Previous?.length === 0;
 	const formatDate = (dateStr) => {
 		const date = new Date(dateStr);
 		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
@@ -69,15 +70,18 @@ function CallerIdPopUp() {
 
 	// the simple use effect to open the popup or modal
 	useEffect(() => {
-		if (callerId.Telephone && !isEmpty) {
+		if (callerId[0]?.Telephone && !isEmpty) {
 			setOpen(true);
 		}
 	}, [callerId, isEmpty]);
 
+	useEffect(() => {
+		if (callerId.length > 0) setOpen(true);
+	}, [callerId.length]);
+
 	function handleSubmit(data) {
 		insertData(filterFiled(data));
-		console.log(filterFiled(data));
-
+		onRemoveCaller();
 		navigate('/pusher');
 		setOpen(false);
 	}
@@ -86,10 +90,12 @@ function CallerIdPopUp() {
 		<Modal
 			open={open}
 			setOpen={setOpen}
+			disableEscapeKeyDown={true}
 		>
 			{!isEmpty && (
 				<CallerTable
-					bookings={callerId}
+					bookings={callerId[0]}
+					numBooking={callerId.length}
 					onConfirm={handleSubmit}
 					onSet={setOpen}
 				/>

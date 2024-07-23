@@ -13,7 +13,6 @@ import SimpleSnackbar from '../components/SnackBar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Loader from './../components/Loader';
 import { useAuth } from './../hooks/useAuth';
-import 'dayjs/locale/en-gb';
 
 function Booking({ bookingData, id }) {
 	const { updateValue, onBooking, deleteBooking, onUpdateBooking } =
@@ -223,29 +222,6 @@ function Booking({ bookingData, id }) {
 
 					<div className='flex items-center justify-between mb-4'>
 						<div className='flex gap-5 flex-col md:flex-row'>
-							{/* <LocalizationProvider
-								dateAdapter={AdapterDayjs}
-								adapterLocale='en-gb'
-							>
-								<DateTimePicker
-									label='Pickup Date'
-									value={dayjs(bookingData.PickupDateTime)}
-									onChange={(newVal) => {
-										if (
-											bookingData.returnTime &&
-											bookingData.returnTime < newVal
-										) {
-											setSnackbarMessage(
-												'return time cannot be less than pickuptime'
-											);
-											setIsQuoteSnackbarActive(true);
-											return bookingData.PickupDateTime;
-										}
-										console.log(newVal, new Date(newVal));
-										return updateData('PickupDateTime', new Date(newVal));
-									}}
-								/>
-							</LocalizationProvider> */}
 							<input
 								required
 								type='datetime-local'
@@ -266,26 +242,7 @@ function Booking({ bookingData, id }) {
 									onChange={(e) => updateData('returnTime', e.target.value)}
 									className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 								/>
-							) : // <LocalizationProvider
-							// 	dateAdapter={AdapterDayjs}
-							// 	adapterLocale='en-gb'
-							// >
-							// 	<DateTimePicker
-							// 		label='Return Date'
-							// 		value={dayjs(new Date(bookingData.returnTime))}
-							// 		onChange={(newVal) => {
-							// 			if (bookingData.PickupDateTime > newVal) {
-							// 				setIsQuoteSnackbarActive(true);
-							// 				setSnackbarMessage(
-							// 					'return time cannot be less than the pickup time'
-							// 				);
-							// 				return bookingData.returnTime;
-							// 			}
-							// 			return updateData('returnTime', newVal);
-							// 		}}
-							// 	/>
-							// </LocalizationProvider>
-							null}
+							) : null}
 						</div>
 						<div className='flex gap-5 flex-col md:flex-row justify-between'>
 							<div>
@@ -315,16 +272,9 @@ function Booking({ bookingData, id }) {
 					</div>
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
-						{/* <input
-							type='text'
-							placeholder='Pickup Address'
-							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-							required
-							value={bookingData.PickupAddress}
-							onChange={(e) => updateData('PickupAddress', e.target.value)}
-						/> */}
 						<Autocomplete
 							type='address'
+							required={true}
 							placeholder='Pickup Address'
 							value={bookingData.PickupAddress}
 							onPushChange={handleAddPickup}
@@ -332,6 +282,7 @@ function Booking({ bookingData, id }) {
 						/>
 						<Autocomplete
 							type='postal'
+							required={false}
 							placeholder='Post Code'
 							value={bookingData.PickupPostCode}
 							onPushChange={handleAddPickup}
@@ -362,6 +313,7 @@ function Booking({ bookingData, id }) {
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
 						<Autocomplete
+							required={true}
 							type='address'
 							placeholder='Destination Address'
 							value={bookingData.DestinationAddress}
@@ -369,7 +321,7 @@ function Booking({ bookingData, id }) {
 							onChange={(e) => updateData('DestinationAddress', e.target.value)}
 						/>
 						<Autocomplete
-							required
+							required={false}
 							type='postal'
 							placeholder='Post Code'
 							value={bookingData.DestinationPostCode}
@@ -613,15 +565,6 @@ function Booking({ bookingData, id }) {
 								</select>
 							</div>
 							{bookingData.scope === 1 ? (
-								// <Autocomplete
-								// 	placeholder='booking scope'
-								// 	onPushChange={(accountNumber) =>
-								// 		updateData('accountNumber', accountNumber)
-								// 	}
-								// 	onChange={() => {}}
-								// 	value={bookingData.accountNumber}
-								// 	type={'scope'}
-								// />
 								<div>
 									<p className='text-gray-700 text-sm capitalize'>
 										Account number
@@ -1073,12 +1016,14 @@ const AddEditViaComponent = ({ onSet, id }) => {
 				<Autocomplete
 					type='address'
 					placeholder='Add Via Address'
+					required={true}
 					value={newViaAddress}
 					onChange={(e) => setNewViaAddress(e.target.value)}
 					onPushChange={handleSelectAutocomplete}
 				/>
 				<Autocomplete
 					type='postal'
+					required={false}
 					placeholder='Add Via PostCode'
 					value={newViaPostcode}
 					onChange={(e) => setNewViaPostcode(e.target.value)}
@@ -1179,11 +1124,10 @@ function Input({ value, onChange, type, placeholder, required }) {
 	);
 }
 
-function ListDrivers({ onSet, id }) {
+function ListDrivers({ id }) {
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
-	const [selectedUser, setSelectedUser] = useState({});
-	const { updateValue, callerTab } = useBooking();
+	const { updateValue } = useBooking();
 
 	useEffect(() => {
 		getAllDrivers().then((res) => {
@@ -1194,7 +1138,6 @@ function ListDrivers({ onSet, id }) {
 	}, []);
 
 	function handleAttactDriver(driver) {
-		onSet(setSelectedUser(driver.id));
 		updateValue(id, 'userId', driver.id);
 	}
 

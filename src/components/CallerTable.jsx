@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import 'tailwindcss/tailwind.css';
+import { useBooking } from '../hooks/useBooking';
 
-const BookingTable = ({ bookings, onConfirm, onSet }) => {
+const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 	const [activeTab, setActiveTab] = useState('previous-bookings');
 	const [selectedRow, setSelectedRow] = useState(null);
 	const isEmpty =
 		bookings.Current.length === 0 && bookings.Previous.length === 0;
+	const { onRemoveCaller } = useBooking();
 
 	const handleTabClick = (tab) => {
 		setActiveTab(tab);
@@ -52,7 +54,14 @@ const BookingTable = ({ bookings, onConfirm, onSet }) => {
 
 	return (
 		<div className='max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-5'>
-			<h2 className='text-xl font-semibold mb-4'>📞 ({bookings.Telephone})</h2>
+			<div className='flex justify-between'>
+				<h2 className='text-xl font-semibold mb-4 '>
+					📞 ({bookings.Telephone})
+				</h2>
+				<span className='text-center bg-red-700 p-2 text-white'>
+					{numBooking} Caller Waiting..
+				</span>
+			</div>
 			<div className='flex border-b mb-4'>
 				<button
 					className={`tab-link py-2 px-4 text-gray-600 border-b-2 ${
@@ -128,7 +137,10 @@ const BookingTable = ({ bookings, onConfirm, onSet }) => {
 					)}
 					<button
 						className='bg-red-500 text-white py-2 px-4 rounded'
-						onClick={() => onSet(false)}
+						onClick={() => {
+							onRemoveCaller();
+							onSet(false);
+						}}
 					>
 						cancel
 					</button>
