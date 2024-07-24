@@ -118,13 +118,14 @@ function Booking({ bookingData, id }) {
 	}, []);
 
 	useEffect(() => {
-		if (!currentUser && !currentUser.fullName) return;
+		if (!isAuth) return;
+		if (currentUser && !currentUser.fullName) return;
 		if (bookingData.bookingType === 'current') {
 			updateData('updatedByName', currentUser.fullName);
 		} else {
 			updateData('bookedByName', currentUser.fullName);
 		}
-	}, [isAuth, currentUser.fullName]);
+	}, [isAuth, currentUser]);
 
 	function convertDateToInputFormat(dateStr) {
 		// Parse the input date string
@@ -255,6 +256,7 @@ function Booking({ bookingData, id }) {
 											? updateData(
 													'returnTime',
 													formatDate(Date.now() + 1 * 60 * 60 * 1000)
+													// eslint-disable-next-line no-mixed-spaces-and-tabs
 											  )
 											: null;
 										updateData('returnBooking', !bookingData.returnBooking);
@@ -1168,7 +1170,7 @@ function ListDrivers({ id }) {
 										style={{ backgroundColor: el.colorRGB }}
 										className={`h-5 w-5 rounded-full`}
 									></div>
-									<p className='text-2xl'>{el.fullName}</p>
+									<p className='text-2xl'>{el?.fullName}</p>
 								</div>
 								<p>{el.regNo}</p>
 							</div>

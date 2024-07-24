@@ -110,9 +110,11 @@ function reducer(state, action) {
 }
 
 function BookingProvider({ children }) {
-	const { currentUser, isAuth } = useAuth();
+	const { currentUser } = useAuth();
 	const [data, dispacher] = useReducer(reducer, initState);
 	const [callerId, setCallerId] = useState([]);
+	const [activeTab, setActiveTab] = useState(0);
+	const isCurrentTabActive = data[activeTab]?.formBusy;
 
 	function updateValue(itemIndex, property, value) {
 		dispacher({ type: 'updateValue', payload: { itemIndex, value, property } });
@@ -137,6 +139,7 @@ function BookingProvider({ children }) {
 		const res = await makeBooking(targetBooking);
 		if (res.status === 'success') {
 			dispacher({ type: 'endBooking', payload: { itemIndex } });
+			setActiveTab(data.length !== 1 ? data.length - 2 : 0);
 			return { status: 'success' };
 		} else {
 			return { status: 'error', message: res.message };
@@ -148,6 +151,7 @@ function BookingProvider({ children }) {
 		const res = await updateBooking(targetBooking);
 		if (res.status === 'success') {
 			dispacher({ type: 'endBooking', payload: { itemIndex } });
+			setActiveTab(data.length !== 1 ? data.length - 2 : 0);
 			return { status: 'success' };
 		} else {
 			return { status: 'error', message: res.message };
@@ -156,11 +160,11 @@ function BookingProvider({ children }) {
 
 	async function deleteBooking(itemIndex) {
 		dispacher({ type: 'endBooking', payload: { itemIndex } });
+		setActiveTab(data.length === 1 ? 0 : data.length - 2);
 	}
 
 	// this is the caller id use effect it will trigger dialog box when the caller id is received
 	useEffect(() => {
-		// if (!isAuth) return;
 		if (currentUser && !currentUser.isAdmin) return;
 		function handleBind(data) {
 			try {
@@ -187,6 +191,7 @@ function BookingProvider({ children }) {
 	function onRemoveCaller() {
 		const filteredCaller = callerId.filter((_, idx) => idx !== 0);
 		setCallerId(filteredCaller);
+		// setActiveTab(data.length === 1 ? 0 : data.length - 2);
 	}
 
 	async function onDeleteBooking(bookingId) {
@@ -220,6 +225,9 @@ function BookingProvider({ children }) {
 				onUpdateBooking,
 				addVia,
 				onDeleteBooking,
+				activeTab,
+				onActiveTabChange: setActiveTab,
+				isCurrentTabActive,
 			}}
 		>
 			{children}

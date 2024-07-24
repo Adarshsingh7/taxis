@@ -7,7 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import CallerTable from './CallerTable';
 
 function CallerIdPopUp() {
-	const { callerId, insertData, onRemoveCaller } = useBooking();
+	const { callerId, insertData, onRemoveCaller, isCurrentTabActive } =
+		useBooking();
 	const [open, setOpen] = useState(callerId.length ? true : false);
 	const navigate = useNavigate();
 	const isEmpty =
@@ -64,6 +65,7 @@ function CallerIdPopUp() {
 			paymentStatus: data.PaymentStatus || 0,
 			priceAccount: data.PriceAccount || 0,
 			driver: {},
+			formBusy: false,
 		};
 	}
 
@@ -75,8 +77,9 @@ function CallerIdPopUp() {
 	}, [callerId, isEmpty]);
 
 	useEffect(() => {
+		if (isCurrentTabActive) return;
 		if (callerId.length > 0) setOpen(true);
-	}, [callerId.length]);
+	}, [callerId.length, isCurrentTabActive]);
 
 	function handleSubmit(data) {
 		insertData(filterFiled(data));
@@ -84,6 +87,9 @@ function CallerIdPopUp() {
 		navigate('/pusher');
 		setOpen(false);
 	}
+
+	if (isCurrentTabActive) return null;
+	console.log(isCurrentTabActive);
 
 	return (
 		<Modal

@@ -3,23 +3,15 @@
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
 import { useBooking } from '../hooks/useBooking';
 import Booking from './Booking';
 
 export default function Pusher() {
-	const { callerTab, insertValue } = useBooking();
-	const [value, setValue] = useState(
-		callerTab.length === 0 ? 0 : callerTab.length - 1
-	);
+	const { callerTab, insertValue, activeTab, onActiveTabChange } = useBooking();
 
 	const handleChange = (event, newValue) => {
-		setValue(newValue);
+		onActiveTabChange(newValue);
 	};
-
-	useEffect(() => {
-		setValue(callerTab.length - 1 >= 0 ? callerTab.length - 1 : 0);
-	}, [callerTab.length]);
 
 	return (
 		<Box
@@ -37,7 +29,7 @@ export default function Pusher() {
 				}}
 			>
 				<Tabs
-					value={value}
+					value={activeTab}
 					sx={{ backgroundColor: '#e5e7eb' }}
 					onChange={handleChange}
 					variant='scrollable'
@@ -52,8 +44,8 @@ export default function Pusher() {
 								label={label}
 								key={index}
 								style={{
-									backgroundColor: item.formBusy ? '#B91C1C' : '#e5e7eb',
-									color: item.formBusy ? '#ffffff' : '#1976D2',
+									// backgroundColor: item.formBusy ? '#B91C1C' : '#e5e7eb',
+									color: item.formBusy ? '#B91C1C' : '',
 								}}
 							/>
 						);
@@ -62,10 +54,10 @@ export default function Pusher() {
 
 				<Box>
 					<Booking
-						bookingData={callerTab[value]}
-						key={value}
+						bookingData={callerTab[activeTab]}
+						key={activeTab}
 						insertValue={insertValue}
-						id={value}
+						id={activeTab}
 					/>
 				</Box>
 			</Box>

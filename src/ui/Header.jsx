@@ -8,6 +8,7 @@ import { useState } from 'react';
 const Navbar = () => {
 	const navigate = useNavigate();
 	const { isAuth, logout } = useAuth();
+	const [activeTestMode, setActiveTestMode] = useState(false);
 
 	return (
 		<nav className='sticky top-0 z-50 flex justify-between items-center bg-zinc-900 text-white p-4'>
@@ -42,15 +43,27 @@ const Navbar = () => {
 					// </button>
 					<></>
 				) : (
-					<button
-						className='bg-blue-500 text-white px-4 py-2 rounded-lg'
-						onClick={() => {
-							logout();
-							navigate('/login');
-						}}
-					>
-						logout
-					</button>
+					<>
+						<span className='flex flex-row gap-2 items-center align-middle'>
+							<span>Test Mode</span>
+							<input
+								type='checkbox'
+								checked={activeTestMode}
+								onChange={(e) => {
+									setActiveTestMode(e.target.checked);
+								}}
+							/>
+						</span>
+						<button
+							className='bg-blue-500 text-white px-4 py-2 rounded-lg'
+							onClick={() => {
+								logout();
+								navigate('/login');
+							}}
+						>
+							logout
+						</button>
+					</>
 				)}
 				{/* <MuiMenu /> */}
 			</span>

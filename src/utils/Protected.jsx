@@ -1,17 +1,15 @@
 /** @format */
 
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useEffect } from 'react';
 import Loader from '../components/Loader';
 
 const ProtectedRoute = ({ children }) => {
-	const location = useLocation();
 	const navigate = useNavigate();
 	const { isAuth, isLoading } = useAuth();
 
 	useEffect(() => {
-		// Only navigate to login if not authenticated and not loading
 		if (!isLoading && !isAuth) {
 			navigate('/login');
 		}
