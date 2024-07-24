@@ -53,7 +53,7 @@ export default function Pusher() {
 								label={label}
 								key={index}
 								style={{
-									backgroundColor: item.formBusy ? '#ff0000' : '#e5e7eb',
+									backgroundColor: item.formBusy ? '#B91C1C' : '#e5e7eb',
 									color: item.formBusy ? '#ffffff' : '#1976D2',
 								}}
 							/>
