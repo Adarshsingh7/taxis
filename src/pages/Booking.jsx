@@ -124,7 +124,7 @@ function Booking({ bookingData, id }) {
 		} else {
 			updateData('bookedByName', currentUser.fullName);
 		}
-	}, [isAuth]);
+	}, [isAuth, currentUser.fullName]);
 
 	function convertDateToInputFormat(dateStr) {
 		// Parse the input date string

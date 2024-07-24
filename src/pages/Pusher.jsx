@@ -45,12 +45,20 @@ export default function Pusher() {
 					allowScrollButtonsMobile
 					aria-label='scrollable force tabs example'
 				>
-					{callerTab.map((item, index) => (
-						<Tab
-							label={index === 0 ? 'New Booking' : item.PhoneNumber}
-							key={index}
-						/>
-					))}
+					{callerTab.map((item, index) => {
+						let label = index === 0 ? 'New Booking' : item.PhoneNumber;
+						label = item.formBusy ? `${label} *` : label;
+						return (
+							<Tab
+								label={label}
+								key={index}
+								style={{
+									backgroundColor: item.formBusy ? '#ff0000' : '#e5e7eb',
+									color: item.formBusy ? '#ffffff' : '#1976D2',
+								}}
+							/>
+						);
+					})}
 				</Tabs>
 
 				<Box>

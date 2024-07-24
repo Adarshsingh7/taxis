@@ -62,6 +62,7 @@ const initState = [
 		accountNumber: 0,
 		priceAccount: 0,
 		userId: '',
+		formBusy: false,
 	},
 ];
 
@@ -115,10 +116,15 @@ function BookingProvider({ children }) {
 
 	function updateValue(itemIndex, property, value) {
 		dispacher({ type: 'updateValue', payload: { itemIndex, value, property } });
+		if (property !== 'updatedByName' && property !== 'bookedByName') {
+			dispacher({
+				type: 'updateValue',
+				payload: { itemIndex, value: true, property: 'formBusy' },
+			});
+		}
 	}
 
 	function insertData(data) {
-		console.log(data);
 		dispacher({ type: 'addData', payload: data });
 	}
 
@@ -154,7 +160,7 @@ function BookingProvider({ children }) {
 
 	// this is the caller id use effect it will trigger dialog box when the caller id is received
 	useEffect(() => {
-		if (!isAuth) return;
+		// if (!isAuth) return;
 		if (currentUser && !currentUser.isAdmin) return;
 		function handleBind(data) {
 			try {
