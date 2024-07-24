@@ -28,7 +28,7 @@ const AceScheduler = () => {
 	const [snackbarMessage, setSnackBarMessage] = useState('');
 	const [data, setData] = useState();
 	const [selectedBookingData, setSelectedBookingData] = useState();
-	const { onDeleteBooking } = useBooking();
+	const { onDeleteBooking, activeTestMode } = useBooking();
 
 	const fieldsData = {
 		id: 'bookingId',
@@ -47,7 +47,7 @@ const AceScheduler = () => {
 	}
 
 	useEffect(() => {
-		getBookingData().then((data) => {
+		getBookingData(activeTestMode).then((data) => {
 			if (data.status === 'success') {
 				setData(data.bookings);
 				localStorage.setItem('bookings', JSON.stringify(data.bookings));
@@ -57,7 +57,7 @@ const AceScheduler = () => {
 			}
 			setOpen(true);
 		});
-	}, []);
+	}, [activeTestMode]);
 
 	const eventSettings = {
 		dataSource: data,

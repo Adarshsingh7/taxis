@@ -4,11 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Avatar, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
+import { useBooking } from '../hooks/useBooking';
 
 const Navbar = () => {
 	const navigate = useNavigate();
 	const { isAuth, logout } = useAuth();
-	const [activeTestMode, setActiveTestMode] = useState(false);
+	const { activeTestMode, setActiveTestMode } = useBooking();
 
 	return (
 		<nav className='sticky top-0 z-50 flex justify-between items-center bg-zinc-900 text-white p-4'>

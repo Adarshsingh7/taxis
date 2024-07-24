@@ -3,6 +3,7 @@
 import axios from 'axios';
 // const BASE = 'https://abacusonline-001-site1.atempurl.com';
 const BASE = 'https://api.acetaxisdorset.co.uk';
+const TEST = 'https://abacusonline-001-site1.atempurl.com';
 // https://api.getaddress.io/v2/uk/sp84aa?api-key=RCX7bLL_a0C5xaApbiBLFQ983
 
 // utils function
@@ -127,19 +128,19 @@ async function handlePostReq(URL, data) {
 	}
 }
 
-async function makeBooking(data) {
-	const URL = BASE + '/api/Bookings/Create';
+async function makeBooking(data, testMode = false) {
+	const URL = `${testMode ? TEST : BASE}/api/Bookings/Create`;
 	const filteredData = filterData(data);
 	console.log(filterData(data));
 	console.log(data);
 	return await handlePostReq(URL, filteredData);
 }
 
-const getBookingData = async function () {
+const getBookingData = async function (testMode = false) {
 	const accessToken = localStorage.getItem('authToken');
 	if (!accessToken) return;
 
-	const URL = `${BASE}/api/Bookings/DateRange`;
+	const URL = `${testMode ? TEST : BASE}/api/Bookings/DateRange`;
 	const dataToSend = createObjectForToday();
 
 	// Use handlePostReq function
@@ -204,14 +205,14 @@ async function getAccountList() {
 	}
 }
 
-async function updateBooking(data) {
-	const URL = BASE + '/api/Bookings/Update';
+async function updateBooking(data, testMode = false) {
+	const URL = testMode ? TEST : BASE + '/api/Bookings/Update';
 	const filteredData = filterData(data);
 	return await handlePostReq(URL, filteredData);
 }
 
-async function deleteSchedulerBooking(data) {
-	const URL = BASE + '/api/Bookings/Cancel';
+async function deleteSchedulerBooking(data, testMode = false) {
+	const URL = testMode ? TEST : BASE + '/api/Bookings/Cancel';
 	return await handlePostReq(URL, {
 		bookingId: data.bookingId,
 		cancelledByName: data.cancelledByName,

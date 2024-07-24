@@ -113,6 +113,7 @@ function BookingProvider({ children }) {
 	const { currentUser } = useAuth();
 	const [data, dispacher] = useReducer(reducer, initState);
 	const [callerId, setCallerId] = useState([]);
+	const [activeTestMode, setActiveTestMode] = useState(false);
 	const [activeTab, setActiveTab] = useState(0);
 	const isCurrentTabActive = data[activeTab]?.formBusy;
 
@@ -136,7 +137,7 @@ function BookingProvider({ children }) {
 
 	async function onBooking(itemIndex) {
 		const targetBooking = data[itemIndex];
-		const res = await makeBooking(targetBooking);
+		const res = await makeBooking(targetBooking, activeTestMode);
 		if (res.status === 'success') {
 			dispacher({ type: 'endBooking', payload: { itemIndex } });
 			setActiveTab(data.length !== 1 ? data.length - 2 : 0);
@@ -148,7 +149,7 @@ function BookingProvider({ children }) {
 
 	async function onUpdateBooking(itemIndex) {
 		const targetBooking = data[itemIndex];
-		const res = await updateBooking(targetBooking);
+		const res = await updateBooking(targetBooking, activeTestMode);
 		if (res.status === 'success') {
 			dispacher({ type: 'endBooking', payload: { itemIndex } });
 			setActiveTab(data.length !== 1 ? data.length - 2 : 0);
@@ -195,11 +196,14 @@ function BookingProvider({ children }) {
 	}
 
 	async function onDeleteBooking(bookingId) {
-		const res = await deleteSchedulerBooking({
-			bookingId,
-			cancelledByName: currentUser.fullName,
-			actionByUserId: currentUser.id,
-		});
+		const res = await deleteSchedulerBooking(
+			{
+				bookingId,
+				cancelledByName: currentUser.fullName,
+				actionByUserId: currentUser.id,
+			},
+			activeTestMode
+		);
 		return res;
 	}
 
@@ -228,6 +232,8 @@ function BookingProvider({ children }) {
 				activeTab,
 				onActiveTabChange: setActiveTab,
 				isCurrentTabActive,
+				activeTestMode,
+				setActiveTestMode,
 			}}
 		>
 			{children}
