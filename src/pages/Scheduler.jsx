@@ -10,9 +10,7 @@ import { registerLicense } from '@syncfusion/ej2-base';
 import Modal from '../components/Modal';
 import CustomDialog from '../components/CustomDialog';
 
-registerLicense(
-	'Ngo9BigBOggjHTQxAR8/V1NCaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXhedHVUQ2hYVkN2V0c='
-);
+registerLicense(import.meta.env.VITE_SYNCFUSION_KEY);
 
 import './scheduler.css';
 import ProtectedRoute from '../utils/Protected';
@@ -77,7 +75,7 @@ const AceScheduler = () => {
 		onDeleteBooking(bookingId).then((res) => {
 			if (res.status === 'success') {
 				setDialogOpen(false);
-				getBookingData().then((data) => {
+				getBookingData(activeTestMode).then((data) => {
 					if (data.status === 'success') {
 						setData(data.bookings);
 						localStorage.setItem('bookings', JSON.stringify(data.bookings));

@@ -213,7 +213,7 @@ async function updateBooking(data, testMode = false) {
 }
 
 async function deleteSchedulerBooking(data, testMode = false) {
-	const URL = testMode ? TEST : BASE + '/api/Bookings/Cancel';
+	const URL = `${testMode ? TEST : BASE}/api/Bookings/Cancel`;
 	return await handlePostReq(URL, {
 		bookingId: data.bookingId,
 		cancelledByName: data.cancelledByName,
