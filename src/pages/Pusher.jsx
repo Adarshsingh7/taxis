@@ -47,7 +47,6 @@ export default function Pusher() {
 				>
 					{callerTab.map((item, index) => {
 						let label = index === 0 ? 'New Booking' : item.PhoneNumber;
-						label = item.formBusy ? `${label} *` : label;
 						return (
 							<Tab
 								label={label}
