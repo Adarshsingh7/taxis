@@ -81,7 +81,7 @@ function Booking({ bookingData, id }) {
 			destinationPostcode: bookingData.DestinationPostCode,
 			pickupDateTime: bookingData.PickupDateTime,
 			passengers: bookingData.Passengers,
-			priceFromBase: bookingData.changeFromBase,
+			priceFromBase: bookingData.chargeFromBase,
 		});
 		if (quote.status === 'success') {
 			updateData('Price', +quote.totalPrice);

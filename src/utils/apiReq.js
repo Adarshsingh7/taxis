@@ -164,6 +164,7 @@ async function makeBookingQuoteRequest(data) {
 		passengers: data.passengers,
 		priceFromBase: data.priceFromBase,
 	};
+	console.log(requestData);
 
 	return await handlePostReq(URL, requestData);
 }

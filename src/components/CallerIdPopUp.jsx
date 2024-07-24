@@ -89,7 +89,6 @@ function CallerIdPopUp() {
 	}
 
 	if (isCurrentTabActive) return null;
-	console.log(isCurrentTabActive);
 
 	return (
 		<Modal
