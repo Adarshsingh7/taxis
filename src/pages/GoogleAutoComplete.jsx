@@ -2,50 +2,36 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { TextField, MenuItem } from '@mui/material';
+import {
+	loadGoogleMapsScript,
+	getAutocompleteService,
+	getPlacesService,
+} from '../utils/googleMap';
 
-const GOOGLE_MAP_KEY = import.meta.env.VITE_GOOGLE_MAP_KEY;
-
-const PlaceAutocomplete = () => {
-	const [inputValue, setInputValue] = useState('');
+function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
+	const [inputValue, setInputValue] = useState(value);
 	const [suggestions, setSuggestions] = useState([]);
-	const autocompleteService = useRef(null);
-	const placesService = useRef(null);
+	const [showOption, setShowOption] = useState(false);
+	const inputRef = useRef(null);
+	console.log(suggestions);
 
 	useEffect(() => {
-		const loadGoogleMapsScript = () => {
-			const script = document.createElement('script');
-			script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_KEY}&libraries=places`;
-			script.async = true;
-			script.onload = initGoogleServices;
-			document.head.appendChild(script);
-		};
-
-		const initGoogleServices = () => {
-			autocompleteService.current =
-				new window.google.maps.places.AutocompleteService();
-			placesService.current = new window.google.maps.places.PlacesService(
-				document.createElement('div')
-			);
-		};
-
-		loadGoogleMapsScript();
-
-		return () => {
-			// Cleanup script if needed
-		};
+		loadGoogleMapsScript(() => {});
 	}, []);
 
 	const handleInputChange = (event) => {
 		setInputValue(event.target.value);
+		onChange(event);
 		if (event.target.value) {
-			autocompleteService.current.getPlacePredictions(
+			const autocompleteService = getAutocompleteService();
+			autocompleteService.getPlacePredictions(
 				{ input: event.target.value },
 				(predictions, status) => {
 					if (status === window.google.maps.places.PlacesServiceStatus.OK) {
 						Promise.all(
 							predictions.map((prediction) => getPlaceDetails(prediction))
 						).then((detailedPredictions) => {
-							setSuggestions(detailedPredictions.filter(Boolean)); // filter out null values
+							setSuggestions(detailedPredictions.filter(Boolean));
 						});
 					} else {
 						setSuggestions([]);
@@ -59,11 +45,12 @@ const PlaceAutocomplete = () => {
 
 	const getPlaceDetails = (prediction) => {
 		return new Promise((resolve) => {
+			const placesService = getPlacesService();
 			const request = {
 				placeId: prediction.place_id,
 				fields: ['address_component', 'geometry.location'],
 			};
-			placesService.current.getDetails(request, (place, status) => {
+			placesService.getDetails(request, (place, status) => {
 				if (status === window.google.maps.places.PlacesServiceStatus.OK) {
 					const postalCode = place.address_components.find((component) =>
 						component.types.includes('postal_code')
@@ -87,34 +74,51 @@ const PlaceAutocomplete = () => {
 	};
 
 	const handleSuggestionSelect = (suggestion) => {
+		console.log('clicked');
 		setInputValue(suggestion.label);
+		onPushChange(suggestion.address, suggestion.postcode);
 		setSuggestions([]);
 		console.log('Selected suggestion:', suggestion);
 	};
 
+	function handleBlur() {
+		// Delay onBlur to allow option click to register
+		setTimeout(() => {
+			setShowOption(false);
+		}, 100);
+	}
+
+	useEffect(() => {
+		if (suggestions.length > 0) setShowOption(true);
+	}, [suggestions]);
+
 	return (
-		<div>
+		<div className='relative'>
 			<TextField
-				value={inputValue}
+				value={value}
+				onBlur={handleBlur}
+				ref={inputRef}
 				onChange={handleInputChange}
-				label='Search for a place'
+				label={placeholder}
 				fullWidth
 				autoComplete='off'
+				className='px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 w-full'
 			/>
-			{suggestions.length > 0 && (
-				<div style={{ position: 'absolute', zIndex: 1, width: '100%' }}>
-					{suggestions.map((suggestion) => (
-						<MenuItem
-							key={suggestion.id}
-							onClick={() => handleSuggestionSelect(suggestion)}
+			{showOption && (
+				<ul className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-[40vh] overflow-auto'>
+					{suggestions.map((option, index) => (
+						<li
+							key={index}
+							onClick={() => handleSuggestionSelect(option)}
+							className={`px-4 py-2 cursor-pointer hover:bg-gray-100`}
 						>
-							{suggestion.label}
-						</MenuItem>
+							{option.label}
+						</li>
 					))}
-				</div>
+				</ul>
 			)}
 		</div>
 	);
-};
+}
 
 export default PlaceAutocomplete;

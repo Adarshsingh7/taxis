@@ -21,7 +21,7 @@ export default function Pusher() {
 			<Box
 				sx={{
 					margin: '1vh auto',
-					// height: '85vh',
+					height: '85vh',
 					overflow: 'auto',
 					width: '50%', // Adjusting the width to 50% for the first child Box
 					borderColor: '#e5e7eb',

@@ -130,12 +130,10 @@ function Booking({ bookingData, id }) {
 
 	// auto calulate the get qoutes
 	useEffect(() => {
-		console.log('entered');
 		if (!bookingData.PickupPostCode) return;
 		if (!bookingData.DestinationPostCode && bookingData.vias.length === 0)
 			return;
 		const viasPostCodes = bookingData.vias.map((via) => via.postcode);
-		console.log(viasPostCodes);
 		makeBookingQuoteRequest({
 			pickupPostcode: bookingData.PickupPostCode,
 			viaPostcodes: bookingData.vias.map((via) => via.postcode),
@@ -146,6 +144,7 @@ function Booking({ bookingData, id }) {
 		}).then((quote) => {
 			if (quote.status === 'success') {
 				updateData('Price', +quote.totalPrice);
+				updateData('durationText', quote.journeyMinutes);
 				setQuote(quote);
 			} else {
 				setQuote(null);
