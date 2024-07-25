@@ -47,13 +47,15 @@ const Navbar = () => {
 					<></>
 				) : (
 					<div className='flex flex-row items-center align-middle gap-8'>
-						<Badge
-							badgeContent={callerId.length}
-							color='error'
-							className='cursor-pointer select-none animate-bounce'
-						>
-							<CallIcon />
-						</Badge>
+						{callerId.length > 0 && (
+							<Badge
+								badgeContent={callerId.length}
+								color='error'
+								className='cursor-pointer select-none animate-bounce'
+							>
+								<CallIcon />
+							</Badge>
+						)}
 						<span className='flex flex-row gap-2 items-center align-middle'>
 							<span>Test Mode</span>
 							<input
