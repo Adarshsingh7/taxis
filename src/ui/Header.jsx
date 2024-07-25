@@ -5,11 +5,13 @@ import { useAuth } from '../hooks/useAuth';
 import { Avatar, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
 import { useBooking } from '../hooks/useBooking';
+import CallIcon from '@mui/icons-material/Call';
+import Badge from '@mui/material/Badge';
 
 const Navbar = () => {
 	const navigate = useNavigate();
 	const { isAuth, logout } = useAuth();
-	const { activeTestMode, setActiveTestMode } = useBooking();
+	const { activeTestMode, setActiveTestMode, callerId } = useBooking();
 
 	return (
 		<nav className='sticky top-0 z-50 flex justify-between items-center bg-zinc-900 text-white p-4'>
@@ -44,7 +46,14 @@ const Navbar = () => {
 					// </button>
 					<></>
 				) : (
-					<>
+					<div className='flex flex-row items-center align-middle gap-8'>
+						<Badge
+							badgeContent={callerId.length}
+							color='error'
+							className='cursor-pointer select-none animate-bounce'
+						>
+							<CallIcon />
+						</Badge>
 						<span className='flex flex-row gap-2 items-center align-middle'>
 							<span>Test Mode</span>
 							<input
@@ -64,7 +73,7 @@ const Navbar = () => {
 						>
 							logout
 						</button>
-					</>
+					</div>
 				)}
 				{/* <MuiMenu /> */}
 			</span>

@@ -119,7 +119,11 @@ function BookingProvider({ children }) {
 
 	function updateValue(itemIndex, property, value) {
 		dispacher({ type: 'updateValue', payload: { itemIndex, value, property } });
-		if (property !== 'updatedByName' && property !== 'bookedByName') {
+		if (
+			!data[itemIndex].formBusy &&
+			property !== 'updatedByName' &&
+			property !== 'bookedByName'
+		) {
 			dispacher({
 				type: 'updateValue',
 				payload: { itemIndex, value: true, property: 'formBusy' },
