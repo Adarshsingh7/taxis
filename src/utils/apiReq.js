@@ -162,7 +162,7 @@ async function makeBookingQuoteRequest(data) {
 		destinationPostcode: data.destinationPostcode,
 		pickupDateTime: convertDateString(data.pickupDateTime),
 		passengers: data.passengers,
-		priceFromBase: data.priceFromBase,
+		priceFromBase: data.priceFromBase || data.chargeFromBase,
 	};
 	console.log(requestData);
 

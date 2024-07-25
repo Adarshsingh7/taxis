@@ -13,6 +13,7 @@ import SimpleSnackbar from '../components/SnackBar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Loader from './../components/Loader';
 import { useAuth } from './../hooks/useAuth';
+import GoogleAutoComplete from './GoogleAutoComplete';
 
 function Booking({ bookingData, id }) {
 	const { updateValue, onBooking, deleteBooking, onUpdateBooking } =
@@ -126,6 +127,41 @@ function Booking({ bookingData, id }) {
 			updateData('bookedByName', currentUser.fullName);
 		}
 	}, [isAuth, currentUser]);
+
+	// auto calulate the get qoutes
+	useEffect(() => {
+		console.log('entered');
+		if (!bookingData.PickupPostCode) return;
+		if (!bookingData.DestinationPostCode && bookingData.vias.length === 0)
+			return;
+		const viasPostCodes = bookingData.vias.map((via) => via.postcode);
+		console.log(viasPostCodes);
+		makeBookingQuoteRequest({
+			pickupPostcode: bookingData.PickupPostCode,
+			viaPostcodes: bookingData.vias.map((via) => via.postcode),
+			destinationPostcode: bookingData.DestinationPostCode,
+			pickupDateTime: bookingData.PickupDateTime,
+			passengers: bookingData.Passengers,
+			priceFromBase: bookingData.chargeFromBase,
+		}).then((quote) => {
+			if (quote.status === 'success') {
+				updateData('Price', +quote.totalPrice);
+				setQuote(quote);
+			} else {
+				setQuote(null);
+				setSnackbarMessage('Failed to get quote');
+				// setIsQuoteSnackbarActive(true);
+			}
+		});
+	}, [
+		bookingData.PickupPostCode,
+		bookingData.DestinationPostCode,
+		bookingData.postcode,
+		bookingData.chargeFromBase,
+		bookingData.vias,
+		bookingData.PickupDateTime,
+		bookingData.Passengers,
+	]);
 
 	function convertDateToInputFormat(dateStr) {
 		// Parse the input date string
@@ -282,6 +318,12 @@ function Booking({ bookingData, id }) {
 							onPushChange={handleAddPickup}
 							onChange={(e) => updateData('PickupAddress', e.target.value)}
 						/>
+						{/* <GoogleAutoComplete
+							placeholder='Pickup Address'
+							value={bookingData.PickupAddress}
+							onPushChange={handleAddPickup}
+							onChange={(e) => updateData('PickupAddress', e.target.value)}
+						/> */}
 						<Autocomplete
 							type='postal'
 							required={false}
@@ -314,6 +356,12 @@ function Booking({ bookingData, id }) {
 					</div>
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+						{/* <GoogleAutoComplete
+							placeholder='Destination Address'
+							value={bookingData.DestinationAddress}
+							onPushChange={handleAddDestination}
+							onChange={(e) => updateData('DestinationAddress', e.target.value)}
+						/> */}
 						<Autocomplete
 							required={true}
 							type='address'

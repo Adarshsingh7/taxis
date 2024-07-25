@@ -144,7 +144,7 @@ function BookingProvider({ children }) {
 		const res = await makeBooking(targetBooking, activeTestMode);
 		if (res.status === 'success') {
 			dispacher({ type: 'endBooking', payload: { itemIndex } });
-			setActiveTab(data.length !== 1 ? data.length - 2 : 0);
+			setActiveTab(data.length !== 1 ? itemIndex - 1 : 0);
 			return { status: 'success' };
 		} else {
 			return { status: 'error', message: res.message };
@@ -156,7 +156,7 @@ function BookingProvider({ children }) {
 		const res = await updateBooking(targetBooking, activeTestMode);
 		if (res.status === 'success') {
 			dispacher({ type: 'endBooking', payload: { itemIndex } });
-			setActiveTab(data.length !== 1 ? data.length - 2 : 0);
+			setActiveTab(data.length !== 1 ? itemIndex - 1 : 0);
 			return { status: 'success' };
 		} else {
 			return { status: 'error', message: res.message };
@@ -165,7 +165,7 @@ function BookingProvider({ children }) {
 
 	async function deleteBooking(itemIndex) {
 		dispacher({ type: 'endBooking', payload: { itemIndex } });
-		setActiveTab(data.length === 1 ? 0 : data.length - 2);
+		setActiveTab(data.length === 1 ? 0 : itemIndex - 1);
 	}
 
 	// this is the caller id use effect it will trigger dialog box when the caller id is received
@@ -196,7 +196,7 @@ function BookingProvider({ children }) {
 	function onRemoveCaller() {
 		const filteredCaller = callerId.filter((_, idx) => idx !== 0);
 		setCallerId(filteredCaller);
-		// setActiveTab(data.length === 1 ? 0 : data.length - 2);
+		// setActiveTab(data.length === 1 ? 0 : itemIndex - 1);
 	}
 
 	async function onDeleteBooking(bookingId) {
