@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 import {
 	loadGoogleMapsScript,
@@ -15,7 +15,6 @@ function PlaceAutocomplete({
 	onPushChange,
 	inputRef,
 }) {
-	const [inputValue, setInputValue] = useState(value);
 	const [suggestions, setSuggestions] = useState([]);
 	const [showOption, setShowOption] = useState(false);
 	const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -26,7 +25,7 @@ function PlaceAutocomplete({
 
 	const handleInputChange = (event) => {
 		onChange(event);
-		setHighlightedIndex(-1); // Reset highlighted index on input change
+		setHighlightedIndex(-1);
 		if (event.target.value) {
 			const autocompleteService = getAutocompleteService();
 			autocompleteService.getPlacePredictions(

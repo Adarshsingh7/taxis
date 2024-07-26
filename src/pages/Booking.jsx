@@ -13,8 +13,7 @@ import SimpleSnackbar from '../components/SnackBar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Loader from './../components/Loader';
 import { useAuth } from './../hooks/useAuth';
-import GoogleAutoComplete from './GoogleAutoComplete';
-import { data } from 'autoprefixer';
+import GoogleAutoComplete from '../components/GoogleAutoComplete';
 
 function Booking({ bookingData, id }) {
 	const {
@@ -143,7 +142,6 @@ function Booking({ bookingData, id }) {
 		if (!bookingData.PickupPostCode) return;
 		if (!bookingData.DestinationPostCode && bookingData.vias.length === 0)
 			return;
-		const viasPostCodes = bookingData.vias.map((via) => via.postcode);
 		makeBookingQuoteRequest({
 			pickupPostcode: bookingData.PickupPostCode,
 			viaPostcodes: bookingData.vias.map((via) => via.postcode),
@@ -186,6 +184,7 @@ function Booking({ bookingData, id }) {
 	}, [callerId.length]);
 
 	useEffect(() => {
+		if (bookingData.formBusy) return;
 		if (bookingData.bookingType === 'previous') {
 			destinationRef.current.focus();
 			destinationRef.current.select();
@@ -193,7 +192,11 @@ function Booking({ bookingData, id }) {
 			pickupRef.current.focus();
 			pickupRef.current.select();
 		}
-	}, [bookingData.PickupAddress, bookingData.bookingType]);
+	}, [
+		bookingData.PickupAddress,
+		bookingData.bookingType,
+		bookingData.formBusy,
+	]);
 
 	function convertDateToInputFormat(dateStr) {
 		// Parse the input date string
@@ -343,6 +346,14 @@ function Booking({ bookingData, id }) {
 					</div>
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+						{/* <Autocomplete
+									type='address'
+									required={true}
+									placeholder='Pickup Address'
+									value={bookingData.PickupAddress}
+									onPushChange={handleAddPickup}
+									onChange={(e) => updateData('PickupAddress', e.target.value)}
+								/> */}
 						<GoogleAutoComplete
 							placeholder='Pickup Address'
 							value={bookingData.PickupAddress}
@@ -350,14 +361,6 @@ function Booking({ bookingData, id }) {
 							onChange={(e) => updateData('PickupAddress', e.target.value)}
 							inputRef={pickupRef}
 						/>
-						{/* <Autocomplete
-								type='address'
-								required={true}
-								placeholder='Pickup Address'
-								value={bookingData.PickupAddress}
-								onPushChange={handleAddPickup}
-								onChange={(e) => updateData('PickupAddress', e.target.value)}
-							/> */}
 						<Autocomplete
 							type='postal'
 							required={false}

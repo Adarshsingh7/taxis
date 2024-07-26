@@ -16,7 +16,6 @@ import AceScheduler from './pages/Scheduler';
 import Booking from './pages/Booking';
 import Push from './pages/Pusher';
 import Protected from './utils/Protected';
-import GoogleAutoComplete from './pages/GoogleAutoComplete';
 
 const router = createBrowserRouter([
 	{
@@ -49,10 +48,6 @@ const router = createBrowserRouter([
 						<Booking />,
 					</Protected>
 				),
-			},
-			{
-				path: '/google',
-				element: <GoogleAutoComplete />,
 			},
 			{
 				path: '/spinner',
