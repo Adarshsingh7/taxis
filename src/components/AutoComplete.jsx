@@ -19,6 +19,8 @@ const Autocomplete = ({
 	const [activeOptionIndex, setActiveOptionIndex] = useState(-1);
 
 	const inputRef = useRef(null);
+	const optionsListRef = useRef(null);
+	const activeOptionRef = useRef(null);
 
 	useEffect(() => {
 		setInputValue(value);
@@ -71,6 +73,22 @@ const Autocomplete = ({
 			fetchPoi();
 		}
 	}, [inputValue]);
+
+	useEffect(() => {
+		if (activeOptionRef.current && optionsListRef.current) {
+			const list = optionsListRef.current;
+			const item = activeOptionRef.current;
+			const itemHeight = item.offsetHeight;
+			const itemTop = item.offsetTop;
+			const itemBottom = itemTop + itemHeight;
+
+			if (itemTop < list.scrollTop) {
+				list.scrollTop = itemTop;
+			} else if (itemBottom > list.scrollTop + list.clientHeight) {
+				list.scrollTop = itemBottom - list.clientHeight;
+			}
+		}
+	}, [activeOptionIndex]);
 
 	const handleInputChange = (e) => {
 		const newValue = e.target.value;
@@ -132,7 +150,10 @@ const Autocomplete = ({
 				className='px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 w-full'
 			/>
 			{showOptions && focus && inputValue.length > 0 && (
-				<ul className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-[40vh] overflow-auto'>
+				<ul
+					className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-[40vh] overflow-auto'
+					ref={optionsListRef}
+				>
 					{options.map((option, index) => (
 						<li
 							key={index}
@@ -140,6 +161,7 @@ const Autocomplete = ({
 							className={`px-4 py-2 cursor-pointer hover:bg-gray-100 ${
 								index === activeOptionIndex ? 'bg-gray-200' : ''
 							}`}
+							ref={index === activeOptionIndex ? activeOptionRef : null}
 						>
 							{option.label}
 						</li>

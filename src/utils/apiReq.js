@@ -131,8 +131,6 @@ async function handlePostReq(URL, data) {
 async function makeBooking(data, testMode = false) {
 	const URL = `${testMode ? TEST : BASE}/api/Bookings/Create`;
 	const filteredData = filterData(data);
-	console.log(filterData(data));
-	console.log(data);
 	return await handlePostReq(URL, filteredData);
 }
 
@@ -155,7 +153,6 @@ const getBookingData = async function (testMode = false) {
 
 async function makeBookingQuoteRequest(data) {
 	const URL = BASE + '/api/Bookings/Quote';
-	console.log(data);
 	const requestData = {
 		pickupPostcode: data.pickupPostcode,
 		viaPostcodes: data.viaPostcodes,
@@ -164,7 +161,6 @@ async function makeBookingQuoteRequest(data) {
 		passengers: data.passengers,
 		priceFromBase: data.priceFromBase || data.chargeFromBase,
 	};
-	console.log(requestData);
 
 	return await handlePostReq(URL, requestData);
 }

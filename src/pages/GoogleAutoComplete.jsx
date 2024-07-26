@@ -1,7 +1,7 @@
 /** @format */
 
 import { useEffect, useRef, useState } from 'react';
-import { TextField, MenuItem } from '@mui/material';
+import { TextField } from '@mui/material';
 import {
 	loadGoogleMapsScript,
 	getAutocompleteService,
@@ -12,16 +12,16 @@ function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
 	const [inputValue, setInputValue] = useState(value);
 	const [suggestions, setSuggestions] = useState([]);
 	const [showOption, setShowOption] = useState(false);
+	const [highlightedIndex, setHighlightedIndex] = useState(-1);
 	const inputRef = useRef(null);
-	console.log(suggestions);
 
 	useEffect(() => {
 		loadGoogleMapsScript(() => {});
 	}, []);
 
 	const handleInputChange = (event) => {
-		setInputValue(event.target.value);
 		onChange(event);
+		setHighlightedIndex(-1); // Reset highlighted index on input change
 		if (event.target.value) {
 			const autocompleteService = getAutocompleteService();
 			autocompleteService.getPlacePredictions(
@@ -43,7 +43,7 @@ function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
 		}
 	};
 
-	const getPlaceDetails = (prediction) => {
+	function getPlaceDetails(prediction) {
 		return new Promise((resolve) => {
 			const placesService = getPlacesService();
 			const request = {
@@ -71,14 +71,12 @@ function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
 				}
 			});
 		});
-	};
+	}
 
 	const handleSuggestionSelect = (suggestion) => {
-		console.log('clicked');
-		setInputValue(suggestion.label);
 		onPushChange(suggestion.address, suggestion.postcode);
 		setSuggestions([]);
-		console.log('Selected suggestion:', suggestion);
+		setHighlightedIndex(-1); // Reset highlighted index on selection
 	};
 
 	function handleBlur() {
@@ -87,6 +85,25 @@ function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
 			setShowOption(false);
 		}, 100);
 	}
+
+	const handleKeyDown = (event) => {
+		if (showOption) {
+			if (event.key === 'ArrowDown') {
+				event.preventDefault();
+				setHighlightedIndex((prevIndex) =>
+					prevIndex < suggestions.length - 1 ? prevIndex + 1 : 0
+				);
+			} else if (event.key === 'ArrowUp') {
+				event.preventDefault();
+				setHighlightedIndex((prevIndex) =>
+					prevIndex > 0 ? prevIndex - 1 : suggestions.length - 1
+				);
+			} else if (event.key === 'Enter' && highlightedIndex >= 0) {
+				event.preventDefault();
+				handleSuggestionSelect(suggestions[highlightedIndex]);
+			}
+		}
+	};
 
 	useEffect(() => {
 		if (suggestions.length > 0) setShowOption(true);
@@ -99,6 +116,7 @@ function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
 				onBlur={handleBlur}
 				ref={inputRef}
 				onChange={handleInputChange}
+				onKeyDown={handleKeyDown}
 				label={placeholder}
 				fullWidth
 				autoComplete='off'
@@ -110,7 +128,10 @@ function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
 						<li
 							key={index}
 							onClick={() => handleSuggestionSelect(option)}
-							className={`px-4 py-2 cursor-pointer hover:bg-gray-100`}
+							onMouseOver={() => setHighlightedIndex(index)}
+							className={`px-4 py-2 cursor-pointer ${
+								index === highlightedIndex ? 'bg-gray-100' : ''
+							}`}
 						>
 							{option.label}
 						</li>

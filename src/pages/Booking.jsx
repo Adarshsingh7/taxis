@@ -145,11 +145,12 @@ function Booking({ bookingData, id }) {
 			if (quote.status === 'success') {
 				updateData('Price', +quote.totalPrice);
 				updateData('durationText', quote.journeyMinutes);
+				updateData('hours', Math.floor(quote.journeyMinutes / 60));
+				updateData('minutes', quote.journeyMinutes % 60);
 				setQuote(quote);
 			} else {
 				setQuote(null);
 				setSnackbarMessage('Failed to get quote');
-				// setIsQuoteSnackbarActive(true);
 			}
 		});
 	}, [
@@ -309,20 +310,20 @@ function Booking({ bookingData, id }) {
 					</div>
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
-						<Autocomplete
-							type='address'
-							required={true}
+						<GoogleAutoComplete
 							placeholder='Pickup Address'
 							value={bookingData.PickupAddress}
 							onPushChange={handleAddPickup}
 							onChange={(e) => updateData('PickupAddress', e.target.value)}
 						/>
-						{/* <GoogleAutoComplete
-							placeholder='Pickup Address'
-							value={bookingData.PickupAddress}
-							onPushChange={handleAddPickup}
-							onChange={(e) => updateData('PickupAddress', e.target.value)}
-						/> */}
+						{/* <Autocomplete
+								type='address'
+								required={true}
+								placeholder='Pickup Address'
+								value={bookingData.PickupAddress}
+								onPushChange={handleAddPickup}
+								onChange={(e) => updateData('PickupAddress', e.target.value)}
+							/> */}
 						<Autocomplete
 							type='postal'
 							required={false}
@@ -355,20 +356,20 @@ function Booking({ bookingData, id }) {
 					</div>
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
-						{/* <GoogleAutoComplete
+						<GoogleAutoComplete
 							placeholder='Destination Address'
 							value={bookingData.DestinationAddress}
 							onPushChange={handleAddDestination}
 							onChange={(e) => updateData('DestinationAddress', e.target.value)}
-						/> */}
-						<Autocomplete
+						/>
+						{/* <Autocomplete
 							required={true}
 							type='address'
 							placeholder='Destination Address'
 							value={bookingData.DestinationAddress}
 							onPushChange={handleAddDestination}
 							onChange={(e) => updateData('DestinationAddress', e.target.value)}
-						/>
+						/> */}
 						<Autocomplete
 							required={false}
 							type='postal'
@@ -493,7 +494,11 @@ function Booking({ bookingData, id }) {
 								type='number'
 								required
 								placeholder='Minutes'
-								value={Math.floor(bookingData.durationText % 60)}
+								value={
+									Math.floor(bookingData.durationText % 60) === 0
+										? ''
+										: Math.floor(bookingData.durationText % 60)
+								}
 								onChange={(e) =>
 									updateData(
 										'minutes',
