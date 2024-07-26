@@ -12,6 +12,7 @@ export default function SimpleSnackbar({
 	message,
 	reset,
 	disableReset,
+	color = '#2F3030',
 }) {
 	// const [open, setOpen] = React.useState(false);
 
@@ -53,7 +54,8 @@ export default function SimpleSnackbar({
 	return (
 		<div>
 			<Snackbar
-				color='success'
+				sx={{ '& .MuiSnackbarContent-root': { backgroundColor: color } }}
+				color='error'
 				open={open}
 				autoHideDuration={6000}
 				onClose={handleClose}

@@ -131,6 +131,10 @@ function BookingProvider({ children }) {
 		}
 	}
 
+	function updateValueSilentMode(itemIndex, property, value) {
+		dispacher({ type: 'updateValue', payload: { itemIndex, value, property } });
+	}
+
 	function insertData(data) {
 		dispacher({ type: 'addData', payload: data });
 	}
@@ -236,6 +240,7 @@ function BookingProvider({ children }) {
 				isCurrentTabActive,
 				activeTestMode,
 				setActiveTestMode,
+				updateValueSilentMode,
 			}}
 		>
 			{children}

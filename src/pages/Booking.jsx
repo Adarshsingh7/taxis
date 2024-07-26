@@ -14,10 +14,17 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Loader from './../components/Loader';
 import { useAuth } from './../hooks/useAuth';
 import GoogleAutoComplete from './GoogleAutoComplete';
+import { data } from 'autoprefixer';
 
 function Booking({ bookingData, id }) {
-	const { updateValue, onBooking, deleteBooking, onUpdateBooking } =
-		useBooking();
+	const {
+		updateValue,
+		onBooking,
+		deleteBooking,
+		onUpdateBooking,
+		callerId,
+		updateValueSilentMode,
+	} = useBooking();
 	const [isPhoneModelActive, setIsPhoneModelActive] = useState(false);
 	const [isRepeatBookingModelActive, setIsRepeatBookingModelActive] =
 		useState(false);
@@ -28,6 +35,7 @@ function Booking({ bookingData, id }) {
 	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
 	const [quote, setQuote] = useState(null);
 	const { currentUser, isAuth } = useAuth();
+	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
 
 	function toggleAddress() {
 		updateData('DestinationAddress', bookingData.PickupAddress);
@@ -143,10 +151,14 @@ function Booking({ bookingData, id }) {
 			priceFromBase: bookingData.chargeFromBase,
 		}).then((quote) => {
 			if (quote.status === 'success') {
-				updateData('Price', +quote.totalPrice);
-				updateData('durationText', quote.journeyMinutes);
-				updateData('hours', Math.floor(quote.journeyMinutes / 60));
-				updateData('minutes', quote.journeyMinutes % 60);
+				updateValueSilentMode(id, 'Price', +quote.totalPrice);
+				updateValueSilentMode(id, 'durationText', quote.journeyMinutes);
+				updateValueSilentMode(
+					id,
+					'hours',
+					Math.floor(quote.journeyMinutes / 60)
+				);
+				updateValueSilentMode(id, 'minutes', quote.journeyMinutes % 60);
 				setQuote(quote);
 			} else {
 				setQuote(null);
@@ -162,6 +174,14 @@ function Booking({ bookingData, id }) {
 		bookingData.PickupDateTime,
 		bookingData.Passengers,
 	]);
+
+	useEffect(() => {
+		if (callerId.length > 0 && bookingData.formBusy) {
+			setIsQuoteSnackbarActive(true);
+			setSnackbarMessage(`${callerId.length} Caller Waiting`);
+			setSnackbarColor('#035418');
+		}
+	}, [callerId.length]);
 
 	function convertDateToInputFormat(dateStr) {
 		// Parse the input date string
@@ -248,6 +268,7 @@ function Booking({ bookingData, id }) {
 						open={isQuoteSnackbarActive}
 						setOpen={setIsQuoteSnackbarActive}
 						message={snackbarMessage}
+						color={snackBarColor}
 					/>
 				</>
 				<div className='max-w-3xl mx-auto bg-card p-6 rounded-lg shadow-lg'>
