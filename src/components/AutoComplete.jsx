@@ -1,7 +1,7 @@
 /** @format */
 
 import { useState, useEffect, useRef } from 'react';
-import { getPoi, getPostal } from '../utils/apiReq';
+import { getPoi, getPostal, getAddressSuggestions } from '../utils/apiReq';
 import { TextField } from '@mui/material';
 
 const Autocomplete = ({
@@ -11,6 +11,7 @@ const Autocomplete = ({
 	value,
 	type,
 	required,
+	inputRef,
 }) => {
 	const [inputValue, setInputValue] = useState(value || '');
 	const [options, setOptions] = useState([]);
@@ -18,7 +19,7 @@ const Autocomplete = ({
 	const [focus, setFocus] = useState(false);
 	const [activeOptionIndex, setActiveOptionIndex] = useState(-1);
 
-	const inputRef = useRef(null);
+	// const inputRef = useRef(null);
 	const optionsListRef = useRef(null);
 	const activeOptionRef = useRef(null);
 
@@ -33,10 +34,15 @@ const Autocomplete = ({
 		}
 		async function fetchPoi() {
 			try {
-				const response = await getPoi(inputValue);
+				// const response = await getPoi(inputValue);
+				const response = await getAddressSuggestions(inputValue);
+				console.log('response', response);
 				setOptions(
 					response.map((item) => ({
-						label: item.address,
+						// label: item.address,
+						label: item.formatted_address.join(' '),
+						address: item.formatted_address.join(' '),
+						postcode: item.postcode,
 						...item,
 					}))
 				);

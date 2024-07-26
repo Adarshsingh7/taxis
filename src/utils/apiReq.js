@@ -224,6 +224,32 @@ async function getDriverAvailability() {
 	return await handlePostReq(URL, { date: new Date().toISOString() });
 }
 
+async function getAddressSuggestions(location) {
+	const apiKey = import.meta.env.VITE_GETADDRESS_KEY;
+	try {
+		// Get autocomplete suggestions
+		const autocompleteResponse = await axios.get(
+			`https://api.getAddress.io/autocomplete/${location}?api-key=${apiKey}`
+		);
+		const suggestions = autocompleteResponse.data.suggestions;
+
+		// Fetch details for each suggestion
+		const detailsPromises = suggestions.map(async (suggestion) => {
+			const detailResponse = await axios.get(
+				`https://api.getAddress.io/get/${suggestion.id}?api-key=${apiKey}`
+			);
+			return detailResponse.data;
+		});
+
+		const details = await Promise.all(detailsPromises);
+
+		return details;
+	} catch (error) {
+		console.error('Error fetching address suggestions:', error);
+		return [];
+	}
+}
+
 export {
 	getBookingData,
 	makeBooking,
@@ -235,4 +261,5 @@ export {
 	updateBooking,
 	deleteSchedulerBooking,
 	getDriverAvailability,
+	getAddressSuggestions,
 };

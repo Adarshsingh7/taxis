@@ -189,8 +189,8 @@ function Booking({ bookingData, id }) {
 			destinationRef.current.focus();
 			destinationRef.current.select();
 		} else {
-			pickupRef.current.focus();
-			pickupRef.current.select();
+			// pickupRef.current.focus();
+			// pickupRef.current.select();
 		}
 	}, [
 		bookingData.PickupAddress,
@@ -346,21 +346,22 @@ function Booking({ bookingData, id }) {
 					</div>
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
-						{/* <Autocomplete
-									type='address'
-									required={true}
-									placeholder='Pickup Address'
-									value={bookingData.PickupAddress}
-									onPushChange={handleAddPickup}
-									onChange={(e) => updateData('PickupAddress', e.target.value)}
-								/> */}
-						<GoogleAutoComplete
+						<Autocomplete
+							type='address'
+							required={true}
+							placeholder='Pickup Address'
+							value={bookingData.PickupAddress}
+							onPushChange={handleAddPickup}
+							inputRef={pickupRef}
+							onChange={(e) => updateData('PickupAddress', e.target.value)}
+						/>
+						{/* <GoogleAutoComplete
 							placeholder='Pickup Address'
 							value={bookingData.PickupAddress}
 							onPushChange={handleAddPickup}
 							onChange={(e) => updateData('PickupAddress', e.target.value)}
 							inputRef={pickupRef}
-						/>
+						/> */}
 						<Autocomplete
 							type='postal'
 							required={false}

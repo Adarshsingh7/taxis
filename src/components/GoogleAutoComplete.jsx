@@ -8,6 +8,9 @@ import {
 	getPlacesService,
 } from '../utils/googleMap';
 
+const SP8_4QA_COORDS = { lat: 51.0388, lng: -2.2799 }; // Coordinates for SP8 4QA
+const RADIUS = 10000; // 50 km in meters
+
 function PlaceAutocomplete({
 	placeholder,
 	value,
@@ -31,14 +34,21 @@ function PlaceAutocomplete({
 			autocompleteService.getPlacePredictions(
 				{
 					input: event.target.value,
-					componentRestrictions: { country: 'uk' }, // Restrict to UK
+					location: new window.google.maps.LatLng(
+						SP8_4QA_COORDS.lat,
+						SP8_4QA_COORDS.lng
+					),
+					radius: RADIUS,
 				},
 				(predictions, status) => {
 					if (status === window.google.maps.places.PlacesServiceStatus.OK) {
 						Promise.all(
 							predictions.map((prediction) => getPlaceDetails(prediction))
 						).then((detailedPredictions) => {
-							setSuggestions(detailedPredictions.filter(Boolean));
+							const filteredPredictions = detailedPredictions.filter(
+								(prediction) => prediction && prediction.postcode
+							);
+							setSuggestions(filteredPredictions);
 						});
 					} else {
 						setSuggestions([]);
