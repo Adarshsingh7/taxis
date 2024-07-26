@@ -219,6 +219,11 @@ async function deleteSchedulerBooking(data, testMode = false) {
 	});
 }
 
+async function getDriverAvailability() {
+	const URL = `${BASE}/api/UserProfile/GetAvailability`;
+	return await handlePostReq(URL, { date: new Date().toISOString() });
+}
+
 export {
 	getBookingData,
 	makeBooking,
@@ -229,4 +234,5 @@ export {
 	getAccountList,
 	updateBooking,
 	deleteSchedulerBooking,
+	getDriverAvailability,
 };

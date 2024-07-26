@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { useBooking } from '../hooks/useBooking';
 import Booking from './Booking';
+import DriverAllocation from '../components/DriverAllocation';
 
 export default function Pusher() {
 	const { data, insertValue, activeTab, onActiveTabChange } = useBooking();
@@ -50,7 +51,6 @@ export default function Pusher() {
 						);
 					})}
 				</Tabs>
-
 				<Box>
 					<Booking
 						bookingData={data[activeTab]}
@@ -59,6 +59,18 @@ export default function Pusher() {
 						id={activeTab}
 					/>
 				</Box>
+			</Box>
+			<Box
+				sx={{
+					margin: '1vh auto',
+					height: '90vh',
+					overflow: 'auto',
+					width: '50%',
+					borderColor: '#e5e7eb',
+					borderWidth: '1px',
+				}}
+			>
+				<DriverAllocation />
 			</Box>
 		</Box>
 	);

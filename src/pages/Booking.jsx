@@ -181,7 +181,7 @@ function Booking({ bookingData, id }) {
 			setSnackbarMessage(`${callerId.length} Caller Waiting`);
 			setSnackbarColor('#035418');
 		}
-	}, [callerId.length]);
+	}, [callerId.length, bookingData.formBusy]);
 
 	useEffect(() => {
 		if (bookingData.formBusy) return;

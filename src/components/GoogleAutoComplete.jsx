@@ -29,7 +29,10 @@ function PlaceAutocomplete({
 		if (event.target.value) {
 			const autocompleteService = getAutocompleteService();
 			autocompleteService.getPlacePredictions(
-				{ input: event.target.value },
+				{
+					input: event.target.value,
+					componentRestrictions: { country: 'uk' }, // Restrict to UK
+				},
 				(predictions, status) => {
 					if (status === window.google.maps.places.PlacesServiceStatus.OK) {
 						Promise.all(
@@ -122,6 +125,7 @@ function PlaceAutocomplete({
 				onKeyDown={handleKeyDown}
 				label={placeholder}
 				fullWidth
+				required={true}
 				autoComplete='off'
 				className='px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 w-full'
 				inputRef={inputRef}

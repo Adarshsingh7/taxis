@@ -4,6 +4,7 @@ import {
 	makeBooking,
 	updateBooking,
 	deleteSchedulerBooking,
+	getDriverAvailability,
 } from './../utils/apiReq';
 import Pusher from 'pusher-js';
 import { useAuth } from '../hooks/useAuth';

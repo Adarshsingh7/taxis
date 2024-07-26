@@ -15,7 +15,7 @@ export const loadGoogleMapsScript = (callback) => {
 	}
 
 	const script = document.createElement('script');
-	script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_KEY}&libraries=places`;
+	script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_KEY}&libraries=places&components=country:GB`;
 	script.async = true;
 	script.onload = () => {
 		isLoaded = true;
