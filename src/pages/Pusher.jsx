@@ -24,7 +24,7 @@ export default function Pusher() {
 					margin: '1vh auto',
 					height: '90vh',
 					overflow: 'auto',
-					width: '50%', // Adjusting the width to 50% for the first child Box
+					width: '60%', // Adjusting the width to 50% for the first child Box
 					borderColor: '#e5e7eb',
 					borderWidth: '1px',
 				}}
@@ -65,11 +65,23 @@ export default function Pusher() {
 					margin: '1vh auto',
 					height: '90vh',
 					overflow: 'auto',
-					width: '50%',
+					width: '40%',
 					borderColor: '#e5e7eb',
 					borderWidth: '1px',
 				}}
 			>
+				<Tabs
+					value={activeTab}
+					sx={{ backgroundColor: '#e5e7eb' }}
+					// onChange={handleChange}
+					variant='scrollable'
+					scrollButtons
+					allowScrollButtonsMobile
+					aria-label='scrollable force tabs example'
+				>
+					<Tab label='Availability' />
+					<Tab label='Map' />
+				</Tabs>
 				<DriverAllocation />
 			</Box>
 		</Box>

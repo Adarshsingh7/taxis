@@ -28,7 +28,7 @@ const DriverAllocation = () => {
 	const [employeeData, setEmployeeData] = useState([]);
 
 	// Get current time and end time (5 hours later)
-	const currentTime = new Date();
+	const currentTime = new Date(Date.now() - 30 * 60 * 1000);
 	const endTime = new Date(currentTime.getTime() + 10 * 60 * 60 * 1000);
 
 	// Format the time in HH:mm format
@@ -84,7 +84,7 @@ const DriverAllocation = () => {
 	return (
 		<ScheduleComponent
 			height={'50%'}
-			selectedDate={new Date()}
+			selectedDate={new Date(Date.now() - 30 * 60 * 1000)}
 			eventSettings={{
 				dataSource: data,
 				fields: {

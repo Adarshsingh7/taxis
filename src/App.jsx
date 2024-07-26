@@ -16,6 +16,7 @@ import AceScheduler from './pages/Scheduler';
 import Booking from './pages/Booking';
 import Push from './pages/Pusher';
 import Protected from './utils/Protected';
+import './components/LocationSuggestion';
 
 const router = createBrowserRouter([
 	{
