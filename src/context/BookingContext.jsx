@@ -214,6 +214,12 @@ function BookingProvider({ children }) {
 		return res;
 	}
 
+	useEffect(() => {
+		if (data.length > 1) {
+			setActiveTab(data.length - 1);
+		}
+	}, [data.length]);
+
 	// this use effect will refresh the booking every single minute
 	// useEffect(() => {
 	// 	const refreshData = setInterval(getBookingData, 1000 * 60);

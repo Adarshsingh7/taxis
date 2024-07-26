@@ -5,7 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { RRule } from 'rrule';
 import { useBooking } from '../hooks/useBooking';
 import Autocomplete from '../components/AutoComplete';
-import { useEffect, useState, Fragment } from 'react';
+import { useEffect, useState, Fragment, useRef } from 'react';
 import Modal from '../components/Modal';
 import Dragger from '../components/Dragger';
 import { makeBookingQuoteRequest, getAllDrivers } from '../utils/apiReq';
@@ -36,6 +36,8 @@ function Booking({ bookingData, id }) {
 	const [quote, setQuote] = useState(null);
 	const { currentUser, isAuth } = useAuth();
 	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
+	const pickupRef = useRef(null);
+	const destinationRef = useRef(null);
 
 	function toggleAddress() {
 		updateData('DestinationAddress', bookingData.PickupAddress);
@@ -182,6 +184,16 @@ function Booking({ bookingData, id }) {
 			setSnackbarColor('#035418');
 		}
 	}, [callerId.length]);
+
+	useEffect(() => {
+		if (bookingData.bookingType === 'previous') {
+			destinationRef.current.focus();
+			destinationRef.current.select();
+		} else {
+			pickupRef.current.focus();
+			pickupRef.current.select();
+		}
+	}, [bookingData.PickupAddress, bookingData.bookingType]);
 
 	function convertDateToInputFormat(dateStr) {
 		// Parse the input date string
@@ -336,6 +348,7 @@ function Booking({ bookingData, id }) {
 							value={bookingData.PickupAddress}
 							onPushChange={handleAddPickup}
 							onChange={(e) => updateData('PickupAddress', e.target.value)}
+							inputRef={pickupRef}
 						/>
 						{/* <Autocomplete
 								type='address'
@@ -381,6 +394,7 @@ function Booking({ bookingData, id }) {
 							placeholder='Destination Address'
 							value={bookingData.DestinationAddress}
 							onPushChange={handleAddDestination}
+							inputRef={destinationRef}
 							onChange={(e) => updateData('DestinationAddress', e.target.value)}
 						/>
 						{/* <Autocomplete

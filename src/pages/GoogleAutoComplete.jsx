@@ -8,12 +8,17 @@ import {
 	getPlacesService,
 } from '../utils/googleMap';
 
-function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
+function PlaceAutocomplete({
+	placeholder,
+	value,
+	onChange,
+	onPushChange,
+	inputRef,
+}) {
 	const [inputValue, setInputValue] = useState(value);
 	const [suggestions, setSuggestions] = useState([]);
 	const [showOption, setShowOption] = useState(false);
 	const [highlightedIndex, setHighlightedIndex] = useState(-1);
-	const inputRef = useRef(null);
 
 	useEffect(() => {
 		loadGoogleMapsScript(() => {});
@@ -114,13 +119,13 @@ function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
 			<TextField
 				value={value}
 				onBlur={handleBlur}
-				ref={inputRef}
 				onChange={handleInputChange}
 				onKeyDown={handleKeyDown}
 				label={placeholder}
 				fullWidth
 				autoComplete='off'
 				className='px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 w-full'
+				inputRef={inputRef}
 			/>
 			{showOption && (
 				<ul className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-[40vh] overflow-auto'>
@@ -128,7 +133,10 @@ function PlaceAutocomplete({ placeholder, value, onChange, onPushChange }) {
 						<li
 							key={index}
 							onClick={() => handleSuggestionSelect(option)}
-							onMouseOver={() => setHighlightedIndex(index)}
+							onMouseOver={() => {
+								setHighlightedIndex(index);
+								onPushChange(option.address, option.postcode);
+							}}
 							className={`px-4 py-2 cursor-pointer ${
 								index === highlightedIndex ? 'bg-gray-100' : ''
 							}`}
