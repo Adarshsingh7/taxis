@@ -6,9 +6,12 @@ import Box from '@mui/material/Box';
 import { useBooking } from '../hooks/useBooking';
 import Booking from './Booking';
 import DriverAllocation from '../components/DriverAllocation';
+import { useState } from 'react';
+import Map from '../components/Map';
 
 export default function Pusher() {
 	const { data, insertValue, activeTab, onActiveTabChange } = useBooking();
+	const [secondaryTab, setSecondaryTab] = useState(1);
 
 	const handleChange = (event, newValue) => {
 		onActiveTabChange(newValue);
@@ -71,9 +74,9 @@ export default function Pusher() {
 				}}
 			>
 				<Tabs
-					value={activeTab}
+					value={secondaryTab}
 					sx={{ backgroundColor: '#e5e7eb' }}
-					// onChange={handleChange}
+					onChange={(event, newValue) => setSecondaryTab(newValue)}
 					variant='scrollable'
 					scrollButtons
 					allowScrollButtonsMobile
@@ -82,7 +85,8 @@ export default function Pusher() {
 					<Tab label='Availability' />
 					<Tab label='Map' />
 				</Tabs>
-				<DriverAllocation />
+				{secondaryTab === 0 && <DriverAllocation />}
+				{secondaryTab === 1 && <Map />}
 			</Box>
 		</Box>
 	);

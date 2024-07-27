@@ -20,9 +20,9 @@ import '@syncfusion/ej2-navigations/styles/material.css';
 import '@syncfusion/ej2-popups/styles/material.css';
 import '@syncfusion/ej2-splitbuttons/styles/material.css';
 import '@syncfusion/ej2-react-schedule/styles/material.css';
+import './DriverAllocation.css';
 
 import { getDriverAvailability } from '../utils/apiReq';
-
 const DriverAllocation = () => {
 	const [data, setData] = useState([]);
 	const [employeeData, setEmployeeData] = useState([]);
@@ -34,12 +34,28 @@ const DriverAllocation = () => {
 	// Format the time in HH:mm format
 	const formatTime = (date) => {
 		const hours = date.getHours();
-		const minutes = date.getMinutes();
+		const minutes = 0;
 		return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
 	};
 
 	const startHour = formatTime(currentTime);
 	const endHour = formatTime(endTime);
+
+	function isLightColor(hex) {
+		// Remove the leading # if present
+		hex = hex.replace(/^#/, '');
+
+		// Parse the hex color
+		let r = parseInt(hex.substring(0, 2), 16);
+		let g = parseInt(hex.substring(2, 4), 16);
+		let b = parseInt(hex.substring(4, 6), 16);
+
+		// Calculate the relative luminance
+		let luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+
+		// Determine if the color is light
+		return luminance > 0.5;
+	}
 
 	useEffect(() => {
 		const fetchDriverAvailability = async () => {
@@ -52,6 +68,7 @@ const DriverAllocation = () => {
 						from: new Date(driver.date.split('T')[0] + 'T' + driver.from),
 						to: new Date(driver.date.split('T')[0] + 'T' + driver.to),
 						EmployeeId: driver.userId,
+						color: driver.colorCode,
 					}));
 					const formattedEmployeeData = res.drivers.map((driver) => ({
 						Text: driver.fullName,
@@ -81,10 +98,22 @@ const DriverAllocation = () => {
 		}
 	};
 
+	function onEventRender(args) {
+		args.element.style.color = isLightColor(args.data.color)
+			? 'black'
+			: 'white';
+	}
+
+	function onRenderCell(args) {
+		args.element.style.fontWeight = 'bold';
+	}
+
 	return (
 		<ScheduleComponent
-			height={'50%'}
+			renderCell={onRenderCell}
+			// height={'50%'}
 			selectedDate={new Date(Date.now() - 30 * 60 * 1000)}
+			eventRendered={onEventRender}
 			eventSettings={{
 				dataSource: data,
 				fields: {

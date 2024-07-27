@@ -36,7 +36,6 @@ const Autocomplete = ({
 			try {
 				// const response = await getPoi(inputValue);
 				const response = await getAddressSuggestions(inputValue);
-				console.log('response', response);
 				setOptions(
 					response.map((item) => ({
 						// label: item.address,
