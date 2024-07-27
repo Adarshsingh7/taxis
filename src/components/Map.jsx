@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useBooking } from '../hooks/useBooking';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Icon } from 'leaflet';
 
 const position = [51.0388, -2.2799];
 
@@ -17,6 +18,11 @@ const LeafletMapComponent = () => {
 		DestinationPostCode,
 		DestinationAddress,
 	} = data[activeTab];
+
+	const newIcon = new Icon({
+		iconUrl: '/map-pointer.png',
+		iconSize: [25, 25],
+	});
 
 	// this is temperory code to get the lat and lng from the postal code
 	// we need lat lng in the booking data context
@@ -81,13 +87,17 @@ const LeafletMapComponent = () => {
 				url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 				attribution=''
 			/>
-			{/* <Marker position={position}>
+			<Marker
+				position={position}
+				icon={newIcon}
+			>
 				<Popup>
 					A pretty CSS3 popup. <br /> Easily customizable.
 				</Popup>
-			</Marker> */}
+			</Marker>
 			{markers.map((marker, idx) => (
 				<Marker
+					icon={newIcon}
 					key={idx}
 					position={marker.coords}
 				>
