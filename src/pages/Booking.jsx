@@ -69,14 +69,22 @@ function Booking({ bookingData, id }) {
 		updateValue(id, property, val);
 	}
 
-	function handleAddPickup(pickupAddress, pickupPostCode) {
-		updateData('PickupAddress', pickupAddress);
-		updateData('PickupPostCode', pickupPostCode);
+	function handleAddPickup(location) {
+		updateData('PickupAddress', location.address);
+		updateData('PickupPostCode', location.postcode);
+		updateData('PickupCoords', {
+			lat: location.latitude,
+			lng: location.longitude,
+		});
 	}
 
-	function handleAddDestination(destinationAddress, destinationPostCode) {
-		updateData('DestinationAddress', destinationAddress);
-		updateData('DestinationPostCode', destinationPostCode);
+	function handleAddDestination(location) {
+		updateData('DestinationAddress', location.address);
+		updateData('DestinationPostCode', location.postcode);
+		updateData('DestinationCoords', {
+			lat: location.latitude,
+			lng: location.longitude,
+		});
 	}
 
 	function addDriverToBooking(driverId) {
@@ -142,6 +150,7 @@ function Booking({ bookingData, id }) {
 		if (!bookingData.PickupPostCode) return;
 		if (!bookingData.DestinationPostCode && bookingData.vias.length === 0)
 			return;
+		if (bookingData.scope !== 0) return;
 		makeBookingQuoteRequest({
 			pickupPostcode: bookingData.PickupPostCode,
 			viaPostcodes: bookingData.vias.map((via) => via.postcode),
@@ -346,7 +355,7 @@ function Booking({ bookingData, id }) {
 					</div>
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
-						<Autocomplete
+						{/* <Autocomplete
 							type='address'
 							required={true}
 							placeholder='Pickup Address'
@@ -354,14 +363,14 @@ function Booking({ bookingData, id }) {
 							onPushChange={handleAddPickup}
 							inputRef={pickupRef}
 							onChange={(e) => updateData('PickupAddress', e.target.value)}
-						/>
-						{/* <GoogleAutoComplete
+						/> */}
+						<GoogleAutoComplete
 							placeholder='Pickup Address'
 							value={bookingData.PickupAddress}
 							onPushChange={handleAddPickup}
 							onChange={(e) => updateData('PickupAddress', e.target.value)}
 							inputRef={pickupRef}
-						/> */}
+						/>
 						<Autocomplete
 							type='postal'
 							required={false}

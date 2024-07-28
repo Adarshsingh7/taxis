@@ -91,7 +91,7 @@ function PlaceAutocomplete({
 	}
 
 	const handleSuggestionSelect = (suggestion) => {
-		onPushChange(suggestion.address, suggestion.postcode);
+		onPushChange(suggestion);
 		setSuggestions([]);
 		setHighlightedIndex(-1); // Reset highlighted index on selection
 	};
@@ -148,7 +148,7 @@ function PlaceAutocomplete({
 							onClick={() => handleSuggestionSelect(option)}
 							onMouseOver={() => {
 								setHighlightedIndex(index);
-								onPushChange(option.address, option.postcode);
+								onPushChange(option);
 							}}
 							className={`px-4 py-2 cursor-pointer ${
 								index === highlightedIndex ? 'bg-gray-100' : ''
