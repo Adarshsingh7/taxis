@@ -118,17 +118,15 @@ import {
 	AdvancedMarker,
 	Pin,
 	InfoWindow,
+	useMapsLibrary,
 } from '@vis.gl/react-google-maps';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useBooking } from '../hooks/useBooking';
 
 const GoogleMap = () => {
 	const pos = { lat: 51.0388, lng: -2.2799 };
 	const mapRef = useRef(null);
 	const [mapLoaded, setMapLoaded] = useState(false);
-	const { data, activeTab } = useBooking();
-	const currentBooking = data[activeTab];
-	const { PickupCoords, DestinationCoords } = currentBooking;
 
 	return (
 		<APIProvider
@@ -142,14 +140,6 @@ const GoogleMap = () => {
 				defaultZoom={13}
 				defaultCenter={pos}
 				style={{ height: '50%', width: '100%' }}
-				onCameraChanged={(ev) =>
-					console.log(
-						'camera changed:',
-						ev.detail.center,
-						'zoom:',
-						ev.detail.zoom
-					)
-				}
 				mapId='da37f3254c6a6d1c'
 				onLoad={(map) => {
 					mapRef.current = map;
@@ -158,55 +148,65 @@ const GoogleMap = () => {
 					}, 100);
 				}}
 			>
-				{mapLoaded && (
-					<>
-						<Marker
-							coords={pos}
-							title='This is the current position of ours'
-							map={mapRef.current}
-						/>
-						{PickupCoords && (
-							<Marker
-								coords={PickupCoords}
-								title='This is the Pickup location'
-								map={mapRef.current}
-							/>
-						)}
-						{DestinationCoords && (
-							<Marker
-								coords={DestinationCoords}
-								title='This is the Destination location'
-								map={mapRef.current}
-							/>
-						)}
-					</>
-				)}
-				{/* <Markers points={data} /> */}
+				<Direction />
 			</Map>
 		</APIProvider>
 	);
 };
 
-function Marker({ coords, title, map }) {
-	const [open, setOpen] = useState(false);
+function Direction() {
+	const map = useMap();
+	const routeLibrary = useMapsLibrary('routes');
+	const [directionService, setDirectionService] = useState(null);
+	const [directionRenderer, setDirectionRenderer] = useState(null);
 
-	return (
-		<AdvancedMarker
-			position={coords}
-			onClick={() => setOpen(true)}
-			map={map} // ensure the map prop is correctly passed
-		>
-			<Pin />
-			{open && (
-				<InfoWindow
-					position={coords}
-					onClose={() => setOpen(false)}
-				>
-					<p>{title}</p>
-				</InfoWindow>
-			)}
-		</AdvancedMarker>
-	);
+	const { data, activeTab } = useBooking();
+	const currentBooking = data[activeTab];
+	const {
+		PickupAddress,
+		PickupPostCode,
+		DestinationAddress,
+		DestinationPostCode,
+		vias,
+	} = currentBooking;
+
+	useEffect(() => {
+		if (!routeLibrary || !map) return;
+		setDirectionService(new routeLibrary.DirectionsService());
+		setDirectionRenderer(new routeLibrary.DirectionsRenderer({ map }));
+	}, [map, routeLibrary]);
+
+	useEffect(() => {
+		if (!directionService || !directionRenderer) return;
+		if (!PickupAddress || !DestinationAddress) return;
+
+		const waypoints = vias.map((via) => ({
+			location: `${via.address}, ${via.postcode}`,
+		}));
+
+		directionService
+			.route({
+				origin: `${PickupAddress}, ${PickupPostCode}`,
+				destination: `${DestinationAddress}, ${DestinationPostCode}`,
+				travelMode: window.google.maps.TravelMode.DRIVING,
+				provideRouteAlternatives: true,
+				waypoints: waypoints,
+			})
+			.then((res) => {
+				directionRenderer.setDirections(res);
+			})
+			.catch((err) => console.log('error occurred:', err));
+	}, [
+		directionService,
+		directionRenderer,
+		PickupAddress,
+		PickupPostCode,
+		DestinationAddress,
+		DestinationPostCode,
+		vias,
+	]);
+
+	return null;
 }
 
 export default GoogleMap;

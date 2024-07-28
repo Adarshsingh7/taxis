@@ -72,19 +72,11 @@ function Booking({ bookingData, id }) {
 	function handleAddPickup(location) {
 		updateData('PickupAddress', location.address);
 		updateData('PickupPostCode', location.postcode);
-		updateData('PickupCoords', {
-			lat: location.latitude,
-			lng: location.longitude,
-		});
 	}
 
 	function handleAddDestination(location) {
 		updateData('DestinationAddress', location.address);
 		updateData('DestinationPostCode', location.postcode);
-		updateData('DestinationCoords', {
-			lat: location.latitude,
-			lng: location.longitude,
-		});
 	}
 
 	function addDriverToBooking(driverId) {
