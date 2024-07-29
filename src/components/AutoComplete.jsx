@@ -103,7 +103,7 @@ const Autocomplete = ({
 	};
 
 	const handleSelectOption = (option) => {
-		onPushChange(option.address, option.postcode);
+		onPushChange(option);
 		setOptions(options.filter((opt) => opt.label !== option.label));
 		setShowOptions(false);
 		setFocus(false);
