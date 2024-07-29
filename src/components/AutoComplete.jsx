@@ -143,7 +143,8 @@ const Autocomplete = ({
 		<div className='relative'>
 			<TextField
 				type='text'
-				autoComplete='off'
+				autoComplete='new-password'
+				id={Math.random().toString(36).substring(7)}
 				ref={inputRef}
 				label={placeholder}
 				required={required}
