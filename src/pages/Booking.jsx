@@ -1213,7 +1213,7 @@ function Input({ value, onChange, type, placeholder, required }) {
 			type={type}
 			value={value}
 			onChange={onChange}
-			id='outlined-uncontrolled'
+			id={Math.random() * 10000}
 			label={placeholder}
 		/>
 	);
