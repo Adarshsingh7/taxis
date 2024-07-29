@@ -137,7 +137,7 @@ function Booking({ bookingData, id }) {
 		}
 	}, [isAuth, currentUser]);
 
-	// auto calulate the get qoutes
+	// auto calculate the get quotes
 	useEffect(() => {
 		if (!bookingData.PickupPostCode) return;
 		if (!bookingData.DestinationPostCode && bookingData.vias.length === 0)
@@ -846,6 +846,7 @@ function RepeatBooking({ onSet, id }) {
 		parseRecurrenceRule(data[id].recurrenceRule)
 	);
 
+
 	const handleClick = (day) => {
 		setSelectedDays((prevDays) => ({
 			...prevDays,
@@ -933,7 +934,7 @@ function RepeatBooking({ onSet, id }) {
 	}, [repeatEnd, frequency]);
 
 	return (
-		<form className='p-4 bg-card shadow rounded-lg max-w-lg mx-auto mt-6 bg-white'>
+		<form className='p-4 bg-card shadow rounded-lg max-w-lg w-[30vw] mx-auto mt-6 bg-white'>
 			<div className='flex justify-between items-center mb-4'>
 				<p className='text-xl font-bold'>Repeat Booking</p>
 				<div className='flex items-center'></div>
@@ -1044,6 +1045,7 @@ function RepeatBooking({ onSet, id }) {
 	);
 }
 
+// Via Section Modal
 const AddEditViaComponent = ({ onSet, id }) => {
 	const { updateValue, data } = useBooking();
 	const [vias, setVias] = useState(data[id].vias);
@@ -1080,7 +1082,7 @@ const AddEditViaComponent = ({ onSet, id }) => {
 	}
 
 	return (
-		<div className='bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto'>
+		<div className='bg-white p-6 rounded-lg shadow-lg w-[25vw] max-w-md mx-auto'>
 			<h2 className='text-2xl font-semibold mb-4 flex items-center'>
 				<svg
 					className='h-6 w-6 text-gray-600 mr-2'
@@ -1207,7 +1209,7 @@ function VIABar({ data, onEdit, isEditing, setEditingItem }) {
 function Input({ value, onChange, type, placeholder, required }) {
 	return (
 		<TextField
-			autoComplete='off'
+			autoComplete='new-password'
 			required={required}
 			type={type}
 			value={value}
@@ -1217,6 +1219,8 @@ function Input({ value, onChange, type, placeholder, required }) {
 		/>
 	);
 }
+
+// Allocate Driver Section Modal
 
 function ListDrivers({ id }) {
 	const [loading, setLoading] = useState(false);
@@ -1236,7 +1240,7 @@ function ListDrivers({ id }) {
 	}
 
 	return (
-		<div className='bg-gray-100 px-2 py-10 rounded'>
+		<div className='bg-gray-100 w-[25vw] px-2 py-10 rounded'>
 			<div className='header flex w-full flex-col gap-5 text-center text-gray-700'>
 				<div className=''>
 					<p className='text-5xl'>
@@ -1274,10 +1278,12 @@ function ListDrivers({ id }) {
 	);
 }
 
+// Quote Modal Section
+
 function QuoteDialog({ onSet, quote }) {
 	return (
-		<div className='flex items-center justify-center bg-gray-100 rounded-lg'>
-			<div className='bg-white p-6 rounded-lg shadow-lg max-w-xs w-full px-20'>
+		<div className='flex items-center justify-center w-[20vw] bg-white rounded-lg'>
+			<div className='bg-white p-6 rounded-lg max-w-xs w-full px-12'>
 				<div className='flex justify-center mb-4'>
 					<div className='bg-red-100 rounded-full p-2'>
 						<AccountCircleIcon />
@@ -1286,7 +1292,7 @@ function QuoteDialog({ onSet, quote }) {
 				<div className='text-center mb-4'>
 					<h2 className='text-lg font-semibold'>Booking Quote</h2>
 				</div>
-				<div className='bg-green-700 text-white p-4 rounded-lg text-center mb-4'>
+				<div className='bg-green-700 text-white py-4 px-8 rounded-lg text-center mb-4'>
 					<p className='text-2xl font-bold'>£{quote.totalPrice.toFixed(2)}</p>
 					<p className='text-sm'>{quote.tariff}</p>
 				</div>

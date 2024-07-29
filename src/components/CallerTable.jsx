@@ -1,23 +1,66 @@
 /** @format */
 
-import { useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { useBooking } from '../hooks/useBooking';
 
 const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 	const [activeTab, setActiveTab] = useState('previous-bookings');
-	const [selectedRow, setSelectedRow] = useState(null);
+	const [selectedRow, setSelectedRow] = useState(0);
 	const isEmpty =
 		bookings.Current.length === 0 && bookings.Previous.length === 0;
 	const { onRemoveCaller } = useBooking();
 
+	useEffect(() => {
+		const handleKeyDown = (event) => {
+			if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+				event.preventDefault();
+				switchTab(event.key);
+			} else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+				event.preventDefault();
+				traverseTable(event.key);
+			}  else if (event.key === 'Enter') {
+				event.preventDefault();
+				confirmSelection();
+			}
+		};
+
+		document.addEventListener('keydown', handleKeyDown);
+		return () => {
+			document.removeEventListener('keydown', handleKeyDown);
+		};
+	}, [activeTab, selectedRow, bookings]);
+
 	const handleTabClick = (tab) => {
 		setActiveTab(tab);
-		setSelectedRow(null);
+		setSelectedRow(0);
 	};
+
+	const switchTab = (key) => {
+		if (key === 'ArrowLeft' && activeTab === 'previous-bookings') {
+			handleTabClick('current-bookings');
+		} else if (key === 'ArrowRight' && activeTab === 'current-bookings') {
+			handleTabClick('previous-bookings');
+		}
+	};
+
+
 
 	const selectRow = (index) => {
 		setSelectedRow(index);
+	};
+
+	// Key Events Listener to traverse on row of table data
+
+	const traverseTable = (key) => {
+		const currentBookings = activeTab === 'current-bookings' ? bookings.Current : bookings.Previous;
+		if (currentBookings.length === 0) return;
+
+		if (key === 'ArrowUp' && selectedRow > 0) {
+			setSelectedRow(selectedRow - 1);
+		} else if (key === 'ArrowDown' && selectedRow < currentBookings.length - 1) {
+			setSelectedRow(selectedRow + 1);
+		}
 	};
 
 	const formatDate = (dateStr) => {
@@ -53,7 +96,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 	}
 
 	return (
-		<div className='max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-5'>
+		<div className='w-[75vw] mx-auto bg-white rounded-lg shadow-lg p-5'>
 			<div className='flex justify-between'>
 				<h2 className='text-xl font-semibold mb-4 '>
 					📞 ({bookings.Telephone})
@@ -70,6 +113,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 							: 'border-transparent'
 					} hover:border-blue-500 focus:outline-none`}
 					onClick={() => handleTabClick('current-bookings')}
+					
 				>
 					Current Bookings
 				</button>
@@ -80,6 +124,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 							: 'border-transparent'
 					} hover:border-blue-500 focus:outline-none`}
 					onClick={() => handleTabClick('previous-bookings')}
+					
 				>
 					Previous Bookings
 				</button>
@@ -87,7 +132,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 			<div
 				className={`${
 					activeTab === 'current-bookings' ? 'block' : 'hidden'
-				}  h-[40vh] overflow-auto`}
+				} min-h-[15vh] max-h-[40vh] overflow-auto`}
 			>
 				<CurrentTable
 					bookings={bookings.Current}
@@ -98,7 +143,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 			<div
 				className={`${
 					activeTab === 'previous-bookings' ? 'block' : 'hidden'
-				}  h-[40vh] overflow-auto`}
+				} min-h-[15vh] max-h-[40vh] overflow-auto`}
 			>
 				<CurrentTable
 					bookings={bookings.Previous}
