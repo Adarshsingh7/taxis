@@ -8,8 +8,8 @@ import {
 	getPlacesService,
 } from '../utils/googleMap';
 
-const SP8_4QA_COORDS = { lat: 51.0388, lng: -2.2799 }; // Coordinates for SP8 4QA
-const RADIUS = 10000; // 50 km in meters
+const SP8_4QA_COORDS = { lat: 51.0388, lng: -2.2799 };
+const RADIUS = 10000;
 
 function PlaceAutocomplete({
 	placeholder,
