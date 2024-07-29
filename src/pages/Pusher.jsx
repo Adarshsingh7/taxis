@@ -1,5 +1,5 @@
 /** @format */
-
+import React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -8,9 +8,11 @@ import Booking from './Booking';
 import DriverAllocation from '../components/DriverAllocation';
 import { useState } from 'react';
 import Map from '../components/Map';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function Pusher() {
-	const { data, insertValue, activeTab, onActiveTabChange } = useBooking();
+	const { data, insertValue, activeTab, onActiveTabChange, deleteBooking } =
+		useBooking();
 	const [secondaryTab, setSecondaryTab] = useState(1);
 
 	const handleChange = (event, newValue) => {
@@ -44,13 +46,24 @@ export default function Pusher() {
 					{data.map((item, index) => {
 						let label = index === 0 ? 'New Booking' : item.PhoneNumber;
 						return (
-							<Tab
-								label={label}
-								key={index}
-								style={{
-									color: item.formBusy ? '#B91C1C' : '',
-								}}
-							/>
+							<>
+								<div className='cursor-pointer'>
+									<Tab
+										label={label}
+										key={index}
+										style={{
+											color: item.formBusy ? '#B91C1C' : '',
+										}}
+									/>
+									{
+										index !== 0 ? <CancelIcon
+										fontSize='20px'
+										onClick={() => deleteBooking(index)}
+									/>  : <></>
+									}
+									
+								</div>
+							</>
 						);
 					})}
 				</Tabs>

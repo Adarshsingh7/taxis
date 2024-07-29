@@ -19,7 +19,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 			} else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
 				event.preventDefault();
 				traverseTable(event.key);
-			}  else if (event.key === 'Enter') {
+			} else if (event.key === 'Enter') {
 				event.preventDefault();
 				confirmSelection();
 			}
@@ -44,8 +44,6 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 		}
 	};
 
-
-
 	const selectRow = (index) => {
 		setSelectedRow(index);
 	};
@@ -53,12 +51,16 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 	// Key Events Listener to traverse on row of table data
 
 	const traverseTable = (key) => {
-		const currentBookings = activeTab === 'current-bookings' ? bookings.Current : bookings.Previous;
+		const currentBookings =
+			activeTab === 'current-bookings' ? bookings.Current : bookings.Previous;
 		if (currentBookings.length === 0) return;
 
 		if (key === 'ArrowUp' && selectedRow > 0) {
 			setSelectedRow(selectedRow - 1);
-		} else if (key === 'ArrowDown' && selectedRow < currentBookings.length - 1) {
+		} else if (
+			key === 'ArrowDown' &&
+			selectedRow < currentBookings.length - 1
+		) {
 			setSelectedRow(selectedRow + 1);
 		}
 	};
@@ -73,7 +75,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 		).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 	};
 
-	const confirmSelection = () => {
+	function confirmSelection() {
 		if (selectedRow !== null) {
 			const selectedBooking =
 				activeTab === 'current-bookings'
@@ -89,7 +91,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 		} else {
 			alert('No row selected');
 		}
-	};
+	}
 
 	function handleCreateNewBookingWithTelephone() {
 		onConfirm({ PhoneNumber: bookings.Telephone });
@@ -113,7 +115,6 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 							: 'border-transparent'
 					} hover:border-blue-500 focus:outline-none`}
 					onClick={() => handleTabClick('current-bookings')}
-					
 				>
 					Current Bookings
 				</button>
@@ -124,7 +125,6 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 							: 'border-transparent'
 					} hover:border-blue-500 focus:outline-none`}
 					onClick={() => handleTabClick('previous-bookings')}
-					
 				>
 					Previous Bookings
 				</button>
