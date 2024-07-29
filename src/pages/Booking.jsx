@@ -441,7 +441,7 @@ function Booking({ bookingData, id }) {
 						</LongButton>
 					</div>
 
-					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+					<div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 '>
 						<div className='flex items-center'>
 							<label className='mr-2'>Passengers</label>
 							<select
@@ -470,9 +470,20 @@ function Booking({ bookingData, id }) {
 								}
 							/>
 						</label>
+						<div className='mb-4'>
+							{bookingData.scope !== 1 && (
+								<>
+									{quote ? (
+										<LongButton onClick={resetPrice}>Reset Price</LongButton>
+									) : (
+										<LongButton onClick={findQuote}>Get Quote</LongButton>
+									)}
+								</>
+							)}
+						</div>
 					</div>
 
-					<div className='mb-4'>
+					{/* <div className='mb-4'>
 						{bookingData.scope !== 1 && (
 							<>
 								{quote ? (
@@ -482,7 +493,7 @@ function Booking({ bookingData, id }) {
 								)}
 							</>
 						)}
-					</div>
+					</div> */}
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
 						<div className='flex items-center gap-2'>
