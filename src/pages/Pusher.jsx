@@ -50,33 +50,42 @@ export default function Pusher() {
 					{data.map((item, index) => {
 						let label = index === 0 ? 'New Booking' : item.PhoneNumber;
 						return (
-							<div key={index}>
-								<div className='cursor-pointer'>
-									<Tab
-										label={label}
-										key={index}
-										style={{
-											color: item.formBusy ? '#B91C1C' : '',
-										}}
-									/>
-									{index !== 0 ? (
-										<CancelIcon
-											fontSize='20px'
-											onClick={() => setIsConfirmationModalOpen(true)}
-										/>
-									) : (
-										<></>
-									)}
-								</div>
-								<Modal
-									open={isConfirmationModalOpen}
-									setOpen={setIsConfirmationModalOpen}
-								>
-									<ConfirmDeleteBookingModal
-										setIsConfirmationModalOpen={setIsConfirmationModalOpen} id={index} deleteBooking={deleteBooking}
-									/>
-								</Modal>
-							</div>
+							// <div key={index}>
+							// 	<div className='cursor-pointer'>
+							// 		<Tab
+							// 			label={label}
+							// 			key={index}
+							// 			style={{
+							// 				color: item.formBusy ? '#B91C1C' : '',
+							// 			}}
+							// 		/>
+							// 		{index !== 0 ? (
+							// 			<CancelIcon
+							// 				fontSize='20px'
+							// 				onClick={() => setIsConfirmationModalOpen(true)}
+							// 			/>
+							// 		) : (
+							// 			<></>
+							// 		)}
+							// 	</div>
+							// 	<Modal
+							// 		open={isConfirmationModalOpen}
+							// 		setOpen={setIsConfirmationModalOpen}
+							// 	>
+							// 		<ConfirmDeleteBookingModal
+							// 			setIsConfirmationModalOpen={setIsConfirmationModalOpen}
+							// 			id={index}
+							// 			deleteBooking={deleteBooking}
+							// 		/>
+							// 	</Modal>
+							// </div>
+							<Tab
+								label={label}
+								key={index}
+								style={{
+									color: item.formBusy ? '#B91C1C' : '',
+								}}
+							/>
 						);
 					})}
 				</Tabs>
@@ -118,23 +127,39 @@ export default function Pusher() {
 	);
 }
 
-function ConfirmDeleteBookingModal({ setIsConfirmationModalOpen, id, deleteBooking }) {
+function ConfirmDeleteBookingModal({
+	setIsConfirmationModalOpen,
+	id,
+	deleteBooking,
+}) {
 	const handleClick = (id) => {
-        setIsConfirmationModalOpen(false);
-        deleteBooking(id);
-    };
+		setIsConfirmationModalOpen(false);
+		deleteBooking(id);
+	};
 	return (
 		<div className='flex flex-col items-center justify-center w-[20vw] bg-white rounded-lg p-4 gap-4'>
 			<div className='flex justify-between items-center  bg-cyan-600 text-white w-full rounded-lg p-2'>
 				<h2 className='text-xl font-semibold bg-cyan-600 text-white w-full'>
 					Discard Booking
 				</h2>
-				<CloseIcon onClick={() => setIsConfirmationModalOpen(false)}/>
+				<CloseIcon onClick={() => setIsConfirmationModalOpen(false)} />
 			</div>
 			<h2>Are you sure you want to delete this booking?</h2>
 			<div className='flex justify-center items-center gap-2'>
-				<Button variant='contained' sx={{backgroundColor: "#0891b2"}}  onClick={() => handleClick(id)}>Yes</Button>
-				<Button color='inherit' variant='contained' onClick={() => setIsConfirmationModalOpen(false)}>No</Button>
+				<Button
+					variant='contained'
+					sx={{ backgroundColor: '#0891b2' }}
+					onClick={() => handleClick(id)}
+				>
+					Yes
+				</Button>
+				<Button
+					color='inherit'
+					variant='contained'
+					onClick={() => setIsConfirmationModalOpen(false)}
+				>
+					No
+				</Button>
 			</div>
 		</div>
 	);

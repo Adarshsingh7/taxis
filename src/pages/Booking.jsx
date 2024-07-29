@@ -14,6 +14,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Loader from './../components/Loader';
 import { useAuth } from './../hooks/useAuth';
 import GoogleAutoComplete from '../components/GoogleAutoComplete';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 
 function Booking({ bookingData, id }) {
 	const {
@@ -288,11 +289,11 @@ function Booking({ bookingData, id }) {
 					/>
 				</>
 				<div className='max-w-3xl mx-auto bg-card p-6 rounded-lg shadow-lg'>
-					<div className='mb-4'>
+					{/* <div className='mb-4'>
 						<LongButton onClick={() => setIsPhoneModelActive(true)}>
 							Phone Number Lookup
 						</LongButton>
-					</div>
+					</div> */}
 
 					<div className='flex items-center justify-between mb-4'>
 						<div className='flex gap-5 flex-col md:flex-row'>
@@ -318,7 +319,16 @@ function Booking({ bookingData, id }) {
 								/>
 							) : null}
 						</div>
-						<div className='flex gap-5 flex-col md:flex-row justify-between'>
+						<div className='flex gap-5 flex-col md:flex-row justify-between items-center align-middle'>
+							<div className='bg-red-700 hover:bg-opacity-80 rounded-lg flex  text-white'>
+								<button
+									type='button'
+									className='px-3 py-2'
+									onClick={() => setIsRepeatBookingModelActive(true)}
+								>
+									Repeat Booking
+								</button>
+							</div>
 							<div>
 								<span className='mr-2'>Return</span>
 								<Switch
@@ -338,12 +348,6 @@ function Booking({ bookingData, id }) {
 							</div>
 							<></>
 						</div>
-					</div>
-
-					<div className='mb-4'>
-						<LongButton onClick={() => setIsRepeatBookingModelActive(true)}>
-							Repeat Booking
-						</LongButton>
 					</div>
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
@@ -581,18 +585,34 @@ function Booking({ bookingData, id }) {
 							onChange={(e) => updateData('PassengerName', e.target.value)}
 							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 						/>
-						<Input
-							type='text'
-							placeholder='Phone'
-							value={bookingData.PhoneNumber}
-							onChange={(e) => {
-								const value = e.target.value;
-								// Remove non-numeric characters and limit to 12 digits
-								const cleanedValue = value.replace(/\D/g, '').slice(0, 12);
-								updateData('PhoneNumber', cleanedValue);
-							}}
-							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-						/>
+						<div className='flex justify-between flex-row items-center gap-1'>
+							<Input
+								type='text'
+								placeholder='Phone'
+								value={bookingData.PhoneNumber}
+								onChange={(e) => {
+									const value = e.target.value;
+									// Remove non-numeric characters and limit to 12 digits
+									const cleanedValue = value.replace(/\D/g, '').slice(0, 12);
+									updateData('PhoneNumber', cleanedValue);
+								}}
+								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
+							/>
+							<div
+								className='px-3 bg-red-700 hover:bg-opacity-80 rounded-lg flex cursor-pointer'
+								onClick={() => setIsPhoneModelActive(true)}
+							>
+								<span
+									style={{ padding: '1rem 0' }}
+									color='error'
+									className='text-white flex gap-2 px-3'
+									type='button'
+								>
+									<LocalPhoneIcon />
+									<span>Lookup</span>
+								</span>
+							</div>
+						</div>
 					</div>
 
 					<div className='mb-4'>
