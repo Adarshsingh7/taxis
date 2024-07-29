@@ -6,6 +6,7 @@ import { useBooking } from '../hooks/useBooking';
 
 const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 	const [activeTab, setActiveTab] = useState('previous-bookings');
+	
 	const [selectedRow, setSelectedRow] = useState(0);
 	const isEmpty =
 		bookings.Current.length === 0 && bookings.Previous.length === 0;

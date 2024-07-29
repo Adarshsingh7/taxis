@@ -124,13 +124,18 @@ function ConfirmDeleteBookingModal({ setIsConfirmationModalOpen, id, deleteBooki
         deleteBooking(id);
     };
 	return (
-		<div className="bg-white rounded-lg shadow-lg p-6 max-w-md">
-        <h2 className="text-lg font-semibold">Are you absolutely sure, Discard Booking?</h2>
-        <p className="text-sm text-gray-600 mt-2">This action cannot be undone. This will permanently delete your booking and remove your data from scope.</p>
-        <div className="mt-6 flex justify-end space-x-3">
-            <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg" onClick={() => setIsConfirmationModalOpen(false)}>Cancel</button>
-            <button className="bg-black text-white px-4 py-2 rounded-lg" onClick={() => handleClick(id)}>Yes</button>
-        </div>
-    </div>
+		<div className='flex flex-col items-center justify-center w-[20vw] bg-white rounded-lg p-4 gap-4'>
+			<div className='flex justify-between items-center  bg-cyan-600 text-white w-full rounded-lg p-2'>
+				<h2 className='text-xl font-semibold bg-cyan-600 text-white w-full'>
+					Discard Booking
+				</h2>
+				<CloseIcon onClick={() => setIsConfirmationModalOpen(false)}/>
+			</div>
+			<h2>Are you sure you want to delete this booking?</h2>
+			<div className='flex justify-center items-center gap-2'>
+				<Button variant='contained' sx={{backgroundColor: "#0891b2"}}  onClick={() => handleClick(id)}>Yes</Button>
+				<Button color='inherit' variant='contained' onClick={() => setIsConfirmationModalOpen(false)}>No</Button>
+			</div>
+		</div>
 	);
 }
