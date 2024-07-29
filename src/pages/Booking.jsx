@@ -846,7 +846,6 @@ function RepeatBooking({ onSet, id }) {
 		parseRecurrenceRule(data[id].recurrenceRule)
 	);
 
-
 	const handleClick = (day) => {
 		setSelectedDays((prevDays) => ({
 			...prevDays,

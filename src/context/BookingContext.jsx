@@ -77,30 +77,6 @@ function reducer(state, action) {
 			);
 		case 'addData':
 			return [...state, action.payload];
-		case 'updateVia':
-			return state.map((item, index) => {
-				if (index === action.payload.itemIndex) {
-					const updatedVias = item.vias.map((via, viaIndex) =>
-						viaIndex === action.payload.viaIndex
-							? { ...via, [action.payload.property]: action.payload.value }
-							: via
-					);
-					return { ...item, vias: updatedVias };
-				}
-				return item;
-			});
-		case 'addVia':
-			return state.map((item, index) => {
-				if (index === action.payload.itemIndex) {
-					const newVia = {
-						address: action.payload.property,
-						postCode: action.payload.property,
-						id: item.vias.length,
-					};
-					return { ...item, vias: [...item.vias, newVia] };
-				}
-				return item;
-			});
 		case 'endBooking':
 			return action.payload.itemIndex === 0
 				? state.map((item, idx) => (idx === 0 ? initState[0] : item))
@@ -138,10 +114,6 @@ function BookingProvider({ children }) {
 
 	function insertData(data) {
 		dispacher({ type: 'addData', payload: data });
-	}
-
-	function addVia(itemIndex, property, value) {
-		dispacher({ type: 'addVia', payload: { itemIndex, property, value } });
 	}
 
 	async function onBooking(itemIndex) {
@@ -240,7 +212,6 @@ function BookingProvider({ children }) {
 				deleteBooking,
 				insertData,
 				onUpdateBooking,
-				addVia,
 				onDeleteBooking,
 				activeTab,
 				onActiveTabChange: setActiveTab,

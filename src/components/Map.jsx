@@ -13,9 +13,6 @@ const GoogleMap = () => {
 	const pos = { lat: 51.0388, lng: -2.2799 };
 	const mapRef = useRef(null);
 	const [mapLoaded, setMapLoaded] = useState(false);
-
-	console.log(mapLoaded);
-
 	return (
 		<APIProvider
 			apiKey={import.meta.env.VITE_GOOGLE_MAP_KEY}

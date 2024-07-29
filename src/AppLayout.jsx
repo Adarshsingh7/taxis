@@ -5,7 +5,6 @@ import Header from './ui/Header';
 import { AuthProvider } from './context/AuthContext';
 import { BookingProvider } from './context/BookingContext';
 import CallerIdPopUp from './components/CallerIdPopUp';
-
 function AppLayout() {
 	return (
 		<AuthProvider>
