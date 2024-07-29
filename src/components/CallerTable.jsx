@@ -5,8 +5,10 @@ import 'tailwindcss/tailwind.css';
 import { useBooking } from '../hooks/useBooking';
 
 const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
-	const [activeTab, setActiveTab] = useState('previous-bookings');
-	
+	const [activeTab, setActiveTab] = useState(
+		bookings.Current.length > 0 ? 'current-bookings' : 'previous-bookings'
+	);
+
 	const [selectedRow, setSelectedRow] = useState(0);
 	const isEmpty =
 		bookings.Current.length === 0 && bookings.Previous.length === 0;
