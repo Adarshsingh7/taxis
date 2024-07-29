@@ -8,6 +8,8 @@ import {
 	getPlacesService,
 } from '../utils/googleMap';
 
+import { getPoi } from '../utils/apiReq';
+
 const SP8_4QA_COORDS = { lat: 51.0388, lng: -2.2799 };
 const RADIUS = 10000;
 
@@ -26,14 +28,27 @@ function PlaceAutocomplete({
 		loadGoogleMapsScript(() => {});
 	}, []);
 
-	const handleInputChange = (event) => {
+	const handleInputChange = async (event) => {
 		onChange(event);
+		const input = event.target.value;
+		let tempSuggestions = [];
 		setHighlightedIndex(-1);
-		if (event.target.value) {
+		if (input.length > 2) {
+			const res = await getPoi(input);
+			tempSuggestions = res.map((poi) => ({
+				label: `${poi.address}, ${poi.postcode}`,
+				id: poi.id,
+				name: poi.name,
+				address: poi.address,
+				postcode: poi.postcode,
+				longitude: poi.longitude,
+				latitude: poi.latitude,
+			}));
+			setSuggestions(tempSuggestions);
 			const autocompleteService = getAutocompleteService();
 			autocompleteService.getPlacePredictions(
 				{
-					input: event.target.value,
+					input,
 					location: new window.google.maps.LatLng(
 						SP8_4QA_COORDS.lat,
 						SP8_4QA_COORDS.lng
@@ -48,7 +63,8 @@ function PlaceAutocomplete({
 							const filteredPredictions = detailedPredictions.filter(
 								(prediction) => prediction && prediction.postcode
 							);
-							setSuggestions(filteredPredictions);
+							tempSuggestions = [...tempSuggestions, ...filteredPredictions];
+							setSuggestions(tempSuggestions);
 						});
 					} else {
 						setSuggestions([]);
@@ -136,7 +152,7 @@ function PlaceAutocomplete({
 				label={placeholder}
 				fullWidth
 				required={true}
-				autoComplete='off'
+				autoComplete='new-password'
 				className='px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 w-full'
 				inputRef={inputRef}
 			/>
