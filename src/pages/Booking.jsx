@@ -577,6 +577,7 @@ function Booking({ bookingData, id }) {
 								}
 							/>
 						</div>
+						
 						<label className='flex items-center'>
 							<span className='mr-2'>All Day</span>
 							<input

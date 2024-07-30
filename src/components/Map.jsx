@@ -21,22 +21,25 @@ const GoogleMap = () => {
 				setMapLoaded(true);
 			}}
 		>
-			{mapLoaded && (
+			{mapLoaded ? (
 				<Map
 					defaultZoom={13}
 					defaultCenter={pos}
+					disableDefaultUI={true}
+					fullscreenControl = {true}
+					zoomControl={true}
 					style={{ height: '50%', width: '100%' }}
 					mapId='da37f3254c6a6d1c'
 					onLoad={(map) => {
 						mapRef.current = map;
 						setTimeout(() => {
 							setMapLoaded(true);
-						}, 100);
+						}, 1000);
 					}}
 				>
 					<Direction />
 				</Map>
-			)}
+			) : (<div className='flex justify-center items-center'><div className='spinner'></div></div>)}
 		</APIProvider>
 	);
 };

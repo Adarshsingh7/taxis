@@ -94,7 +94,7 @@ function CallerIdPopUp() {
 		<Modal
 			open={open}
 			setOpen={setOpen}
-			// disableEscapeKeyDown={true}
+			disableEscapeKeyDown={true}
 		>
 			{!isEmpty && (
 				<CallerTable
