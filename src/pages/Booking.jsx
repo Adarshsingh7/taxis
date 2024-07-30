@@ -349,6 +349,7 @@ function Booking({ bookingData, id }) {
 							<></>
 						</div>
 					</div>
+					{/* Google AutoSuggestion 1 */}
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
 						{/* <Autocomplete
@@ -376,7 +377,7 @@ function Booking({ bookingData, id }) {
 							onChange={(e) => updateData('PickupPostCode', e.target.value)}
 						/>
 					</div>
-
+					{/* Toogle Button Start*/}
 					<div className='flex justify-center mb-4'>
 						<button
 							type='button'
@@ -397,7 +398,9 @@ function Booking({ bookingData, id }) {
 							</svg>
 						</button>
 					</div>
+					{/* Toogle Button Ends */}
 
+					{/* Google AutoSuggestion 2 */}
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
 						<GoogleAutoComplete
 							placeholder='Destination Address'
