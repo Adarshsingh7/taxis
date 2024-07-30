@@ -1,6 +1,6 @@
 /** @format */
 
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import 'tailwindcss/tailwind.css';
 import { useBooking } from '../hooks/useBooking';
 
@@ -14,71 +14,17 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 		bookings.Current.length === 0 && bookings.Previous.length === 0;
 	const { onRemoveCaller } = useBooking();
 
-	useEffect(() => {
-		const handleKeyDown = (event) => {
-			if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-				event.preventDefault();
-				switchTab(event.key);
-			} else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-				event.preventDefault();
-				traverseTable(event.key);
-			} else if (event.key === 'Enter') {
-				event.preventDefault();
-				confirmSelection();
-			}
+	const confirmSelection = useCallback(() => {
+		const formatDate = (dateStr) => {
+			const date = new Date(dateStr);
+			return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+				2,
+				'0'
+			)}-${String(date.getDate()).padStart(2, '0')}T${String(
+				date.getHours()
+			).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 		};
 
-		document.addEventListener('keydown', handleKeyDown);
-		return () => {
-			document.removeEventListener('keydown', handleKeyDown);
-		};
-	}, [activeTab, selectedRow, bookings]);
-
-	const handleTabClick = (tab) => {
-		setActiveTab(tab);
-		setSelectedRow(0);
-	};
-
-	const switchTab = (key) => {
-		if (key === 'ArrowLeft' && activeTab === 'previous-bookings') {
-			handleTabClick('current-bookings');
-		} else if (key === 'ArrowRight' && activeTab === 'current-bookings') {
-			handleTabClick('previous-bookings');
-		}
-	};
-
-	const selectRow = (index) => {
-		setSelectedRow(index);
-	};
-
-	// Key Events Listener to traverse on row of table data
-
-	const traverseTable = (key) => {
-		const currentBookings =
-			activeTab === 'current-bookings' ? bookings.Current : bookings.Previous;
-		if (currentBookings.length === 0) return;
-
-		if (key === 'ArrowUp' && selectedRow > 0) {
-			setSelectedRow(selectedRow - 1);
-		} else if (
-			key === 'ArrowDown' &&
-			selectedRow < currentBookings.length - 1
-		) {
-			setSelectedRow(selectedRow + 1);
-		}
-	};
-
-	const formatDate = (dateStr) => {
-		const date = new Date(dateStr);
-		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-			2,
-			'0'
-		)}-${String(date.getDate()).padStart(2, '0')}T${String(
-			date.getHours()
-		).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-	};
-
-	function confirmSelection() {
 		if (selectedRow !== null) {
 			const selectedBooking =
 				activeTab === 'current-bookings'
@@ -94,7 +40,76 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 		} else {
 			alert('No row selected');
 		}
-	}
+	}, [selectedRow, activeTab, bookings, onConfirm]);
+
+	useEffect(() => {
+		const traverseTable = (key) => {
+			const currentBookings =
+				activeTab === 'current-bookings' ? bookings.Current : bookings.Previous;
+			if (currentBookings.length === 0) return;
+
+			if (key === 'ArrowUp' && selectedRow > 0) {
+				setSelectedRow(selectedRow - 1);
+			} else if (
+				key === 'ArrowDown' &&
+				selectedRow < currentBookings.length - 1
+			) {
+				setSelectedRow(selectedRow + 1);
+			}
+		};
+		const switchTab = (key) => {
+			if (key === 'ArrowLeft' && activeTab === 'previous-bookings') {
+				handleTabClick('current-bookings');
+			} else if (key === 'ArrowRight' && activeTab === 'current-bookings') {
+				handleTabClick('previous-bookings');
+			}
+		};
+		const handleKeyDown = (event) => {
+			event.preventDefault();
+			console.log(event.key);
+			if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+				switchTab(event.key);
+			} else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+				traverseTable(event.key);
+			} else if (event.key === 'Enter') {
+				confirmSelection();
+			}
+		};
+
+		document.addEventListener('keydown', handleKeyDown);
+		return () => {
+			document.removeEventListener('keydown', handleKeyDown);
+		};
+	}, [activeTab, selectedRow, bookings, confirmSelection]);
+
+	const handleTabClick = (tab) => {
+		setActiveTab(tab);
+		setSelectedRow(0);
+	};
+
+	const selectRow = (index) => {
+		setSelectedRow(index);
+	};
+
+	// Key Events Listener to traverse on row of table data
+
+	// const confirmSelection = useCallback(() => {
+	// 	if (selectedRow !== null) {
+	// 		const selectedBooking =
+	// 			activeTab === 'current-bookings'
+	// 				? bookings.Current[selectedRow]
+	// 				: bookings.Previous[selectedRow];
+	// 		selectedBooking.type =
+	// 			activeTab === 'current-bookings' ? 'current' : 'previous';
+	// 		selectedBooking.PickupDateTime =
+	// 			activeTab === 'current-bookings'
+	// 				? formatDate(selectedBooking.PickupDateTime)
+	// 				: formatDate(new Date());
+	// 		onConfirm(selectedBooking);
+	// 	} else {
+	// 		alert('No row selected');
+	// 	}
+	// }, [selectedRow, activeTab, bookings, formatDate, onConfirm]);
 
 	function handleCreateNewBookingWithTelephone() {
 		onConfirm({ PhoneNumber: bookings.Telephone });
