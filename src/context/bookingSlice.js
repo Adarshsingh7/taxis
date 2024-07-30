@@ -2,51 +2,42 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 import { makeBooking } from './../utils/apiReq';
-
-const formatDate = (dateStr) => {
-	const date = new Date(dateStr);
-	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-		2,
-		'0'
-	)}-${String(date.getDate()).padStart(2, '0')}T${String(
-		date.getHours()
-	).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-};
+import { formatDate } from './../utils/formatDate';
 
 const initialState = [
 	{
-		returnBooking: false,
-		bookedByName: '',
-		PickupAddress: '',
-		PickupPostCode: '',
-		DestinationAddress: '',
-		DestinationPostCode: '',
-		PickupDateTime: formatDate(new Date()),
-		returnTime: '',
-		isReturn: false,
-		vias: [],
-		Passengers: 1,
-		hours: 0,
-		minutes: 20,
+		details: '',
+		email: '',
 		durationText: '20',
 		isAllDay: false,
-		PassengerName: '',
-		PhoneNumber: '',
-		Email: '',
-		repeatBooking: false,
+		passengerName: '',
+		passengers: 1,
+		paymentStatus: 0,
+		scope: 0,
+		phoneNumber: '',
+		pickupAddress: '',
+		pickupDateTime: formatDate(new Date()),
+		pickupPostCode: '',
+		destinationAddress: '',
+		destinationPostCode: '',
 		recurrenceRule: '',
+		price: 0,
+		priceAccount: 0,
+		chargeFromBase: false,
+		userId: '',
+		returnDateTime: '',
+		vias: [],
+		accountNumber: 0,
+		bookedByName: '',
+		returnBooking: false,
+		isReturn: false,
+		hours: 0,
+		minutes: 20,
+		repeatBooking: false,
 		frequency: 'none',
 		repeatEnd: 'never',
 		repeatEndValue: '',
-		details: '',
-		Price: 0,
-		scope: 0,
-		chargeFromBase: false,
-		paymentStatus: 0,
 		driver: {},
-		accountNumber: 0,
-		priceAccount: 0,
-		userId: '',
 		formBusy: false,
 		isLoading: false,
 	},
@@ -93,8 +84,6 @@ export const updateValue = function (itemIndex, property, value) {
 	};
 };
 
-export const { addData, endBooking } = bookingFormSlice.actions;
-
 export const onCreateBooking = (itemIndex) => async (dispatch, getState) => {
 	const targetBooking = getState().bookingForm[itemIndex];
 	const response = await makeBooking(targetBooking, true);
@@ -108,7 +97,6 @@ export const onCreateBooking = (itemIndex) => async (dispatch, getState) => {
 };
 
 export const onUpdateBooking = (itemIndex) => async (dispatch, getState) => {
-	dispatch(updateValue({ itemIndex, property: 'isLoading', value: true }));
 	const targetBooking = getState().bookingForm[itemIndex];
 	const response = await makeBooking(targetBooking);
 	if (response.status === 'success') {
@@ -131,5 +119,7 @@ export const updateValueSilentMode =
 export const removeBooking = (itemIndex) => (dispatch) => {
 	dispatch(endBooking({ itemIndex }));
 };
+
+export const { addData, endBooking } = bookingFormSlice.actions;
 
 export default bookingFormSlice.reducer;

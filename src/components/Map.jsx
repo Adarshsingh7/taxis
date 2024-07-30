@@ -17,7 +17,6 @@ const GoogleMap = () => {
 		<APIProvider
 			apiKey={import.meta.env.VITE_GOOGLE_MAP_KEY}
 			onLoad={() => {
-				console.log('Maps API has loaded.');
 				setMapLoaded(true);
 			}}
 		>
@@ -26,7 +25,7 @@ const GoogleMap = () => {
 					defaultZoom={13}
 					defaultCenter={pos}
 					disableDefaultUI={true}
-					fullscreenControl = {true}
+					fullscreenControl={true}
 					zoomControl={true}
 					style={{ height: '50%', width: '100%' }}
 					mapId='da37f3254c6a6d1c'
@@ -39,7 +38,11 @@ const GoogleMap = () => {
 				>
 					<Direction />
 				</Map>
-			) : (<div className='flex justify-center items-center'><div className='spinner'></div></div>)}
+			) : (
+				<div className='flex justify-center items-center'>
+					<div className='spinner'></div>
+				</div>
+			)}
 		</APIProvider>
 	);
 };

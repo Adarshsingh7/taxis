@@ -29,7 +29,7 @@ function filterData(data) {
 		details: data.details,
 		email: data.Email,
 		durationText: data.durationText + '',
-		durationMinutes: data.durationText,
+		durationMinutes: +data.durationText,
 		isAllDay: data.isAllDay,
 		passengerName: data.PassengerName,
 		passengers: data.Passengers,
