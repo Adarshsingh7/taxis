@@ -73,6 +73,9 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 				traverseTable(event.key);
 			} else if (event.key === 'Enter') {
 				confirmSelection();
+			} else if (event.key === 'Escape') {
+				onRemoveCaller();
+				onSet(false);
 			}
 		};
 
@@ -80,7 +83,14 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 		return () => {
 			document.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [activeTab, selectedRow, bookings, confirmSelection]);
+	}, [
+		activeTab,
+		selectedRow,
+		bookings,
+		confirmSelection,
+		onRemoveCaller,
+		onSet,
+	]);
 
 	const handleTabClick = (tab) => {
 		setActiveTab(tab);
@@ -90,26 +100,6 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 	const selectRow = (index) => {
 		setSelectedRow(index);
 	};
-
-	// Key Events Listener to traverse on row of table data
-
-	// const confirmSelection = useCallback(() => {
-	// 	if (selectedRow !== null) {
-	// 		const selectedBooking =
-	// 			activeTab === 'current-bookings'
-	// 				? bookings.Current[selectedRow]
-	// 				: bookings.Previous[selectedRow];
-	// 		selectedBooking.type =
-	// 			activeTab === 'current-bookings' ? 'current' : 'previous';
-	// 		selectedBooking.PickupDateTime =
-	// 			activeTab === 'current-bookings'
-	// 				? formatDate(selectedBooking.PickupDateTime)
-	// 				: formatDate(new Date());
-	// 		onConfirm(selectedBooking);
-	// 	} else {
-	// 		alert('No row selected');
-	// 	}
-	// }, [selectedRow, activeTab, bookings, formatDate, onConfirm]);
 
 	function handleCreateNewBookingWithTelephone() {
 		onConfirm({ PhoneNumber: bookings.Telephone });
