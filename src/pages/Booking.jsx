@@ -523,6 +523,8 @@ function Booking({ bookingData, id }) {
 								}
 							/>
 						</div>
+
+						{/* Hours Duration Section Details */}
 						<div className='flex items-center'>
 							<Input
 								type='number'
@@ -552,11 +554,7 @@ function Booking({ bookingData, id }) {
 								type='number'
 								required
 								placeholder='Minutes'
-								value={
-									Math.floor(bookingData.durationText % 60) === 0
-										? ''
-										: Math.floor(bookingData.durationText % 60)
-								}
+								value={Math.floor(bookingData.durationText % 60)}
 								onChange={(e) =>
 									updateData(
 										'minutes',
