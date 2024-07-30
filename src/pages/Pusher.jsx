@@ -18,6 +18,7 @@ export default function Pusher() {
 	const {
 		data,
 		insertValue,
+		onUpdateBooking,
 		activeTab,
 		onActiveTabChange,
 		deleteBooking,
@@ -35,34 +36,25 @@ export default function Pusher() {
 	function handleBookingUpload(id) {
 		console.log(id);
 		const currentBooking = data[id];
-		if (currentBooking.bookingType === "current") {
+		if (currentBooking.bookingType === 'current') {
 			onUpdateBooking(id).then((data) => {
 				setIsBookingSnackBarOpen(true);
-			if (data.status === 'success') {
-				setSnackbarMessage(
-					"Booking Updated Successfully"
-				);
-			} else {
-				setSnackbarMessage(
-					"Failed to Update Booking"
-				);
-			}
-			})
+				if (data.status === 'success') {
+					setSnackbarMessage('Booking Updated Successfully');
+				} else {
+					setSnackbarMessage('Failed to Update Booking');
+				}
+			});
 		} else {
 			onBooking(id).then((data) => {
 				setIsBookingSnackBarOpen(true);
 				if (data.status === 'success') {
-					setSnackbarMessage(
-						`Booking Created Successfully`
-					);
+					setSnackbarMessage(`Booking Created Successfully`);
 				} else {
-					setSnackbarMessage(
-						`Failed to Create booking`
-					);
+					setSnackbarMessage(`Failed to Create booking`);
 				}
-			})
+			});
 		}
-		
 	}
 
 	return (
