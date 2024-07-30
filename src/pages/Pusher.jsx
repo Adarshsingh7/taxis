@@ -33,7 +33,7 @@ export default function Pusher() {
 					margin: '1vh auto',
 					height: '90vh',
 					overflow: 'auto',
-					width: '60%', // Adjusting the width to 50% for the first child Box
+					width: '60%',
 					borderColor: '#e5e7eb',
 					borderWidth: '1px',
 				}}
@@ -49,38 +49,28 @@ export default function Pusher() {
 				>
 					{data.map((item, index) => {
 						let label = index === 0 ? 'New Booking' : item.PhoneNumber;
+						console.log(item);
+						label +=
+							item.bookingType === 'previous'
+								? ' (New)'
+								: item.bookingType === 'current'
+								? ' (Edit)'
+								: '';
 						return (
-							// <div key={index}>
-							// 	<div className='cursor-pointer'>
-							// 		<Tab
-							// 			label={label}
-							// 			key={index}
-							// 			style={{
-							// 				color: item.formBusy ? '#B91C1C' : '',
-							// 			}}
-							// 		/>
-							// 		{index !== 0 ? (
-							// 			<CancelIcon
-							// 				fontSize='20px'
-							// 				onClick={() => setIsConfirmationModalOpen(true)}
-							// 			/>
-							// 		) : (
-							// 			<></>
-							// 		)}
-							// 	</div>
-							// 	<Modal
-							// 		open={isConfirmationModalOpen}
-							// 		setOpen={setIsConfirmationModalOpen}
-							// 	>
-							// 		<ConfirmDeleteBookingModal
-							// 			setIsConfirmationModalOpen={setIsConfirmationModalOpen}
-							// 			id={index}
-							// 			deleteBooking={deleteBooking}
-							// 		/>
-							// 	</Modal>
-							// </div>
 							<Tab
 								label={label}
+								icon={
+									index !== 0 && (
+										<CancelIcon
+											color='error'
+											onClick={() => {
+												console.log('okay');
+												setIsConfirmationModalOpen(true);
+											}}
+										/>
+									)
+								}
+								iconPosition='end'
 								key={index}
 								style={{
 									color: item.formBusy ? '#B91C1C' : '',
@@ -88,6 +78,16 @@ export default function Pusher() {
 							/>
 						);
 					})}
+					<Modal
+						open={isConfirmationModalOpen}
+						setIsOpen={setIsConfirmationModalOpen}
+					>
+						<ConfirmDeleteBookingModal
+							deleteBooking={deleteBooking}
+							id={activeTab}
+							setIsConfirmationModalOpen={setIsConfirmationModalOpen}
+						/>
+					</Modal>
 				</Tabs>
 				<Box>
 					<Booking
