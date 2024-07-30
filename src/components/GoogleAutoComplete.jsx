@@ -23,6 +23,7 @@ function PlaceAutocomplete({
 	const [suggestions, setSuggestions] = useState([]);
 	const [showOption, setShowOption] = useState(false);
 	const [highlightedIndex, setHighlightedIndex] = useState(-1);
+	const [blur, setBlur] = useState(false);
 
 	useEffect(() => {
 		loadGoogleMapsScript(() => {});
@@ -89,10 +90,14 @@ function PlaceAutocomplete({
 						component.types.includes('postal_code')
 					)?.long_name;
 					const detailedPrediction = {
-						label: prediction.description,
+						label: prediction.description.endsWith(', UK')
+							? prediction.description.slice(0, -4)
+							: prediction.description,
 						id: prediction.place_id,
 						name: null,
-						address: prediction.description,
+						address: prediction.description.endsWith(', UK')
+							? prediction.description.slice(0, -4)
+							: prediction.description,
 						postcode: postalCode || '',
 						type: 2,
 						longitude: place.geometry.location.lng(),
@@ -115,6 +120,7 @@ function PlaceAutocomplete({
 	function handleBlur() {
 		// Delay onBlur to allow option click to register
 		setTimeout(() => {
+			setBlur(true);
 			setShowOption(false);
 		}, 100);
 	}
@@ -146,6 +152,7 @@ function PlaceAutocomplete({
 		<div className='relative'>
 			<TextField
 				value={value}
+				onFocus={() => setBlur(false)}
 				onBlur={handleBlur}
 				onChange={handleInputChange}
 				onKeyDown={handleKeyDown}
@@ -157,7 +164,7 @@ function PlaceAutocomplete({
 				className='px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 w-full'
 				inputRef={inputRef}
 			/>
-			{showOption && (
+			{showOption && !blur && (
 				<ul className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-[40vh] overflow-auto'>
 					{suggestions.map((option, index) => (
 						<li
