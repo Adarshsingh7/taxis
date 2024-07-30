@@ -9,7 +9,7 @@ function CustomDialog({ closeDialog, data, onDeleteBooking }) {
 	const { insertData } = useBooking();
 
 	return (
-		<div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
+		<div className='fixed left-[-20vw] inset-0 w-[40vw] z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
 			<div className='relative w-full max-w-md p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
 				<div className='flex items-center justify-between mb-6'>
 					<h2 className='text-lg font-medium text-card'>Booking Options</h2>
