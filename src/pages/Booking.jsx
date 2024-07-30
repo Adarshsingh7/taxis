@@ -8,7 +8,11 @@ import Autocomplete from '../components/AutoComplete';
 import { useEffect, useState, Fragment, useRef } from 'react';
 import Modal from '../components/Modal';
 import Dragger from '../components/Dragger';
-import { makeBookingQuoteRequest, getAllDrivers } from '../utils/apiReq';
+import {
+	makeBookingQuoteRequest,
+	getAllDrivers,
+	fireCallerEvent,
+} from '../utils/apiReq';
 import SimpleSnackbar from '../components/SnackBar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Loader from './../components/Loader';
@@ -222,12 +226,12 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				onSubmit={handleSubmit}
 			>
 				<>
-					<Modal
+					{/* <Modal
 						open={isPhoneModelActive}
 						setOpen={setIsPhoneModelActive}
 					>
 						<PhoneCheckModal setOpen={setIsPhoneModelActive} />
-					</Modal>
+					</Modal> */}
 					<Modal
 						open={isRepeatBookingModelActive}
 						setOpen={setIsRepeatBookingModelActive}
@@ -598,7 +602,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							/>
 							<div
 								className='px-3 bg-red-700 hover:bg-opacity-80 rounded-lg flex cursor-pointer'
-								onClick={() => setIsPhoneModelActive(true)}
+								onClick={() => fireCallerEvent()}
 							>
 								<span
 									style={{ padding: '1rem 0' }}

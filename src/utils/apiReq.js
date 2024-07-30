@@ -250,6 +250,11 @@ async function getAddressSuggestions(location) {
 	}
 }
 
+async function fireCallerEvent(number = '03333444473') {
+	const URL = `${BASE}/api/CallEvents/CallNotification?caller_id=${number}&recipient_id=03333444473`;
+	return await handleGetReq(URL);
+}
+
 export {
 	getBookingData,
 	makeBooking,
@@ -262,4 +267,5 @@ export {
 	deleteSchedulerBooking,
 	getDriverAvailability,
 	getAddressSuggestions,
+	fireCallerEvent,
 };
