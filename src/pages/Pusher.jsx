@@ -12,16 +12,58 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import Modal from '../components/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button } from '@mui/material';
+import SimpleSnackbar from '../components/SnackBar';
 
 export default function Pusher() {
-	const { data, insertValue, activeTab, onActiveTabChange, deleteBooking } =
-		useBooking();
+	const {
+		data,
+		insertValue,
+		activeTab,
+		onActiveTabChange,
+		deleteBooking,
+		onBooking,
+	} = useBooking();
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 
 	const handleChange = (event, newValue) => {
 		onActiveTabChange(newValue);
 	};
+	const [isBookingSnackBarOpen, setIsBookingSnackBarOpen] = useState(false);
+	const [snackbarMessage, setSnackbarMessage] = useState('');
+
+	function handleBookingUpload(id) {
+		console.log(id);
+		const currentBooking = data[id];
+		if (currentBooking.bookingType === "current") {
+			onUpdateBooking(id).then((data) => {
+				setIsBookingSnackBarOpen(true);
+			if (data.status === 'success') {
+				setSnackbarMessage(
+					"Booking Updated Successfully"
+				);
+			} else {
+				setSnackbarMessage(
+					"Failed to Update Booking"
+				);
+			}
+			})
+		} else {
+			onBooking(id).then((data) => {
+				setIsBookingSnackBarOpen(true);
+				if (data.status === 'success') {
+					setSnackbarMessage(
+						`Booking Created Successfully`
+					);
+				} else {
+					setSnackbarMessage(
+						`Failed to Create booking`
+					);
+				}
+			})
+		}
+		
+	}
 
 	return (
 		<Box
@@ -95,6 +137,13 @@ export default function Pusher() {
 						key={activeTab}
 						insertValue={insertValue}
 						id={activeTab}
+						onBookingUpload={handleBookingUpload}
+					/>
+					<SimpleSnackbar
+						disableReset={true}
+						open={isBookingSnackBarOpen}
+						setOpen={setIsBookingSnackBarOpen}
+						message={snackbarMessage}
 					/>
 				</Box>
 			</Box>

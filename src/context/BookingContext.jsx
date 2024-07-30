@@ -119,6 +119,7 @@ function BookingProvider({ children }) {
 	async function onBooking(itemIndex) {
 		const targetBooking = data[itemIndex];
 		const res = await makeBooking(targetBooking, activeTestMode);
+		console.log('response is ', res);
 		if (res.status === 'success') {
 			dispacher({ type: 'endBooking', payload: { itemIndex } });
 			setActiveTab(itemIndex === 0 ? 0 : itemIndex - 1);

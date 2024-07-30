@@ -16,7 +16,7 @@ import { useAuth } from './../hooks/useAuth';
 import GoogleAutoComplete from '../components/GoogleAutoComplete';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 
-function Booking({ bookingData, id }) {
+function Booking({ bookingData, id, onBookingUpload }) {
 	const {
 		updateValue,
 		onBooking,
@@ -48,22 +48,7 @@ function Booking({ bookingData, id }) {
 
 	async function handleSubmit(e) {
 		e.preventDefault();
-		let res;
-		if (bookingData.bookingType === 'current') {
-			updateData('updatedByName', currentUser.fullName);
-			res = onUpdateBooking(id);
-		} else {
-			res = onBooking(id);
-		}
-		res.then(({ status }) => {
-			if (status !== 'success') {
-				setSnackbarMessage('Failed to create booking');
-				setIsQuoteSnackbarActive(true);
-			} else {
-				setSnackbarMessage('booking created successfully');
-				setIsQuoteSnackbarActive(true);
-			}
-		});
+		onBookingUpload(id);
 	}
 
 	function updateData(property, val) {
@@ -577,7 +562,7 @@ function Booking({ bookingData, id }) {
 								}
 							/>
 						</div>
-						
+
 						<label className='flex items-center'>
 							<span className='mr-2'>All Day</span>
 							<input
