@@ -1,7 +1,6 @@
 /** @format */
 
 import { useState, useEffect, useCallback } from 'react';
-import 'tailwindcss/tailwind.css';
 import { useBooking } from '../hooks/useBooking';
 
 const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
@@ -111,9 +110,11 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 				<h2 className='text-xl font-semibold mb-4 '>
 					📞 ({bookings.Telephone})
 				</h2>
-				<span className='text-center bg-red-700 p-2 text-white'>
-					{numBooking} Caller Waiting..
-				</span>
+				{numBooking > 1 && (
+					<span className='text-center bg-red-700 p-2 text-white'>
+						{numBooking} Caller Waiting..
+					</span>
+				)}
 			</div>
 			<div className='flex border-b mb-4'>
 				<button
