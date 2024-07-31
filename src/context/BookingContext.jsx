@@ -147,28 +147,28 @@ function BookingProvider({ children }) {
 	}
 
 	// this is the caller id use effect it will trigger dialog box when the caller id is received
-	useEffect(() => {
-		if (currentUser && !currentUser.isAdmin) return;
-		function handleBind(data) {
-			try {
-				const parsedData = JSON.parse(data.message);
-				if (
-					parsedData.Current.length === 0 &&
-					parsedData.Previous.length === 0
-				) {
-					insertData({ ...initState[0], PhoneNumber: parsedData.Telephone });
-				} else {
-					setCallerId((prev) => [...prev, parsedData]);
-				}
-			} catch (error) {
-				console.error('Failed to parse message data:', error);
-			}
-		}
-		channel.bind('my-event', handleBind);
-		return () => {
-			channel.unbind('my-event', handleBind);
-		};
-	}, [currentUser]);
+	// useEffect(() => {
+	// 	if (currentUser && !currentUser.isAdmin) return;
+	// 	function handleBind(data) {
+	// 		try {
+	// 			const parsedData = JSON.parse(data.message);
+	// 			if (
+	// 				parsedData.Current.length === 0 &&
+	// 				parsedData.Previous.length === 0
+	// 			) {
+	// 				insertData({ ...initState[0], PhoneNumber: parsedData.Telephone });
+	// 			} else {
+	// 				setCallerId((prev) => [...prev, parsedData]);
+	// 			}
+	// 		} catch (error) {
+	// 			console.error('Failed to parse message data:', error);
+	// 		}
+	// 	}
+	// 	channel.bind('my-event', handleBind);
+	// 	return () => {
+	// 		channel.unbind('my-event', handleBind);
+	// 	};
+	// }, [currentUser]);
 
 	function onRemoveCaller() {
 		const filteredCaller = callerId.filter((_, idx) => idx !== 0);

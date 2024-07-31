@@ -1,5 +1,5 @@
 /** @format */
-import { Button, Switch, TextField } from '@mui/material';
+import { Switch, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { RRule } from 'rrule';
@@ -19,19 +19,21 @@ import Loader from './../components/Loader';
 import { useAuth } from './../hooks/useAuth';
 import GoogleAutoComplete from '../components/GoogleAutoComplete';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import {
+	removeBooking,
+	updateValue,
+	updateValueSilentMode,
+} from '../context/bookingSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Booking({ bookingData, id, onBookingUpload }) {
-	const {
-		updateValue,
-		onBooking,
-		deleteBooking,
-		onUpdateBooking,
-		callerId,
-		updateValueSilentMode,
-	} = useBooking();
-	const [isPhoneModelActive, setIsPhoneModelActive] = useState(false);
+	const dispatch = useDispatch();
+	// const { updateValue, deleteBooking, callerId, updateValueSilentMode } =
+	// 	useBooking();
+
 	const [isRepeatBookingModelActive, setIsRepeatBookingModelActive] =
 		useState(false);
+	const callerId = useSelector((state) => state.caller);
 	const [isAddVIAOpen, setIsAddVIAOpen] = useState(false);
 	const [isQuoteSnackbarActive, setIsQuoteSnackbarActive] = useState(false);
 	const [isDriverModalActive, setDriverModalActive] = useState(false);
@@ -44,10 +46,10 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	const destinationRef = useRef(null);
 
 	function toggleAddress() {
-		updateData('DestinationAddress', bookingData.PickupAddress);
-		updateData('DestinationPostCode', bookingData.PickupPostCode);
-		updateData('PickupAddress', bookingData.DestinationAddress);
-		updateData('PickupPostCode', bookingData.DestinationPostCode);
+		updateData('destinationAddress', bookingData.pickupAddress);
+		updateData('destinationPostCode', bookingData.pickupPostCode);
+		updateData('pickupAddress', bookingData.destinationAddress);
+		updateData('pickupPostCode', bookingData.destinationPostCode);
 	}
 
 	async function handleSubmit(e) {
@@ -56,17 +58,17 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	}
 
 	function updateData(property, val) {
-		updateValue(id, property, val);
+		dispatch(updateValue(id, property, val));
 	}
 
 	function handleAddPickup(location) {
-		updateData('PickupAddress', location.address);
-		updateData('PickupPostCode', location.postcode);
+		updateData('pickupAddress', location.address);
+		updateData('pickupPostCode', location.postcode);
 	}
 
 	function handleAddDestination(location) {
-		updateData('DestinationAddress', location.address);
-		updateData('DestinationPostCode', location.postcode);
+		updateData('destinationAddress', location.address);
+		updateData('destinationPostCode', location.postcode);
 	}
 
 	function addDriverToBooking(driverId) {
@@ -76,15 +78,15 @@ function Booking({ bookingData, id, onBookingUpload }) {
 
 	async function findQuote() {
 		const quote = await makeBookingQuoteRequest({
-			pickupPostcode: bookingData.PickupPostCode,
+			pickupPostcode: bookingData.pickupPostCode,
 			viaPostcodes: bookingData.vias.map((via) => via.postcode),
-			destinationPostcode: bookingData.DestinationPostCode,
-			pickupDateTime: bookingData.PickupDateTime,
-			passengers: bookingData.Passengers,
+			destinationPostcode: bookingData.destinationPostCode,
+			pickupDateTime: bookingData.pickupDateTime,
+			passengers: bookingData.passengers,
 			priceFromBase: bookingData.chargeFromBase,
 		});
 		if (quote.status === 'success') {
-			updateData('Price', +quote.totalPrice);
+			updateData('price', +quote.totalPrice);
 			setIsQuoteDialogActive(true);
 			setQuote(quote);
 		} else {
@@ -95,12 +97,12 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	}
 
 	function resetPrice() {
-		updateData('Price', '');
+		updateData('price', '');
 		setQuote(null);
 	}
 
 	function deleteForm() {
-		deleteBooking(id);
+		dispatch(removeBooking(id));
 	}
 
 	useEffect(() => {
@@ -121,35 +123,47 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		if (!isAuth) return;
 		if (currentUser && !currentUser.fullName) return;
 		if (bookingData.bookingType === 'current') {
-			updateData('updatedByName', currentUser.fullName);
+			dispatch(
+				updateValueSilentMode(id, 'updatedByName', currentUser.fullName)
+			);
 		} else {
-			updateData('bookedByName', currentUser.fullName);
+			dispatch(updateValueSilentMode(id, 'bookedByName', currentUser.fullName));
 		}
-	}, [isAuth, currentUser]);
+	}, [isAuth, currentUser, bookingData.bookingType, dispatch, id]);
 
 	// auto calculate the get quotes
 	useEffect(() => {
-		if (!bookingData.PickupPostCode) return;
-		if (!bookingData.DestinationPostCode && bookingData.vias.length === 0)
+		if (!bookingData.pickupPostCode) return;
+		if (!bookingData.destinationPostCode && bookingData.vias.length === 0)
 			return;
 		if (bookingData.scope !== 0) return;
 		makeBookingQuoteRequest({
-			pickupPostcode: bookingData.PickupPostCode,
+			pickupPostcode: bookingData.pickupPostCode,
 			viaPostcodes: bookingData.vias.map((via) => via.postcode),
-			destinationPostcode: bookingData.DestinationPostCode,
-			pickupDateTime: bookingData.PickupDateTime,
-			passengers: bookingData.Passengers,
+			destinationPostcode: bookingData.destinationPostCode,
+			pickupDateTime: bookingData.pickupDateTime,
+			passengers: bookingData.passengers,
 			priceFromBase: bookingData.chargeFromBase,
 		}).then((quote) => {
 			if (quote.status === 'success') {
-				updateValueSilentMode(id, 'Price', +quote.totalPrice);
-				updateValueSilentMode(id, 'durationText', quote.journeyMinutes);
-				updateValueSilentMode(
-					id,
-					'hours',
-					Math.floor(quote.journeyMinutes / 60)
+				dispatch(updateValueSilentMode(id, 'price', +quote.totalPrice));
+				dispatch(
+					updateValueSilentMode(
+						id,
+						'durationText',
+						String(quote.journeyMinutes)
+					)
 				);
-				updateValueSilentMode(id, 'minutes', quote.journeyMinutes % 60);
+				dispatch(
+					updateValueSilentMode(
+						id,
+						'hours',
+						Math.floor(quote.journeyMinutes / 60)
+					)
+				);
+				dispatch(
+					updateValueSilentMode(id, 'minutes', quote.journeyMinutes % 60)
+				);
 				setQuote(quote);
 			} else {
 				setQuote(null);
@@ -157,13 +171,13 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			}
 		});
 	}, [
-		bookingData.PickupPostCode,
-		bookingData.DestinationPostCode,
+		bookingData.pickupPostCode,
+		bookingData.destinationPostCode,
 		bookingData.postcode,
 		bookingData.chargeFromBase,
 		bookingData.vias,
-		bookingData.PickupDateTime,
-		bookingData.Passengers,
+		bookingData.pickupDateTime,
+		bookingData.passengers,
 	]);
 
 	useEffect(() => {
@@ -184,7 +198,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			// pickupRef.current.select();
 		}
 	}, [
-		bookingData.PickupAddress,
+		bookingData.pickupAddress,
 		bookingData.bookingType,
 		bookingData.formBusy,
 	]);
@@ -247,6 +261,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 					>
 						<ListDrivers
 							onSet={addDriverToBooking}
+							setOpen={setDriverModalActive}
 							id={id}
 						/>
 					</Modal>
@@ -290,9 +305,9 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								required
 								type='datetime-local'
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-								value={convertDateToInputFormat(bookingData.PickupDateTime)}
+								value={convertDateToInputFormat(bookingData.pickupDateTime)}
 								onChange={(e) => {
-									updateData('PickupDateTime', e.target.value);
+									updateData('pickupDateTime', e.target.value);
 									return e.target.value;
 								}}
 							/>
@@ -352,18 +367,18 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						/> */}
 						<GoogleAutoComplete
 							placeholder='Pickup Address'
-							value={bookingData.PickupAddress}
+							value={bookingData.pickupAddress}
 							onPushChange={handleAddPickup}
-							onChange={(e) => updateData('PickupAddress', e.target.value)}
+							onChange={(e) => updateData('pickupAddress', e.target.value)}
 							inputRef={pickupRef}
 						/>
 						<Autocomplete
 							type='postal'
 							required={false}
 							placeholder='Post Code'
-							value={bookingData.PickupPostCode}
+							value={bookingData.pickupPostCode}
 							onPushChange={handleAddPickup}
-							onChange={(e) => updateData('PickupPostCode', e.target.value)}
+							onChange={(e) => updateData('pickupPostCode', e.target.value)}
 						/>
 					</div>
 					{/* Toogle Button Start*/}
@@ -393,10 +408,10 @@ function Booking({ bookingData, id, onBookingUpload }) {
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
 						<GoogleAutoComplete
 							placeholder='Destination Address'
-							value={bookingData.DestinationAddress}
+							value={bookingData.destinationAddress}
 							onPushChange={handleAddDestination}
 							inputRef={destinationRef}
-							onChange={(e) => updateData('DestinationAddress', e.target.value)}
+							onChange={(e) => updateData('destinationAddress', e.target.value)}
 						/>
 						{/* <Autocomplete
 							required={true}
@@ -410,10 +425,10 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							required={false}
 							type='postal'
 							placeholder='Post Code'
-							value={bookingData.DestinationPostCode}
+							value={bookingData.destinationPostCode}
 							onPushChange={handleAddDestination}
 							onChange={(e) =>
-								updateData('DestinationPostCode', e.target.value)
+								updateData('destinationPostCode', e.target.value)
 							}
 						/>
 					</div>
@@ -437,8 +452,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						<div className='flex items-center'>
 							<label className='mr-2'>Passengers</label>
 							<select
-								value={bookingData.Passengers}
-								onChange={(e) => updateData('Passengers', e.target.value)}
+								value={bookingData.passengers}
+								onChange={(e) => updateData('passengers', e.target.value)}
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 							>
 								<option value={1}>1</option>
@@ -494,10 +509,10 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								type='number'
 								required={true}
 								placeholder='Driver Price (£)'
-								value={bookingData.Price}
+								value={bookingData.price}
 								onChange={(e) =>
 									updateData(
-										'Price',
+										'price',
 										(() => {
 											const value = parseFloat(e.target.value);
 											if (e.target.value === '') return '';
@@ -506,7 +521,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 												e.target.value === ''
 											) {
 												return value;
-											} else return bookingData.Price;
+											} else return bookingData.price;
 										})()
 									)
 								}
@@ -529,7 +544,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 											if (!isNaN(value) && value >= 0 && value <= 99) {
 												updateData(
 													'durationText',
-													value * 60 + bookingData.minutes
+													String(value * 60 + bookingData.minutes)
 												);
 												return value;
 											} else if (e.target.value === '') {
@@ -552,7 +567,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 											if (!isNaN(value) && value >= 0 && value <= 59) {
 												updateData(
 													'durationText',
-													bookingData.hours * 60 + value
+													String(bookingData.hours * 60 + value)
 												);
 												return value;
 											} else if (e.target.value === '') {
@@ -583,8 +598,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							required
 							type='text'
 							placeholder='Name'
-							value={bookingData.PassengerName}
-							onChange={(e) => updateData('PassengerName', e.target.value)}
+							value={bookingData.passengerName}
+							onChange={(e) => updateData('passengerName', e.target.value)}
 							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 						/>
 						<div className='flex justify-between flex-row items-center gap-1'>
@@ -740,65 +755,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	);
 }
 
-function PhoneCheckModal({ setOpen }) {
-	const [phone, setPhone] = useState('');
-	function handleSetPhone(e) {
-		const digit = e.target.value;
-
-		// Allow empty string to handle deletions
-		if (digit === '' || /^\d+$/.test(digit)) {
-			if (digit.length <= 11) {
-				setPhone(digit);
-			}
-		}
-	}
-
-	return (
-		<div className='relative bg-card p-10 rounded-lg shadow-lg w-full max-w-md transform transition-transform bg-white'>
-			<button
-				className='absolute top-5 right-5'
-				onClick={() => setOpen(false)}
-			>
-				❌
-			</button>
-
-			<div className='flex justify-center mb-10 rounded-full '>
-				<span className='rounded-full bg-gray-300 p-3'>📞</span>
-			</div>
-			<div className='flex gap-5 mb-5'>
-				<TextField
-					id='standard-error-helper-text'
-					label='Phone Number'
-					variant='standard'
-					value={phone}
-					onChange={handleSetPhone}
-					autoComplete='off'
-				/>
-				<div className='flex gap-2'>
-					<Button
-						variant='contained'
-						color='info'
-					>
-						Search
-					</Button>
-					<Button
-						color='error'
-						onClick={() => setPhone('')}
-					>
-						Clear
-					</Button>
-				</div>
-			</div>
-			<div className='p-3 bg-gray-200 cursor-pointer rounded-lg hidden'>
-				<h1>username</h1>
-				<div className='flex text-sm text-gray-500 '>
-					<span>Start Address</span>-<span>End Address</span>
-				</div>
-			</div>
-		</div>
-	);
-}
-
 function LongButton({ children, color = 'bg-red-700', ...props }) {
 	return (
 		<button
@@ -860,7 +816,9 @@ function parseRecurrenceRule(rule) {
 }
 
 function RepeatBooking({ onSet, id }) {
-	const { data, updateValue } = useBooking();
+	// const { data, updateValue } = useBooking();
+	const dispatch = useDispatch();
+	const data = useSelector((state) => state.bookingForm.bookings);
 	const [frequency, setFrequency] = useState(data[id].frequency);
 	const [repeatEnd, setRepeatEnd] = useState(data[id].repeatEnd);
 	const [repeatEndValue, setRepeatEndValue] = useState(data[id].repeatEndValue);
@@ -892,14 +850,18 @@ function RepeatBooking({ onSet, id }) {
 			repeatEndValue,
 			selectedDays
 		);
-		updateValue(id, 'frequency', frequency);
-		updateValue(id, 'repeatEnd', repeatEnd);
-		updateValue(id, 'repeatEndValue', repeatEndValue);
-		updateValue(id, 'recurrenceRule', rrule);
+		dispatch(updateValue(id, 'frequency', frequency));
+		dispatch(updateValue(id, 'repeatEnd', repeatEnd));
+		dispatch(updateValue(id, 'repeatEndValue', repeatEndValue));
+		dispatch(updateValue(id, 'recurrenceRule', rrule));
 		onSet(false);
 	}
-
-	const calculateRecurrenceRule = (frequency, repeatEndValue, selectedDays) => {
+	const calculateRecurrenceRule = (
+		frequency,
+		repeatEndValue,
+		selectedDays,
+		interval = 1
+	) => {
 		const daysOfWeek = {
 			sun: RRule.SU,
 			mon: RRule.MO,
@@ -924,10 +886,13 @@ function RepeatBooking({ onSet, id }) {
 					? RRule.MONTHLY
 					: null,
 			byweekday: selectedWeekDays,
+			interval: interval,
 		};
 
 		if (repeatEndValue) {
-			ruleOptions.until = new Date(repeatEndValue);
+			// Set the 'until' option as a Date object
+			const untilDate = new Date(repeatEndValue);
+			ruleOptions.until = untilDate;
 		}
 
 		if (!ruleOptions.freq) {
@@ -935,9 +900,15 @@ function RepeatBooking({ onSet, id }) {
 		}
 
 		const rule = new RRule(ruleOptions);
-		return rule.toString();
-	};
+		let ruleString = rule.toString();
 
+		// Remove the time portion (T000000Z) from the 'UNTIL' date
+		ruleString = ruleString.replace(/T000000Z/, '');
+		ruleString = ruleString.replace(/RRULE:/, '');
+		ruleString += ';';
+
+		return ruleString;
+	};
 	useEffect(() => {
 		if (repeatEnd === 'never') setRepeatEndValue('');
 		if (frequency === 'none') {
@@ -1068,7 +1039,9 @@ function RepeatBooking({ onSet, id }) {
 
 // Via Section Modal
 const AddEditViaComponent = ({ onSet, id }) => {
-	const { updateValue, data } = useBooking();
+	// const { updateValue, data } = useBooking();
+	const dispatch = useDispatch();
+	const data = useSelector((state) => state.bookingForm.bookings);
 	const [vias, setVias] = useState(data[id].vias);
 	const [newViaAddress, setNewViaAddress] = useState('');
 	const [newViaPostcode, setNewViaPostcode] = useState('');
@@ -1242,11 +1215,11 @@ function Input({ value, onChange, type, placeholder, required }) {
 }
 
 // Allocate Driver Section Modal
-
-function ListDrivers({ id }) {
+function ListDrivers({ id, setOpen }) {
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
-	const { updateValue } = useBooking();
+	// const { updateValue } = useBooking();
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		getAllDrivers().then((res) => {
@@ -1257,7 +1230,8 @@ function ListDrivers({ id }) {
 	}, []);
 
 	function handleAttactDriver(driver) {
-		updateValue(id, 'userId', driver.id);
+		dispatch(updateValue(id, 'userId', driver.id));
+		setOpen(false);
 	}
 
 	return (
@@ -1300,7 +1274,6 @@ function ListDrivers({ id }) {
 }
 
 // Quote Modal Section
-
 function QuoteDialog({ onSet, quote }) {
 	return (
 		<div className='flex items-center justify-center w-[20vw] bg-white rounded-lg'>
