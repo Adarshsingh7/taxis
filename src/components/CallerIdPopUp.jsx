@@ -1,18 +1,22 @@
 /** @format */
 
 import Modal from './Modal';
-import { useBooking } from '../hooks/useBooking';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import CallerTable from './CallerTable';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCallerToBooking } from '../context/callerSlice';
 
 function CallerIdPopUp() {
-	const { callerId, insertData, onRemoveCaller, isCurrentTabActive } =
-		useBooking();
-	const [open, setOpen] = useState(callerId.length ? true : false);
-	const navigate = useNavigate();
+	// const { caller, insertData, onRemoveCaller, isCurrentTabActive } =
+	// 	useBooking();
+	const dispatch = useDispatch();
+	const caller = useSelector((state) => state.caller);
+	const bookingData = useSelector((state) => state.bookingForm);
+	const [open, setOpen] = useState(caller.length ? true : false);
 	const isEmpty =
-		callerId[0]?.Current?.length === 0 && callerId[0]?.Previous?.length === 0;
+		caller[0]?.Current?.length === 0 && caller[0]?.Previous?.length === 0;
+	const isCurrentTabActive =
+		bookingData.bookings[bookingData.activeBookingIndex].formBusy;
 	const formatDate = (dateStr) => {
 		const date = new Date(dateStr);
 		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
@@ -71,20 +75,19 @@ function CallerIdPopUp() {
 
 	// the simple use effect to open the popup or modal
 	useEffect(() => {
-		if (callerId[0]?.Telephone && !isEmpty) {
+		if (caller[0]?.Telephone && !isEmpty) {
 			setOpen(true);
 		}
-	}, [callerId, isEmpty]);
+	}, [caller, isEmpty]);
 
 	useEffect(() => {
 		if (isCurrentTabActive) return;
-		if (callerId.length > 0) setOpen(true);
-	}, [callerId.length, isCurrentTabActive]);
+		if (caller.length > 0) setOpen(true);
+	}, [caller.length, isCurrentTabActive]);
 
 	function handleSubmit(data) {
-		insertData(filterFiled(data));
-		onRemoveCaller();
-		navigate('/pusher');
+		console.log(filterFiled(data));
+		dispatch(addCallerToBooking(filterFiled(data)));
 		setOpen(false);
 	}
 
@@ -98,8 +101,8 @@ function CallerIdPopUp() {
 		>
 			{!isEmpty && (
 				<CallerTable
-					bookings={callerId[0]}
-					numBooking={callerId.length}
+					bookings={caller[0]}
+					numBooking={caller.length}
 					onConfirm={handleSubmit}
 					onSet={setOpen}
 				/>

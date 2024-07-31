@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useBooking } from '../hooks/useBooking';
+import { useSelector } from 'react-redux';
 
-const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
+const BookingTable = ({ onConfirm, onSet, numBooking }) => {
+	const bookings = useSelector((state) => state.caller[0]);
 	const [activeTab, setActiveTab] = useState(
 		bookings.Current.length > 0 ? 'current-bookings' : 'previous-bookings'
 	);

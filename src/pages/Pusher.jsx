@@ -37,10 +37,12 @@ const channel = pusher.subscribe('my-channel');
 
 export default function Push() {
 	const data = useSelector((state) => state.bookingForm.bookings);
+	const caller = useSelector((state) => state.caller);
 	const activeTab = useSelector(
 		(state) => state.bookingForm.activeBookingIndex
 	);
 	const dispatch = useDispatch();
+	console.log(caller);
 
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -82,7 +84,6 @@ export default function Push() {
 		function handleBind(data) {
 			try {
 				const parsedData = JSON.parse(data.message);
-				console.log(parsedData);
 				if (
 					parsedData.Current.length === 0 &&
 					parsedData.Previous.length === 0
@@ -145,7 +146,9 @@ export default function Push() {
 				setIsOpen={setIsConfirmationModalOpen}
 			>
 				<ConfirmDeleteBookingModal
-					deleteBooking={() => dispatch(endBooking(activeTab))}
+					deleteBooking={() => {
+						dispatch(endBooking(activeTab));
+					}}
 					id={activeTab}
 					setIsConfirmationModalOpen={setIsConfirmationModalOpen}
 				/>

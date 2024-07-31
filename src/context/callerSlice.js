@@ -12,7 +12,7 @@ const callerSlice = createSlice({
 			state.push(action.payload);
 		},
 		removeCaller(state) {
-			state.splice(0, 1);
+			state.shift();
 		},
 	},
 });
