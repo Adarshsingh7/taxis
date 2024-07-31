@@ -37,8 +37,13 @@ export default function FullScreenDialog({ children, open, setOpen }) {
 				onClose={handleClose}
 				TransitionComponent={Transition}
 			>
-				<AppBar sx={{ position: 'fixed', backgroundColor: '#424242' }}>
-					<Toolbar>
+				<AppBar
+					sx={{
+						position: 'relative',
+						backgroundColor: '#424242',
+					}}
+				>
+					<Toolbar className='flex justify-between'>
 						<IconButton
 							edge='start'
 							color='inherit'
@@ -47,18 +52,11 @@ export default function FullScreenDialog({ children, open, setOpen }) {
 						>
 							<CloseIcon />
 						</IconButton>
-						<Typography
-							sx={{ ml: 2, flex: 1 }}
-							variant='h6'
-							component='div'
-						>
-							Sound
-						</Typography>
-						<span>
-							<span className='select-none'>Test</span>
+						<span className='flex align-middle items-center'>
+							<Typography className='select-none'>Test</Typography>
 							<Switch
 								color='primary'
-								value={activeTestMode}
+								defaultChecked={activeTestMode}
 								onChange={() => setActiveTestMode(!activeTestMode)}
 							/>
 						</span>
