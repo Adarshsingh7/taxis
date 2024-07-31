@@ -16,32 +16,33 @@ const BookingTable = ({ onConfirm, onSet, numBooking }) => {
 	const { onRemoveCaller } = useBooking();
 
 	const confirmSelection = useCallback(() => {
-		const formatDate = (dateStr) => {
-			const date = new Date(dateStr);
-			return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-				2,
-				'0'
-			)}-${String(date.getDate()).padStart(2, '0')}T${String(
-				date.getHours()
-			).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-		};
+		// const formatDate = (dateStr) => {
+		// 	const date = new Date(dateStr);
+		// 	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+		// 		2,
+		// 		'0'
+		// 	)}-${String(date.getDate()).padStart(2, '0')}T${String(
+		// 		date.getHours()
+		// 	).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+		// };
 
 		if (selectedRow !== null) {
-			const selectedBooking =
-				activeTab === 'current-bookings'
-					? bookings.Current[selectedRow]
-					: bookings.Previous[selectedRow];
-			selectedBooking.type =
-				activeTab === 'current-bookings' ? 'current' : 'previous';
-			selectedBooking.PickupDateTime =
-				activeTab === 'current-bookings'
-					? formatDate(selectedBooking.PickupDateTime)
-					: formatDate(new Date());
-			onConfirm(selectedBooking);
+			// console.log({ selectedRow, activeTab });
+			// const selectedBooking =
+			// 	activeTab === 'current-bookings'
+			// 		? bookings.Current[selectedRow]
+			// 		: bookings.Previous[selectedRow];
+			// selectedBooking.type =
+			// 	activeTab === 'current-bookings' ? 'current' : 'previous';
+			// selectedBooking.PickupDateTime =
+			// 	activeTab === 'current-bookings'
+			// 		? formatDate(selectedBooking.PickupDateTime)
+			// 		: formatDate(new Date());
+			onConfirm(selectedRow, activeTab);
 		} else {
 			alert('No row selected');
 		}
-	}, [selectedRow, activeTab, bookings, onConfirm]);
+	}, [selectedRow, activeTab, onConfirm]);
 
 	useEffect(() => {
 		const traverseTable = (key) => {

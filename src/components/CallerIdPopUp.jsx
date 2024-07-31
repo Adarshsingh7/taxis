@@ -85,9 +85,8 @@ function CallerIdPopUp() {
 		if (caller.length > 0) setOpen(true);
 	}, [caller.length, isCurrentTabActive]);
 
-	function handleSubmit(data) {
-		console.log(filterFiled(data));
-		dispatch(addCallerToBooking(filterFiled(data)));
+	function handleSubmit(selectedRow, activeTab) {
+		dispatch(addCallerToBooking(selectedRow, activeTab));
 		setOpen(false);
 	}
 
