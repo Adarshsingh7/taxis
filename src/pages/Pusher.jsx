@@ -1,5 +1,5 @@
 /** @format */
-import React from 'react';
+import React, { useEffect } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -13,6 +13,8 @@ import Modal from '../components/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button } from '@mui/material';
 import SimpleSnackbar from '../components/SnackBar';
+import FullScreenDialog from '../components/FullScreenModal';
+import Scheduler from './Scheduler';
 
 export default function Pusher() {
 	const {
@@ -26,6 +28,8 @@ export default function Pusher() {
 	} = useBooking();
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+	const [viewDispatcher, setViewDispatcher] = useState(false);
+	const [viewScheduler, setViewScheduler] = useState(false);
 
 	const handleChange = (event, newValue) => {
 		onActiveTabChange(newValue);
@@ -57,11 +61,42 @@ export default function Pusher() {
 		}
 	}
 
+	const handleKeyDown = (event) => {
+		if (event.key === 'F2') {
+			event.preventDefault();
+			setViewScheduler(false);
+			setViewDispatcher((prev) => !prev);
+		}
+		if (event.key === 'F3') {
+			event.preventDefault();
+			setViewDispatcher(false);
+			setViewScheduler((prev) => !prev);
+		}
+	};
+	useEffect(() => {
+		window.addEventListener('keydown', handleKeyDown);
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+		};
+	}, []);
+
 	return (
 		<Box
 			className='flex justify-between'
 			sx={{ width: '100%' }}
 		>
+			<FullScreenDialog
+				open={viewDispatcher}
+				setOpen={setViewDispatcher}
+			>
+				<span>hello</span>
+			</FullScreenDialog>
+			<FullScreenDialog
+				open={viewScheduler}
+				setOpen={setViewScheduler}
+			>
+				<Scheduler />
+			</FullScreenDialog>
 			<Box
 				sx={{
 					margin: '1vh auto',
