@@ -31,7 +31,7 @@ export default function DispatcherBookingTable({ bookings }) {
 			<thead className='bg-black text-white relative'>
 				<tr className=''>
 					{rows.map((row, i) => (
-						<th key={i} className='py-4 sticky top-0 bg-black z-10'>{row}</th>
+						<th key={i} className='py-4 sticky top-0 bg-[#424242] z-10'>{row}</th>
 					))}
 				</tr>
 			</thead>
