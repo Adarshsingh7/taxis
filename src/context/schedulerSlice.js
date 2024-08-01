@@ -39,5 +39,6 @@ export function deleteSchedulerBooking(bookingId) {
 		});
 		const data = await response.json();
 		dispatch({ type: 'scheduler/removeBooking', payload: { bookingId } });
+		return data;
 	};
 }

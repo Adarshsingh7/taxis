@@ -2,8 +2,12 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useBooking } from '../hooks/useBooking';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeCaller } from '../context/callerSlice';
 
-const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
+const BookingTable = ({ onConfirm, onSet, numBooking }) => {
+	const bookings = useSelector((state) => state.caller[0]);
+	const dispatch = useDispatch();
 	const [activeTab, setActiveTab] = useState(
 		bookings.Current.length > 0 ? 'current-bookings' : 'previous-bookings'
 	);
@@ -11,35 +15,15 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 	const [selectedRow, setSelectedRow] = useState(0);
 	const isEmpty =
 		bookings.Current.length === 0 && bookings.Previous.length === 0;
-	const { onRemoveCaller } = useBooking();
+	// const { onRemoveCaller } = useBooking();
 
 	const confirmSelection = useCallback(() => {
-		const formatDate = (dateStr) => {
-			const date = new Date(dateStr);
-			return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-				2,
-				'0'
-			)}-${String(date.getDate()).padStart(2, '0')}T${String(
-				date.getHours()
-			).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-		};
-
 		if (selectedRow !== null) {
-			const selectedBooking =
-				activeTab === 'current-bookings'
-					? bookings.Current[selectedRow]
-					: bookings.Previous[selectedRow];
-			selectedBooking.type =
-				activeTab === 'current-bookings' ? 'current' : 'previous';
-			selectedBooking.PickupDateTime =
-				activeTab === 'current-bookings'
-					? formatDate(selectedBooking.PickupDateTime)
-					: formatDate(new Date());
-			onConfirm(selectedBooking);
+			onConfirm(selectedRow, activeTab);
 		} else {
 			alert('No row selected');
 		}
-	}, [selectedRow, activeTab, bookings, onConfirm]);
+	}, [selectedRow, activeTab, onConfirm]);
 
 	useEffect(() => {
 		const traverseTable = (key) => {
@@ -73,7 +57,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 			} else if (event.key === 'Enter') {
 				confirmSelection();
 			} else if (event.key === 'Escape') {
-				onRemoveCaller();
+				dispatch(removeCaller());
 				onSet(false);
 			}
 		};
@@ -82,14 +66,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 		return () => {
 			document.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [
-		activeTab,
-		selectedRow,
-		bookings,
-		confirmSelection,
-		onRemoveCaller,
-		onSet,
-	]);
+	}, [activeTab, selectedRow, bookings, confirmSelection, onSet, dispatch]);
 
 	const handleTabClick = (tab) => {
 		setActiveTab(tab);
@@ -192,7 +169,7 @@ const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 					<button
 						className='bg-red-500 text-white py-2 px-4 rounded'
 						onClick={() => {
-							onRemoveCaller();
+							dispatch(removeCaller());
 							onSet(false);
 						}}
 					>

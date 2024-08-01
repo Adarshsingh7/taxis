@@ -12,15 +12,25 @@ const callerSlice = createSlice({
 			state.push(action.payload);
 		},
 		removeCaller(state) {
-			state.splice(0, 1);
+			state.shift();
 		},
 	},
 });
 
-export const addCallerToBooking = function () {
+export const addCallerToBooking = function (selectedRow, activeTab) {
 	return function (dispatch, getState) {
-		const targetCaller = getState().caller[0];
-		dispatch({ type: 'bookingForm/addData', payload: targetCaller });
+		const type = activeTab === 'current-booking' ? 'Current' : 'Previous';
+		let targetCallerData = getState().caller[0][type][selectedRow];
+
+		targetCallerData = {
+			...targetCallerData,
+			bookingType: type,
+			PickupDateTime:
+				type === 'Current' ? targetCallerData.PickupDateTime : new Date(),
+			// Add any additional properties you want to extend here
+		};
+
+		dispatch({ type: 'bookingForm/addData', payload: targetCallerData });
 		dispatch({ type: 'caller/removeCaller' });
 	};
 };
