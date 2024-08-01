@@ -57,7 +57,7 @@ const GoogleMap = () => {
 					style={{ height: '50%', width: '100%' }}
 					mapId='da37f3254c6a6d1c'
 				>
-					<Direction mapRef={mapRef} />
+					{tileLoaded && <Direction mapRef={mapRef} />}
 				</Map>
 			) : (
 				<div className='flex justify-center items-center'>

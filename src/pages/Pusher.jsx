@@ -42,8 +42,6 @@ export default function Push() {
 		(state) => state.bookingForm.activeBookingIndex
 	);
 	const dispatch = useDispatch();
-	console.log(caller);
-
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 	const [viewDispatcher, setViewDispatcher] = useState(false);
@@ -122,7 +120,6 @@ export default function Push() {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
 	}, []);
-	console.log(activeTab);
 
 	return (
 		<Box
@@ -147,7 +144,7 @@ export default function Push() {
 			>
 				<ConfirmDeleteBookingModal
 					deleteBooking={() => {
-						dispatch(endBooking(activeTab));
+						dispatch(endBooking());
 					}}
 					id={activeTab}
 					setIsConfirmationModalOpen={setIsConfirmationModalOpen}
@@ -175,23 +172,23 @@ export default function Push() {
 					{data.map((item, index) => {
 						let label = index === 0 ? 'New Booking' : item.phoneNumber;
 						label +=
-							item.bookingType === 'previous'
+							item.bookingType === 'Previous'
 								? ' (New)'
-								: item.bookingType === 'current'
+								: item.bookingType === 'Current'
 								? ' (Edit)'
 								: '';
 						return (
 							<Tab
 								label={label}
 								icon={
-									index !== 0 && (
+									index !== 0 ? (
 										<CancelIcon
 											color='error'
 											onClick={() => {
 												setIsConfirmationModalOpen(true);
 											}}
 										/>
-									)
+									) : null
 								}
 								iconPosition='end'
 								key={index}
@@ -251,9 +248,9 @@ function ConfirmDeleteBookingModal({
 	id,
 	deleteBooking,
 }) {
-	const handleClick = (id) => {
+	const handleClick = () => {
 		setIsConfirmationModalOpen(false);
-		deleteBooking(id);
+		deleteBooking();
 	};
 	return (
 		<div className='flex flex-col items-center justify-center w-[20vw] bg-white rounded-lg p-4 gap-4'>

@@ -11,7 +11,7 @@ import {
 import { getPoi } from '../utils/apiReq';
 
 const SP8_4QA_COORDS = { lat: 51.0388, lng: -2.2799 };
-const RADIUS = 10000;
+const RADIUS = 50000;
 
 function PlaceAutocomplete({
 	placeholder,

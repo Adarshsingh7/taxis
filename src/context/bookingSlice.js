@@ -71,8 +71,8 @@ const bookingFormSlice = createSlice({
 			state.bookings.push(filterData(action.payload));
 			state.activeBookingIndex = state.bookings.length - 1;
 		},
-		endBooking(state, action) {
-			const { itemIndex } = action.payload;
+		endBooking(state) {
+			const itemIndex = state.activeBookingIndex;
 			if (itemIndex === 0) {
 				state.bookings[itemIndex] = initialState.bookings[0];
 			} else {

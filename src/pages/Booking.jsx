@@ -3,7 +3,6 @@ import { Switch, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { RRule } from 'rrule';
-import { useBooking } from '../hooks/useBooking';
 import Autocomplete from '../components/AutoComplete';
 import { useEffect, useState, Fragment, useRef } from 'react';
 import Modal from '../components/Modal';
@@ -39,11 +38,12 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	const [isDriverModalActive, setDriverModalActive] = useState(false);
 	const [snackbarMessage, setSnackbarMessage] = useState('');
 	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
-	const [quote, setQuote] = useState(null);
+	// const [quote, setQuote] = useState(null);
 	const { currentUser, isAuth } = useAuth();
 	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
 	const pickupRef = useRef(null);
 	const destinationRef = useRef(null);
+	const [quote, setQuote] = useState(null);
 
 	function toggleAddress() {
 		updateData('destinationAddress', bookingData.pickupAddress);
@@ -86,7 +86,9 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			priceFromBase: bookingData.chargeFromBase,
 		});
 		if (quote.status === 'success') {
+			console.log(quote);
 			updateData('price', +quote.totalPrice);
+			updateData('durationText', String(quote.totalMinutes));
 			setIsQuoteDialogActive(true);
 			setQuote(quote);
 		} else {
@@ -98,7 +100,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 
 	function resetPrice() {
 		updateData('price', '');
-		setQuote(null);
 	}
 
 	function deleteForm() {
@@ -133,10 +134,13 @@ function Booking({ bookingData, id, onBookingUpload }) {
 
 	// auto calculate the get quotes
 	useEffect(() => {
-		if (!bookingData.pickupPostCode) return;
-		if (!bookingData.destinationPostCode && bookingData.vias.length === 0)
+		if (
+			!bookingData.pickupPostCode ||
+			(!bookingData.destinationPostCode && bookingData.vias.length === 0) ||
+			bookingData.scope !== 0
+		) {
 			return;
-		if (bookingData.scope !== 0) return;
+		}
 		makeBookingQuoteRequest({
 			pickupPostcode: bookingData.pickupPostCode,
 			viaPostcodes: bookingData.vias.map((via) => via.postcode),
@@ -146,27 +150,22 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			priceFromBase: bookingData.chargeFromBase,
 		}).then((quote) => {
 			if (quote.status === 'success') {
+				console.log(quote);
 				dispatch(updateValueSilentMode(id, 'price', +quote.totalPrice));
 				dispatch(
-					updateValueSilentMode(
-						id,
-						'durationText',
-						String(quote.journeyMinutes)
-					)
+					updateValueSilentMode(id, 'durationText', String(quote.totalMinutes))
 				);
 				dispatch(
 					updateValueSilentMode(
 						id,
 						'hours',
-						Math.floor(quote.journeyMinutes / 60)
+						Math.floor(quote.totalMinutes / 60)
 					)
 				);
-				dispatch(
-					updateValueSilentMode(id, 'minutes', quote.journeyMinutes % 60)
-				);
-				setQuote(quote);
+				dispatch(updateValueSilentMode(id, 'minutes', quote.totalMinutes % 60));
 			} else {
-				setQuote(null);
+				// setQuote(null);
+				updateData('price', '');
 				setSnackbarMessage('Failed to get quote');
 			}
 		});
@@ -178,6 +177,9 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		bookingData.vias,
 		bookingData.pickupDateTime,
 		bookingData.passengers,
+		bookingData.scope,
+		dispatch,
+		id,
 	]);
 
 	useEffect(() => {
@@ -194,8 +196,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			destinationRef.current.focus();
 			destinationRef.current.select();
 		} else {
-			// pickupRef.current.focus();
-			// pickupRef.current.select();
+			pickupRef.current.focus();
+			pickupRef.current.select();
 		}
 	}, [
 		bookingData.pickupAddress,
@@ -480,7 +482,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						<div className='mb-4'>
 							{bookingData.scope !== 1 && (
 								<>
-									{quote ? (
+									{bookingData.price ? (
 										<LongButton onClick={resetPrice}>Reset Price</LongButton>
 									) : (
 										<LongButton onClick={findQuote}>Get Quote</LongButton>
@@ -853,7 +855,9 @@ function RepeatBooking({ onSet, id }) {
 		dispatch(updateValue(id, 'frequency', frequency));
 		dispatch(updateValue(id, 'repeatEnd', repeatEnd));
 		dispatch(updateValue(id, 'repeatEndValue', repeatEndValue));
-		dispatch(updateValue(id, 'recurrenceRule', rrule));
+		if (frequency !== 'none') {
+			dispatch(updateValue(id, 'recurrenceRule', rrule));
+		}
 		onSet(false);
 	}
 	const calculateRecurrenceRule = (
@@ -909,10 +913,13 @@ function RepeatBooking({ onSet, id }) {
 
 		return ruleString;
 	};
+
 	useEffect(() => {
 		if (repeatEnd === 'never') setRepeatEndValue('');
-		if (frequency === 'none') {
-			setRepeatEnd('never');
+		if (frequency === 'daily') {
+			if (frequency === 'none') {
+				setRepeatEnd('never');
+			}
 			setSelectedDays({
 				sun: false,
 				mon: false,
@@ -1036,7 +1043,6 @@ function RepeatBooking({ onSet, id }) {
 		</form>
 	);
 }
-
 // Via Section Modal
 const AddEditViaComponent = ({ onSet, id }) => {
 	// const { updateValue, data } = useBooking();
@@ -1070,7 +1076,7 @@ const AddEditViaComponent = ({ onSet, id }) => {
 		onSet(false);
 	}
 
-	function handleSelectAutocomplete(address, postcode) {
+	function handleSelectAutocomplete({ address, postcode }) {
 		setNewViaAddress(address);
 		setNewViaPostcode(postcode);
 	}
@@ -1103,13 +1109,11 @@ const AddEditViaComponent = ({ onSet, id }) => {
 			</div>
 
 			<div className='space-y-4'>
-				<Autocomplete
-					type='address'
-					placeholder='Add Via Address'
-					required={true}
+				<GoogleAutoComplete
+					placeholder='Pickup Address'
 					value={newViaAddress}
-					onChange={(e) => setNewViaAddress(e.target.value)}
 					onPushChange={handleSelectAutocomplete}
+					onChange={(e) => setNewViaAddress(e.target.value)}
 				/>
 				<Autocomplete
 					type='postal'
@@ -1208,7 +1212,7 @@ function Input({ value, onChange, type, placeholder, required }) {
 			type={type}
 			value={value}
 			onChange={onChange}
-			id={Math.random() * 10000}
+			id={String(Math.random() * 10000)}
 			label={placeholder}
 		/>
 	);
