@@ -2,10 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useBooking } from '../hooks/useBooking';
-import { useSelector } from 'react-redux';
 
-const BookingTable = ({ onConfirm, onSet, numBooking }) => {
-	const bookings = useSelector((state) => state.caller[0]);
+const BookingTable = ({ bookings, onConfirm, onSet, numBooking }) => {
 	const [activeTab, setActiveTab] = useState(
 		bookings.Current.length > 0 ? 'current-bookings' : 'previous-bookings'
 	);
@@ -16,33 +14,32 @@ const BookingTable = ({ onConfirm, onSet, numBooking }) => {
 	const { onRemoveCaller } = useBooking();
 
 	const confirmSelection = useCallback(() => {
-		// const formatDate = (dateStr) => {
-		// 	const date = new Date(dateStr);
-		// 	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-		// 		2,
-		// 		'0'
-		// 	)}-${String(date.getDate()).padStart(2, '0')}T${String(
-		// 		date.getHours()
-		// 	).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-		// };
+		const formatDate = (dateStr) => {
+			const date = new Date(dateStr);
+			return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+				2,
+				'0'
+			)}-${String(date.getDate()).padStart(2, '0')}T${String(
+				date.getHours()
+			).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+		};
 
 		if (selectedRow !== null) {
-			// console.log({ selectedRow, activeTab });
-			// const selectedBooking =
-			// 	activeTab === 'current-bookings'
-			// 		? bookings.Current[selectedRow]
-			// 		: bookings.Previous[selectedRow];
-			// selectedBooking.type =
-			// 	activeTab === 'current-bookings' ? 'current' : 'previous';
-			// selectedBooking.PickupDateTime =
-			// 	activeTab === 'current-bookings'
-			// 		? formatDate(selectedBooking.PickupDateTime)
-			// 		: formatDate(new Date());
-			onConfirm(selectedRow, activeTab);
+			const selectedBooking =
+				activeTab === 'current-bookings'
+					? bookings.Current[selectedRow]
+					: bookings.Previous[selectedRow];
+			selectedBooking.type =
+				activeTab === 'current-bookings' ? 'current' : 'previous';
+			selectedBooking.PickupDateTime =
+				activeTab === 'current-bookings'
+					? formatDate(selectedBooking.PickupDateTime)
+					: formatDate(new Date());
+			onConfirm(selectedBooking);
 		} else {
 			alert('No row selected');
 		}
-	}, [selectedRow, activeTab, onConfirm]);
+	}, [selectedRow, activeTab, bookings, onConfirm]);
 
 	useEffect(() => {
 		const traverseTable = (key) => {

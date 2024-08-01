@@ -1,9 +1,9 @@
 /** @format */
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-// import { useBooking } from '../hooks/useBooking';
+import { useBooking } from '../hooks/useBooking';
 import Booking from './Booking';
 import DriverAllocation from '../components/DriverAllocation';
 import { useState } from 'react';
@@ -15,52 +15,33 @@ import { Button } from '@mui/material';
 import SimpleSnackbar from '../components/SnackBar';
 import FullScreenDialog from '../components/FullScreenModal';
 import Scheduler from './Scheduler';
-import { useSelector } from 'react-redux';
-import {
-	addData,
-	endBooking,
-	onCreateBooking,
-	onUpdateBooking,
-	setActiveTabChange,
-} from '../context/bookingSlice';
 
-import { useDispatch } from 'react-redux';
-import { addCaller } from '../context/callerSlice';
-import Pusher from 'pusher-js';
-
-const pusher = new Pusher('8d1879146140a01d73cf', {
-	cluster: 'eu',
-});
-
-// subscribing to a channel for caller id
-const channel = pusher.subscribe('my-channel');
-
-export default function Push() {
-	const data = useSelector((state) => state.bookingForm.bookings);
-	const caller = useSelector((state) => state.caller);
-	const activeTab = useSelector(
-		(state) => state.bookingForm.activeBookingIndex
-	);
-	const dispatch = useDispatch();
-	console.log(caller);
-
+export default function Pusher() {
+	const {
+		data,
+		insertValue,
+		onUpdateBooking,
+		activeTab,
+		onActiveTabChange,
+		deleteBooking,
+		onBooking,
+	} = useBooking();
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 	const [viewDispatcher, setViewDispatcher] = useState(false);
 	const [viewScheduler, setViewScheduler] = useState(false);
 
 	const handleChange = (event, newValue) => {
-		// onActiveTabChange(newValue);
-		dispatch(setActiveTabChange(newValue));
+		onActiveTabChange(newValue);
 	};
-
 	const [isBookingSnackBarOpen, setIsBookingSnackBarOpen] = useState(false);
 	const [snackbarMessage, setSnackbarMessage] = useState('');
 
-	function handleBookingUpload(id = activeTab) {
+	function handleBookingUpload(id) {
+		console.log(id);
 		const currentBooking = data[id];
 		if (currentBooking.bookingType === 'current') {
-			dispatch(onUpdateBooking(id)).then((data) => {
+			onUpdateBooking(id).then((data) => {
 				setIsBookingSnackBarOpen(true);
 				if (data.status === 'success') {
 					setSnackbarMessage('Booking Updated Successfully');
@@ -69,7 +50,7 @@ export default function Push() {
 				}
 			});
 		} else {
-			dispatch(onCreateBooking(id)).then((data) => {
+			onBooking(id).then((data) => {
 				setIsBookingSnackBarOpen(true);
 				if (data.status === 'success') {
 					setSnackbarMessage(`Booking Created Successfully`);
@@ -79,30 +60,6 @@ export default function Push() {
 			});
 		}
 	}
-
-	useEffect(() => {
-		function handleBind(data) {
-			try {
-				const parsedData = JSON.parse(data.message);
-				if (
-					parsedData.Current.length === 0 &&
-					parsedData.Previous.length === 0
-				) {
-					// dispatch(addCaller({ PhoneNumber: parsedData.Telephone }));
-					dispatch(addData({ phoneNumber: parsedData.Telephone }));
-				} else {
-					// setCallerId((prev) => [...prev, parsedData]);
-					dispatch(addCaller(parsedData));
-				}
-			} catch (error) {
-				console.error('Failed to parse message data:', error);
-			}
-		}
-		channel.bind('my-event', handleBind);
-		return () => {
-			channel.unbind('my-event', handleBind);
-		};
-	}, [dispatch]);
 
 	const handleKeyDown = (event) => {
 		if (event.key === 'F2') {
@@ -122,7 +79,6 @@ export default function Push() {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
 	}, []);
-	console.log(activeTab);
 
 	return (
 		<Box
@@ -141,18 +97,6 @@ export default function Push() {
 			>
 				<Scheduler />
 			</FullScreenDialog>
-			<Modal
-				open={isConfirmationModalOpen}
-				setIsOpen={setIsConfirmationModalOpen}
-			>
-				<ConfirmDeleteBookingModal
-					deleteBooking={() => {
-						dispatch(endBooking(activeTab));
-					}}
-					id={activeTab}
-					setIsConfirmationModalOpen={setIsConfirmationModalOpen}
-				/>
-			</Modal>
 			<Box
 				sx={{
 					margin: '1vh auto',
@@ -173,7 +117,8 @@ export default function Push() {
 					aria-label='scrollable force tabs example'
 				>
 					{data.map((item, index) => {
-						let label = index === 0 ? 'New Booking' : item.phoneNumber;
+						let label = index === 0 ? 'New Booking' : item.PhoneNumber;
+						console.log(item);
 						label +=
 							item.bookingType === 'previous'
 								? ' (New)'
@@ -188,6 +133,7 @@ export default function Push() {
 										<CancelIcon
 											color='error'
 											onClick={() => {
+												console.log('okay');
 												setIsConfirmationModalOpen(true);
 											}}
 										/>
@@ -201,11 +147,22 @@ export default function Push() {
 							/>
 						);
 					})}
+					<Modal
+						open={isConfirmationModalOpen}
+						setIsOpen={setIsConfirmationModalOpen}
+					>
+						<ConfirmDeleteBookingModal
+							deleteBooking={deleteBooking}
+							id={activeTab}
+							setIsConfirmationModalOpen={setIsConfirmationModalOpen}
+						/>
+					</Modal>
 				</Tabs>
 				<Box>
 					<Booking
 						bookingData={data[activeTab]}
 						key={activeTab}
+						insertValue={insertValue}
 						id={activeTab}
 						onBookingUpload={handleBookingUpload}
 					/>

@@ -130,8 +130,7 @@ async function handlePostReq(URL, data) {
 
 async function makeBooking(data, testMode = false) {
 	const URL = `${testMode ? TEST : BASE}/api/Bookings/Create`;
-	// const filteredData = filterData(data);
-	const filteredData = data;
+	const filteredData = filterData(data);
 	return await handlePostReq(URL, filteredData);
 }
 
