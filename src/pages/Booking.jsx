@@ -636,8 +636,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						<Input
 							type='email'
 							placeholder='Email'
-							value={bookingData.Email}
-							onChange={(e) => updateData('Email', e.target.value)}
+							value={bookingData.email}
+							onChange={(e) => updateData('email', e.target.value)}
 							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 						/>
 						{bookingData.scope === 1 ? (
