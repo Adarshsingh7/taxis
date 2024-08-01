@@ -1,7 +1,7 @@
 /** @format */
 
 import { createSlice } from '@reduxjs/toolkit';
-import { makeBooking } from './../utils/apiReq';
+import { makeBooking, updateBooking } from './../utils/apiReq';
 import { formatDate } from './../utils/formatDate';
 const filterData = (data = {}) => ({
 	details: data.Details || '',
@@ -109,8 +109,8 @@ export const updateValue = function (itemIndex, property, value) {
 
 export const onCreateBooking = (itemIndex) => async (dispatch, getState) => {
 	const targetBooking = getState().bookingForm.bookings[itemIndex];
-	console.log(targetBooking);
-	const response = await makeBooking(targetBooking, true);
+	const activeTestMode = getState().bookingForm.isActiveTestMode;
+	const response = await makeBooking(targetBooking, activeTestMode);
 	if (response.status === 'success') {
 		dispatch(endBooking({ itemIndex }));
 		return { status: 'success' };
@@ -124,7 +124,8 @@ export const onCreateBooking = (itemIndex) => async (dispatch, getState) => {
 
 export const onUpdateBooking = (itemIndex) => async (dispatch, getState) => {
 	const targetBooking = getState().bookingForm.bookings[itemIndex];
-	const response = await makeBooking(targetBooking);
+	const activeTestMode = getState().bookingForm.isActiveTestMode;
+	const response = await updateBooking(targetBooking, activeTestMode);
 	if (response.status === 'success') {
 		dispatch(endBooking({ itemIndex }));
 		return { status: 'success' };
