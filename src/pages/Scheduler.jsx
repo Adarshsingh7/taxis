@@ -76,7 +76,7 @@ const AceScheduler = () => {
 	};
 
 	function handleDeleteBooking(bookingId) {
-		onDeleteBooking(bookingId).then((res) => {
+		onDeleteBooking(bookingId, activeTestMode).then((res) => {
 			if (res.status === 'success') {
 				setDialogOpen(false);
 				getBookingData(activeTestMode).then((data) => {
