@@ -49,7 +49,6 @@ const BookingTable = ({ onConfirm, onSet, numBooking }) => {
 		};
 		const handleKeyDown = (event) => {
 			event.preventDefault();
-			console.log(event.key);
 			if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
 				switchTab(event.key);
 			} else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {

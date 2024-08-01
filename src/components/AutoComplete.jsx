@@ -103,7 +103,6 @@ const Autocomplete = ({
 	};
 
 	const handleSelectOption = (option) => {
-		console.log(option);
 		onPushChange(option);
 		setOptions(options.filter((opt) => opt.label !== option.label));
 		setShowOptions(false);

@@ -86,7 +86,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			priceFromBase: bookingData.chargeFromBase,
 		});
 		if (quote.status === 'success') {
-			console.log(quote);
 			updateData('price', +quote.totalPrice);
 			updateData('durationText', String(quote.totalMinutes));
 			setIsQuoteDialogActive(true);
@@ -150,7 +149,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			priceFromBase: bookingData.chargeFromBase,
 		}).then((quote) => {
 			if (quote.status === 'success') {
-				console.log(quote);
 				dispatch(updateValueSilentMode(id, 'price', +quote.totalPrice));
 				dispatch(
 					updateValueSilentMode(id, 'durationText', String(quote.totalMinutes))

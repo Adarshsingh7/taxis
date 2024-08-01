@@ -43,7 +43,7 @@ function filterData(data) {
 		pickupPostCode: data.pickupPostCode,
 		destinationAddress: data.destinationAddress,
 		destinationPostCode: data.destinationPostCode,
-		recurrenceRule: data.recurrenceRule?.split('RRULE:')[1] || null,
+		recurrenceRule: data.recurrenceRule || null,
 		recurrenceID: null,
 		price: data.price,
 		priceAccount: data.priceAccount || 0,
