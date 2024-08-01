@@ -34,13 +34,13 @@ const Autocomplete = ({
 		}
 		async function fetchPoi() {
 			try {
-				// const response = await getPoi(inputValue);
-				const response = await getAddressSuggestions(inputValue);
+				const response = await getPoi(inputValue);
+				// const response = await getAddressSuggestions(inputValue);
 				setOptions(
 					response.map((item) => ({
-						// label: item.address,
-						label: item.formatted_address.join(' '),
-						address: item.formatted_address.join(' '),
+						label: item.address,
+						// label: item.formatted_address.join(' '),
+						// address: item.formatted_address.join(' '),
 						postcode: item.postcode,
 						...item,
 					}))

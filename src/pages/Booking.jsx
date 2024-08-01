@@ -1066,7 +1066,7 @@ const AddEditViaComponent = ({ onSet, id }) => {
 	}
 
 	function handleSave() {
-		updateValue(id, 'vias', vias);
+		dispatch(updateValue(id, 'vias', vias));
 		onSet(false);
 	}
 
