@@ -4,9 +4,13 @@ import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { useBooking } from '../hooks/useBooking';
+import Modal from '../components/Modal';
+import { useState } from 'react';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 function CustomDialog({ closeDialog, data, onDeleteBooking }) {
 	const { insertData } = useBooking();
+	const [viewBookingModal, setViewBookingModal] = useState(false);
 
 	return (
 		<div className='fixed left-[-20vw] inset-0 w-[40vw] z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
@@ -38,7 +42,14 @@ function CustomDialog({ closeDialog, data, onDeleteBooking }) {
 					<BookingButton
 						text='View Booking'
 						color='blue'
+						onClick={() => setViewBookingModal(true)}
 					/>
+					<Modal
+						open={viewBookingModal}
+						setOpen={setViewBookingModal}
+					>
+						<ViewBookingModal data={data} />
+					</Modal>
 					<BookingButton
 						text='Allocate Booking'
 						color='blue'
@@ -90,3 +101,19 @@ const BookingButton = ({ text, color, ...props }) => {
 };
 
 export default CustomDialog;
+
+function ViewBookingModal({ data }) {
+	return (
+		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
+			<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
+				<CalendarTodayIcon sx={{ color: '#E45454' }} />
+			</div>
+			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
+				<div className='flex w-full flex-col justify-center items-center'>
+					<p className='font-medium '>Booking Details</p>
+					<div className='font-bold'># {data.bookingId}</div>
+				</div>
+			</div>
+		</div>
+	);
+}
