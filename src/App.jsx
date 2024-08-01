@@ -5,15 +5,9 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 // test push
 
-import Landing from './pages/Landing';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Login, SignUp } from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import AboutMe from './components/AboutMe';
+import { Login } from './pages/Login';
 import AppLayout from './AppLayout';
-import HashLoader from 'react-spinners/HashLoader';
-import AceScheduler from './pages/Scheduler';
-import Booking from './pages/Booking';
 import Push from './pages/Pusher';
 import Protected from './utils/Protected';
 // import './components/LocationSuggestion';
@@ -24,15 +18,15 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: '/',
-				element: <Landing />,
+				element: (
+					<Protected>
+						<Push />
+					</Protected>
+				),
 			},
 			{
 				path: '/login',
 				element: <Login />,
-			},
-			{
-				path: '/app',
-				element: <AceScheduler />,
 			},
 			{
 				path: '/pusher',
@@ -43,49 +37,12 @@ const router = createBrowserRouter([
 				),
 			},
 			{
-				path: '/create',
+				path: '/*',
 				element: (
 					<Protected>
-						<Booking />,
+						<Push />
 					</Protected>
 				),
-			},
-			{
-				path: '/spinner',
-				element: (
-					<div className='h-screen w-full flex flex-col justify-evenly items-center'>
-						<div></div>
-						<HashLoader color='purple' />
-						<div></div>
-						<div></div>
-					</div>
-				),
-			},
-			{
-				path: '/signup',
-				element: <SignUp />,
-			},
-			{
-				path: '/dashboard',
-				element: <Dashboard />,
-				children: [
-					{
-						path: 'about',
-						element: <AboutMe />,
-					},
-					{
-						path: 'contact',
-						element: <h1>Contact</h1>,
-					},
-					{
-						path: 'review',
-						element: <h1>Reviews</h1>,
-					},
-					{
-						path: 'billing',
-						element: <h1>Billing</h1>,
-					},
-				],
 			},
 		],
 	},
