@@ -27,6 +27,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { addCaller } from '../context/callerSlice';
 import Pusher from 'pusher-js';
+import DispatcherBooking from "../components/Dispatcher/DispatcherBooking"
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -131,7 +132,7 @@ export default function Push() {
 				open={viewDispatcher}
 				setOpen={setViewDispatcher}
 			>
-				<span>hello</span>
+				<DispatcherBooking />
 			</FullScreenDialog>
 			<FullScreenDialog
 				open={viewScheduler}
