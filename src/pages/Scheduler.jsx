@@ -18,6 +18,7 @@ import { getBookingData } from '../utils/apiReq';
 import { useEffect, useState } from 'react';
 import Snackbar from '../components/SnackBar';
 import { useBooking } from '../hooks/useBooking';
+import { useDispatch, useSelector } from 'react-redux';
 
 const AceScheduler = () => {
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -26,7 +27,10 @@ const AceScheduler = () => {
 	const [snackbarMessage, setSnackBarMessage] = useState('');
 	const [data, setData] = useState();
 	const [selectedBookingData, setSelectedBookingData] = useState();
-	const { onDeleteBooking, activeTestMode } = useBooking();
+	const { onDeleteBooking } = useBooking();
+	const activeTestMode = useSelector(
+		(state) => state.bookingForm.isActiveTestMode
+	);
 
 	const fieldsData = {
 		id: 'bookingId',

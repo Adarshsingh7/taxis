@@ -2,19 +2,26 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { Avatar, Menu, MenuItem } from '@mui/material';
+import { Avatar, Menu, MenuItem, Switch } from '@mui/material';
 import { useState } from 'react';
 import { useBooking } from '../hooks/useBooking';
 import CallIcon from '@mui/icons-material/Call';
 import Badge from '@mui/material/Badge';
+import { useDispatch, useSelector } from 'react-redux';
+import { setActiveTestMode } from '../context/bookingSlice';
 
 const Navbar = () => {
 	const navigate = useNavigate();
 	const { isAuth, logout } = useAuth();
-	const { activeTestMode, setActiveTestMode, callerId } = useBooking();
+	const dispatch = useDispatch();
+	// const { setActiveTestMode, callerId } = useBooking();
+	const activeTestMode = useSelector(
+		(state) => state.bookingForm.isActiveTestMode
+	);
+	const callerId = useSelector((state) => state.caller);
 
 	return (
-		<nav className='sticky top-0 z-50 flex justify-between items-center bg-zinc-900 text-white p-4'>
+		<nav className='sticky top-0 z-50 flex justify-between items-center bg-[#424242] text-white p-4'>
 			<span className='flex gap-10'>
 				{/* <Link
 					to='/'
@@ -58,11 +65,10 @@ const Navbar = () => {
 						)}
 						<span className='flex flex-row gap-2 items-center align-middle'>
 							<span>Test Mode</span>
-							<input
-								type='checkbox'
+							<Switch
 								checked={activeTestMode}
 								onChange={(e) => {
-									setActiveTestMode(e.target.checked);
+									dispatch(setActiveTestMode(e.target.checked));
 								}}
 							/>
 						</span>

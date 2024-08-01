@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { Box, Switch } from '@mui/material';
-import { useBooking } from '../hooks/useBooking';
+import { setActiveTestMode } from '../context/bookingSlice';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return (
@@ -22,9 +22,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function FullScreenDialog({ children, open, setOpen }) {
-	// const [open, setOpen] = React.useState(false);
-	const { activeTestMode, setActiveTestMode } = useBooking();
-
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -52,14 +49,6 @@ export default function FullScreenDialog({ children, open, setOpen }) {
 						>
 							<CloseIcon />
 						</IconButton>
-						<span className='flex align-middle items-center'>
-							<Typography className='select-none'>Test</Typography>
-							<Switch
-								color='primary'
-								defaultChecked={activeTestMode}
-								onChange={() => setActiveTestMode(!activeTestMode)}
-							/>
-						</span>
 					</Toolbar>
 				</AppBar>
 				<Box>{children}</Box>
