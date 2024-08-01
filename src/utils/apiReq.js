@@ -24,30 +24,32 @@ function convertDateString(inputDateString) {
 	return outputDateString;
 }
 
+// this was needed when data was not mapped
+// after replacement of context with redux use of this fn is not needed
 function filterData(data) {
 	return JSON.stringify({
 		details: data.details,
-		email: data.Email,
+		email: data.email,
 		durationText: data.durationText + '',
 		durationMinutes: +data.durationText,
 		isAllDay: data.isAllDay,
-		passengerName: data.PassengerName,
-		passengers: data.Passengers,
+		passengerName: data.passengerName,
+		passengers: data.passengers,
 		paymentStatus: data.paymentStatus || 0,
 		scope: data.scope,
-		phoneNumber: data.PhoneNumber,
-		pickupAddress: data.PickupAddress,
-		pickupDateTime: data.PickupDateTime,
-		pickupPostCode: data.PickupPostCode,
-		destinationAddress: data.DestinationAddress,
-		destinationPostCode: data.DestinationPostCode,
+		phoneNumber: data.phoneNumber,
+		pickupAddress: data.pickupAddress,
+		pickupDateTime: data.pickupDateTime,
+		pickupPostCode: data.pickupPostCode,
+		destinationAddress: data.destinationAddress,
+		destinationPostCode: data.destinationPostCode,
 		recurrenceRule: data.recurrenceRule?.split('RRULE:')[1] || null,
 		recurrenceID: null,
-		price: data.Price,
+		price: data.price,
 		priceAccount: data.priceAccount || 0,
 		chargeFromBase: data.chargeFromBase || false,
 		userId: data.userId || null,
-		returnDateTime: data.returnTime || null,
+		returnDateTime: data.returnDateTime || null,
 		vias: data.vias || [],
 		accountNumber: data.accountNumber,
 		bookedByName: data.bookedByName || '',
@@ -130,8 +132,8 @@ async function handlePostReq(URL, data) {
 
 async function makeBooking(data, testMode = false) {
 	const URL = `${testMode ? TEST : BASE}/api/Bookings/Create`;
-	// const filteredData = filterData(data);
-	const filteredData = data;
+	const filteredData = filterData(data);
+	// const filteredData = data;
 	return await handlePostReq(URL, filteredData);
 }
 

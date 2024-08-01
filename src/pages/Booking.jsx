@@ -319,8 +319,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 									disabled={bookingData.returnBooking ? false : true}
 									required
 									type='datetime-local'
-									value={bookingData.returnTime}
-									onChange={(e) => updateData('returnTime', e.target.value)}
+									value={bookingData.returnDateTime}
+									onChange={(e) => updateData('returnDateTime', e.target.value)}
 									className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 								/>
 							) : null}
@@ -343,7 +343,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 									onClick={() => {
 										!bookingData.returnBooking
 											? updateData(
-													'returnTime',
+													'returnDateTime',
 													formatDate(Date.now() + 1 * 60 * 60 * 1000)
 													// eslint-disable-next-line no-mixed-spaces-and-tabs
 											  )
