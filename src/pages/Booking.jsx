@@ -1,50 +1,53 @@
 /** @format */
+// all External Libraries and Components are imports
 import { Switch, TextField } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { RRule } from 'rrule';
-import Autocomplete from '../components/AutoComplete';
-import { useEffect, useState, Fragment, useRef } from 'react';
-import Modal from '../components/Modal';
-import Dragger from '../components/Dragger';
-import {
-	makeBookingQuoteRequest,
-	getAllDrivers,
-	fireCallerEvent,
-} from '../utils/apiReq';
-import SimpleSnackbar from '../components/SnackBar';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Loader from './../components/Loader';
-import { useAuth } from './../hooks/useAuth';
-import GoogleAutoComplete from '../components/GoogleAutoComplete';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import { useEffect, useState, Fragment, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+// Context And Hooks imports for data flow and management
 import {
 	removeBooking,
 	updateValue,
 	updateValueSilentMode,
 } from '../context/bookingSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAuth } from './../hooks/useAuth';
+import { makeBookingQuoteRequest, fireCallerEvent } from '../utils/apiReq';
+
+// All local component utilitys
+import Autocomplete from '../components/AutoComplete';
+import Modal from '../components/Modal';
+import SimpleSnackbar from '../components/SnackBar';
+import GoogleAutoComplete from '../components/GoogleAutoComplete';
+import LongButton from '../components/BookingForm/LongButton';
+
+// All Modals and dialogs for the booking form
+import RepeatBooking from '../components/BookingForm/RepeatBooking';
+import AddAndEditVia from '../components/BookingForm/AddAndEditVia';
+import ListDrivers from '../components/BookingForm/ListDrivers';
+import QuoteDialog from '../components/BookingForm/QuoteDialog';
 
 function Booking({ bookingData, id, onBookingUpload }) {
+	// All Hooks and Contexts for the data flow and management
+	const { currentUser, isAuth } = useAuth();
 	const dispatch = useDispatch();
-	// const { updateValue, deleteBooking, callerId, updateValueSilentMode } =
-	// 	useBooking();
+	const callerId = useSelector((state) => state.caller);
 
+	// All Local States and Hooks for ui and fligs
+	const [isAddVIAOpen, setIsAddVIAOpen] = useState(false);
 	const [isRepeatBookingModelActive, setIsRepeatBookingModelActive] =
 		useState(false);
-	const callerId = useSelector((state) => state.caller);
-	const [isAddVIAOpen, setIsAddVIAOpen] = useState(false);
 	const [isQuoteSnackbarActive, setIsQuoteSnackbarActive] = useState(false);
 	const [isDriverModalActive, setDriverModalActive] = useState(false);
-	const [snackbarMessage, setSnackbarMessage] = useState('');
-	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
-	// const [quote, setQuote] = useState(null);
-	const { currentUser, isAuth } = useAuth();
-	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
+
 	const pickupRef = useRef(null);
 	const destinationRef = useRef(null);
+	const [snackbarMessage, setSnackbarMessage] = useState('');
+	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
+	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
 	const [quote, setQuote] = useState(null);
 
+	// working for 🔁 button basically toggles between pickup and destination addresses
 	function toggleAddress() {
 		updateData('destinationAddress', bookingData.pickupAddress);
 		updateData('destinationPostCode', bookingData.pickupPostCode);
@@ -52,30 +55,36 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		updateData('pickupPostCode', bookingData.destinationPostCode);
 	}
 
+	// Submit the form data to the Puser Component
 	async function handleSubmit(e) {
 		e.preventDefault();
 		onBookingUpload(id);
 	}
 
+	// Abstract way to call the updateValue redux function setting the ID
 	function updateData(property, val) {
 		dispatch(updateValue(id, property, val));
 	}
 
+	// This Function sets the pickup address and postcode by location data used in autocomplete
 	function handleAddPickup(location) {
 		updateData('pickupAddress', location.address);
 		updateData('pickupPostCode', location.postcode);
 	}
 
+	// This Function sets the destination address and postcode by location data used in autocomplete
 	function handleAddDestination(location) {
 		updateData('destinationAddress', location.address);
 		updateData('destinationPostCode', location.postcode);
 	}
 
+	// This Function adds the driver to the booking form
 	function addDriverToBooking(driverId) {
 		setDriverModalActive(false);
 		updateData('userId', driverId);
 	}
 
+	// This Function gets the quote and set the value to the booking form
 	async function findQuote() {
 		const quote = await makeBookingQuoteRequest({
 			pickupPostcode: bookingData.pickupPostCode,
@@ -97,41 +106,23 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}
 	}
 
-	function resetPrice() {
-		updateData('price', '');
-	}
-
+	// This Function cancels the booking form
 	function deleteForm() {
 		dispatch(removeBooking(id));
 	}
 
-	useEffect(() => {
-		const handleKeyPress = (event) => {
-			if (event.key === 'End') {
-				document.getElementById('myForm').requestSubmit();
-			}
-		};
+	// This Function formats the date to the required format
+	function formatDate(dateStr) {
+		const date = new Date(dateStr);
+		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+			2,
+			'0'
+		)}-${String(date.getDate()).padStart(2, '0')}T${String(
+			date.getHours()
+		).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+	}
 
-		window.addEventListener('keydown', handleKeyPress);
-
-		return () => {
-			window.removeEventListener('keydown', handleKeyPress);
-		};
-	}, []);
-
-	useEffect(() => {
-		if (!isAuth) return;
-		if (currentUser && !currentUser.fullName) return;
-		if (bookingData.bookingType === 'current') {
-			dispatch(
-				updateValueSilentMode(id, 'updatedByName', currentUser.fullName)
-			);
-		} else {
-			dispatch(updateValueSilentMode(id, 'bookedByName', currentUser.fullName));
-		}
-	}, [isAuth, currentUser, bookingData.bookingType, dispatch, id]);
-
-	// auto calculate the get quotes
+	// auto calculate the quotes based on Pickup and destination
 	useEffect(() => {
 		if (
 			!bookingData.pickupPostCode ||
@@ -180,6 +171,35 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		id,
 	]);
 
+	// This Function sets the END key functionality
+	useEffect(() => {
+		const handleKeyPress = (event) => {
+			if (event.key === 'End') {
+				document.getElementById('myForm').requestSubmit();
+			}
+		};
+
+		window.addEventListener('keydown', handleKeyPress);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyPress);
+		};
+	}, []);
+
+	// This Function sets the user name to the booking form
+	useEffect(() => {
+		if (!isAuth) return;
+		if (currentUser && !currentUser.fullName) return;
+		if (bookingData.bookingType === 'current') {
+			dispatch(
+				updateValueSilentMode(id, 'updatedByName', currentUser.fullName)
+			);
+		} else {
+			dispatch(updateValueSilentMode(id, 'bookedByName', currentUser.fullName));
+		}
+	}, [isAuth, currentUser, bookingData.bookingType, dispatch, id]);
+
+	// Set the snackbar for caller event
 	useEffect(() => {
 		if (callerId.length > 0 && bookingData.formBusy) {
 			setIsQuoteSnackbarActive(true);
@@ -188,6 +208,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}
 	}, [callerId.length, bookingData.formBusy]);
 
+	// Focus on the input field based on the booking type
 	useEffect(() => {
 		if (bookingData.formBusy) return;
 		if (bookingData.bookingType === 'previous') {
@@ -203,32 +224,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		bookingData.formBusy,
 	]);
 
-	function convertDateToInputFormat(dateStr) {
-		// Parse the input date string
-		let dateObj = new Date(dateStr);
-
-		// Get the individual components
-		let year = dateObj.getFullYear();
-		let month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-		let day = String(dateObj.getDate()).padStart(2, '0');
-		let hours = String(dateObj.getHours()).padStart(2, '0');
-		let minutes = String(dateObj.getMinutes()).padStart(2, '0');
-
-		// Format the date for datetime-local input
-		let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
-
-		return formattedDate;
-	}
-	function formatDate(dateStr) {
-		const date = new Date(dateStr);
-		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-			2,
-			'0'
-		)}-${String(date.getDate()).padStart(2, '0')}T${String(
-			date.getHours()
-		).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-	}
-
 	if (!bookingData) return null;
 
 	return (
@@ -240,20 +235,11 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				onSubmit={handleSubmit}
 			>
 				<>
-					{/* <Modal
-						open={isPhoneModelActive}
-						setOpen={setIsPhoneModelActive}
-					>
-						<PhoneCheckModal setOpen={setIsPhoneModelActive} />
-					</Modal> */}
 					<Modal
 						open={isRepeatBookingModelActive}
 						setOpen={setIsRepeatBookingModelActive}
 					>
-						<RepeatBooking
-							onSet={setIsRepeatBookingModelActive}
-							id={id}
-						/>
+						<RepeatBooking onSet={setIsRepeatBookingModelActive} />
 					</Modal>
 					<Modal
 						open={isDriverModalActive}
@@ -262,17 +248,13 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						<ListDrivers
 							onSet={addDriverToBooking}
 							setOpen={setDriverModalActive}
-							id={id}
 						/>
 					</Modal>
 					<Modal
 						open={isAddVIAOpen}
 						setOpen={setIsAddVIAOpen}
 					>
-						<AddEditViaComponent
-							onSet={setIsAddVIAOpen}
-							id={id}
-						/>
+						<AddAndEditVia onSet={setIsAddVIAOpen} />
 					</Modal>
 					<Modal
 						open={isQuoteDialogActive}
@@ -293,19 +275,13 @@ function Booking({ bookingData, id, onBookingUpload }) {
 					/>
 				</>
 				<div className='max-w-3xl mx-auto bg-card p-6 rounded-lg shadow-lg'>
-					{/* <div className='mb-4'>
-						<LongButton onClick={() => setIsPhoneModelActive(true)}>
-							Phone Number Lookup
-						</LongButton>
-					</div> */}
-
 					<div className='flex items-center justify-between mb-4'>
 						<div className='flex gap-5 flex-col md:flex-row'>
 							<input
 								required
 								type='datetime-local'
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-								value={convertDateToInputFormat(bookingData.pickupDateTime)}
+								value={formatDate(bookingData.pickupDateTime)}
 								onChange={(e) => {
 									updateData('pickupDateTime', e.target.value);
 									return e.target.value;
@@ -356,15 +332,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 					{/* Google AutoSuggestion 1 */}
 
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
-						{/* <Autocomplete
-							type='address'
-							required={true}
-							placeholder='Pickup Address'
-							value={bookingData.PickupAddress}
-							onPushChange={handleAddPickup}
-							inputRef={pickupRef}
-							onChange={(e) => updateData('PickupAddress', e.target.value)}
-						/> */}
 						<GoogleAutoComplete
 							placeholder='Pickup Address'
 							value={bookingData.pickupAddress}
@@ -413,14 +380,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							inputRef={destinationRef}
 							onChange={(e) => updateData('destinationAddress', e.target.value)}
 						/>
-						{/* <Autocomplete
-							required={true}
-							type='address'
-							placeholder='Destination Address'
-							value={bookingData.DestinationAddress}
-							onPushChange={handleAddDestination}
-							onChange={(e) => updateData('DestinationAddress', e.target.value)}
-						/> */}
 						<Autocomplete
 							required={false}
 							type='postal'
@@ -481,7 +440,9 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							{bookingData.scope !== 1 && (
 								<>
 									{bookingData.price ? (
-										<LongButton onClick={resetPrice}>Reset Price</LongButton>
+										<LongButton onClick={() => updateData('price', '')}>
+											Reset Price
+										</LongButton>
 									) : (
 										<LongButton onClick={findQuote}>Get Quote</LongButton>
 									)}
@@ -489,19 +450,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							)}
 						</div>
 					</div>
-
-					{/* <div className='mb-4'>
-						{bookingData.scope !== 1 && (
-							<>
-								{quote ? (
-									<LongButton onClick={resetPrice}>Reset Price</LongButton>
-								) : (
-									<LongButton onClick={findQuote}>Get Quote</LongButton>
-								)}
-							</>
-						)}
-					</div> */}
-
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
 						<div className='flex items-center gap-2'>
 							<span>£</span>
@@ -662,13 +610,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						<>
 							<p>options</p>
 							<div className='options mb-4 flex justify-between gap-3 align-middle items-center'>
-								{/* <Input
-							type='text'
-							placeholder='Payment Status'
-							value={bookingData.options}
-							onChange={(e) => updateData('options', e.target.value)}
-							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-						/> */}
 								<p className='text-gray-700 text-sm'>status:</p>
 								<select
 									name='status'
@@ -755,452 +696,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	);
 }
 
-function LongButton({ children, color = 'bg-red-700', ...props }) {
-	return (
-		<button
-			className={`w-full bg-destructive text-destructive-foreground py-2 rounded-lg ${color} text-white hover:bg-opacity-80`}
-			type='button'
-			{...props}
-		>
-			{children}
-		</button>
-	);
-}
-
-function parseRecurrenceRule(rule) {
-	const daysOfWeek = {
-		sun: false,
-		mon: false,
-		tue: false,
-		wed: false,
-		thu: false,
-		fri: false,
-		sat: false,
-	};
-
-	const ruleParts = rule.split(';');
-	const bydayPart = ruleParts.find((part) => part.startsWith('BYDAY='));
-
-	if (bydayPart) {
-		const days = bydayPart.replace('BYDAY=', '').split(',');
-		days.forEach((day) => {
-			switch (day) {
-				case 'SU':
-					daysOfWeek.sun = true;
-					break;
-				case 'MO':
-					daysOfWeek.mon = true;
-					break;
-				case 'TU':
-					daysOfWeek.tue = true;
-					break;
-				case 'WE':
-					daysOfWeek.wed = true;
-					break;
-				case 'TH':
-					daysOfWeek.thu = true;
-					break;
-				case 'FR':
-					daysOfWeek.fri = true;
-					break;
-				case 'SA':
-					daysOfWeek.sat = true;
-					break;
-				default:
-					break;
-			}
-		});
-	}
-
-	return daysOfWeek;
-}
-
-function RepeatBooking({ onSet, id }) {
-	// const { data, updateValue } = useBooking();
-	const dispatch = useDispatch();
-	const data = useSelector((state) => state.bookingForm.bookings);
-	const [frequency, setFrequency] = useState(data[id].frequency);
-	const [repeatEnd, setRepeatEnd] = useState(data[id].repeatEnd);
-	const [repeatEndValue, setRepeatEndValue] = useState(data[id].repeatEndValue);
-	const [selectedDays, setSelectedDays] = useState(
-		parseRecurrenceRule(data[id].recurrenceRule)
-	);
-
-	const handleClick = (day) => {
-		setSelectedDays((prevDays) => ({
-			...prevDays,
-			[day]: !prevDays[day],
-		}));
-	};
-
-	const dayLabels = [
-		{ key: 'sun', label: 'S' },
-		{ key: 'mon', label: 'M' },
-		{ key: 'tue', label: 'T' },
-		{ key: 'wed', label: 'W' },
-		{ key: 'thu', label: 'T' },
-		{ key: 'fri', label: 'F' },
-		{ key: 'sat', label: 'S' },
-	];
-
-	function submitForm(e) {
-		e.preventDefault();
-		const rrule = calculateRecurrenceRule(
-			frequency,
-			repeatEndValue,
-			selectedDays
-		);
-		dispatch(updateValue(id, 'frequency', frequency));
-		dispatch(updateValue(id, 'repeatEnd', repeatEnd));
-		dispatch(updateValue(id, 'repeatEndValue', repeatEndValue));
-		if (frequency !== 'none') {
-			dispatch(updateValue(id, 'recurrenceRule', rrule));
-		}
-		onSet(false);
-	}
-	const calculateRecurrenceRule = (
-		frequency,
-		repeatEndValue,
-		selectedDays,
-		interval = 1
-	) => {
-		const daysOfWeek = {
-			sun: RRule.SU,
-			mon: RRule.MO,
-			tue: RRule.TU,
-			wed: RRule.WE,
-			thu: RRule.TH,
-			fri: RRule.FR,
-			sat: RRule.SA,
-		};
-
-		const selectedWeekDays = Object.keys(selectedDays)
-			.filter((day) => selectedDays[day])
-			.map((day) => daysOfWeek[day]);
-
-		const ruleOptions = {
-			freq:
-				frequency === 'daily'
-					? RRule.DAILY
-					: frequency === 'weekly'
-					? RRule.WEEKLY
-					: frequency === 'monthly'
-					? RRule.MONTHLY
-					: null,
-			byweekday: selectedWeekDays,
-			interval: interval,
-		};
-
-		if (repeatEndValue) {
-			// Set the 'until' option as a Date object
-			const untilDate = new Date(repeatEndValue);
-			ruleOptions.until = untilDate;
-		}
-
-		if (!ruleOptions.freq) {
-			return '';
-		}
-
-		const rule = new RRule(ruleOptions);
-		let ruleString = rule.toString();
-
-		// Remove the time portion (T000000Z) from the 'UNTIL' date
-		ruleString = ruleString.replace(/T000000Z/, '');
-		ruleString = ruleString.replace(/RRULE:/, '');
-		ruleString += ';';
-
-		return ruleString;
-	};
-
-	useEffect(() => {
-		if (repeatEnd === 'never') setRepeatEndValue('');
-		if (frequency === 'daily') {
-			if (frequency === 'none') {
-				setRepeatEnd('never');
-			}
-			setSelectedDays({
-				sun: false,
-				mon: false,
-				tue: false,
-				wed: false,
-				thu: false,
-				fri: false,
-				sat: false,
-			});
-		}
-	}, [repeatEnd, frequency]);
-
-	return (
-		<form className='p-4 bg-card shadow rounded-lg max-w-lg w-[30vw] mx-auto mt-6 bg-white'>
-			<div className='flex justify-between items-center mb-4'>
-				<p className='text-xl font-bold'>Repeat Booking</p>
-				<div className='flex items-center'></div>
-			</div>
-			<div className='space-y-4'>
-				<div>
-					<label
-						htmlFor='frequency'
-						className='block text-sm font-medium text-foreground mb-1'
-					>
-						Frequency
-					</label>
-					<select
-						id='frequency'
-						className='border border-border rounded-md p-2 w-full bg-input text-foreground focus:ring-primary focus:border-primary'
-						value={frequency}
-						onChange={(e) => setFrequency(e.target.value)}
-					>
-						<option value='none'>None</option>
-						<option value='daily'>Daily</option>
-						<option value='weekly'>Weekly</option>
-					</select>
-				</div>
-				{frequency === 'daily' ? null : (
-					<>
-						{frequency !== 'none' ? (
-							<div>
-								<label className='block text-sm font-medium text-foreground mb-1'>
-									Days
-								</label>
-								<div className='flex space-x-2 justify-center'>
-									{dayLabels.map(({ key, label }) => (
-										<div
-											key={key}
-											className={`w-10 h-10 rounded-full text-white flex items-center justify-center cursor-pointer select-none ${
-												selectedDays[key] ? 'bg-red-700' : 'bg-red-500'
-											}`}
-											onClick={() => handleClick(key)}
-										>
-											{label}
-										</div>
-									))}
-								</div>
-							</div>
-						) : null}
-					</>
-				)}
-
-				<div>
-					<label
-						htmlFor='repeat-end'
-						className='block text-sm font-medium text-foreground mb-1'
-					>
-						Repeat End
-					</label>
-					{frequency !== 'none' ? (
-						<select
-							id='repeat-end'
-							className='border border-border rounded-md p-2 w-full bg-input text-foreground focus:ring-primary focus:border-primary '
-							value={repeatEnd}
-							onChange={(e) => setRepeatEnd(e.target.value)}
-						>
-							<option value='never'>Never</option>
-							<option value='until'>Until</option>
-						</select>
-					) : (
-						<select
-							disabled
-							required
-							id='repeat-end'
-							className='border border-border rounded-md p-2 w-full bg-input text-foreground focus:ring-primary focus:border-primary'
-							value={repeatEnd}
-							onChange={(e) => setRepeatEnd(e.target.value)}
-						>
-							<option value='never'>Never</option>
-							<option value='until'>Until</option>
-						</select>
-					)}
-				</div>
-				<div>
-					<label
-						htmlFor='end-date'
-						className='block text-sm font-medium text-foreground mb-1'
-					>
-						Repeat End Date
-					</label>
-					<input
-						disabled={repeatEnd === 'never'}
-						required
-						type='date'
-						value={repeatEndValue}
-						onChange={(e) => setRepeatEndValue(e.target.value)}
-						id='end-date'
-						className='border border-border rounded-md p-2 w-full bg-input text-foreground focus:ring-primary focus:border-primary'
-					/>
-				</div>
-				<div className='grid grid-cols-2 gap-4'>
-					<LongButton onClick={submitForm}>Confirm</LongButton>
-					<LongButton
-						color='bg-gray-700'
-						onClick={() => onSet(false)}
-					>
-						Cancel
-					</LongButton>
-				</div>
-			</div>
-		</form>
-	);
-}
 // Via Section Modal
-const AddEditViaComponent = ({ onSet, id }) => {
-	// const { updateValue, data } = useBooking();
-	const dispatch = useDispatch();
-	const data = useSelector((state) => state.bookingForm.bookings);
-	const [vias, setVias] = useState(data[id].vias);
-	const [newViaAddress, setNewViaAddress] = useState('');
-	const [newViaPostcode, setNewViaPostcode] = useState('');
-
-	const handleAddVia = () => {
-		if (newViaAddress || newViaPostcode) {
-			setVias((prevVias) => [
-				...prevVias,
-				{
-					address: newViaAddress,
-					postcode: newViaPostcode,
-					viaSequence: prevVias.length,
-				},
-			]);
-			setNewViaAddress('');
-			setNewViaPostcode('');
-		}
-	};
-
-	function handleSetVias(viasArray) {
-		setVias(viasArray.map((via, index) => ({ ...via, viaSequence: index })));
-	}
-
-	function handleSave() {
-		dispatch(updateValue(id, 'vias', vias));
-		onSet(false);
-	}
-
-	function handleSelectAutocomplete({ address, postcode }) {
-		setNewViaAddress(address);
-		setNewViaPostcode(postcode);
-	}
-
-	return (
-		<div className='bg-white p-6 rounded-lg shadow-lg w-[25vw] max-w-md mx-auto'>
-			<h2 className='text-2xl font-semibold mb-4 flex items-center'>
-				<svg
-					className='h-6 w-6 text-gray-600 mr-2'
-					fill='none'
-					viewBox='0 0 24 24'
-					stroke='currentColor'
-				>
-					<path
-						strokeLinecap='round'
-						strokeLinejoin='round'
-						strokeWidth='2'
-						d='M9 11h6m-3-3v6m-4 4h8a2 2 0 002-2V7a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z'
-					></path>
-				</svg>
-				Manage Via Points
-			</h2>
-
-			<div className='space-y-2 mb-4 max-h-[30vh] overflow-auto'>
-				<Dragger
-					items={vias}
-					setItems={handleSetVias}
-					Child={VIABar}
-				/>
-			</div>
-
-			<div className='space-y-4'>
-				<GoogleAutoComplete
-					placeholder='Pickup Address'
-					value={newViaAddress}
-					onPushChange={handleSelectAutocomplete}
-					onChange={(e) => setNewViaAddress(e.target.value)}
-				/>
-				<Autocomplete
-					type='postal'
-					required={false}
-					placeholder='Add Via PostCode'
-					value={newViaPostcode}
-					onChange={(e) => setNewViaPostcode(e.target.value)}
-					onPushChange={handleSelectAutocomplete}
-				/>
-				<LongButton
-					color='bg-gray-700'
-					onClick={handleAddVia}
-				>
-					Add New Via
-				</LongButton>
-			</div>
-
-			<div className='mt-4 flex flex-row gap-1'>
-				<LongButton
-					color='bg-red-700'
-					onClick={() => onSet(false)}
-				>
-					Cancel
-				</LongButton>
-				<LongButton
-					onClick={handleSave}
-					color='bg-green-700'
-				>
-					Save
-				</LongButton>
-			</div>
-		</div>
-	);
-};
-
-function VIABar({ data, onEdit, isEditing, setEditingItem }) {
-	const [newAddress, setNewAddress] = useState(data.address);
-	const [newPostcode, setNewPostcode] = useState(data.postcode);
-
-	useEffect(() => {
-		setNewAddress(data.address);
-		setNewPostcode(data.postcode);
-	}, [data]);
-
-	const handleEdit = () => {
-		if (!newAddress && !newPostcode) return;
-		onEdit({ ...data, address: newAddress, postcode: newPostcode });
-	};
-
-	return (
-		<div className='flex gap-5 p-2 rounded'>
-			{isEditing ? (
-				<div className='flex flex-col gap-2'>
-					<input
-						className='border'
-						value={newAddress}
-						onChange={(e) => setNewAddress(e.target.value)}
-					/>
-					<input
-						className='border'
-						value={newPostcode}
-						onChange={(e) => setNewPostcode(e.target.value)}
-					/>
-				</div>
-			) : (
-				<span>
-					{data.address} {data.postcode}
-				</span>
-			)}
-			<div className='space-x-2 m-auto'>
-				{isEditing ? (
-					<button
-						className='text-blue-500 hover:text-blue-700'
-						onClick={handleEdit}
-					>
-						<CheckCircleIcon fontSize='5px' />
-					</button>
-				) : (
-					<button
-						className='text-blue-500 hover:text-blue-700'
-						onClick={() => setEditingItem(data)}
-					>
-						<EditIcon fontSize='5px' />
-					</button>
-				)}
-			</div>
-		</div>
-	);
-}
 
 function Input({ value, onChange, type, placeholder, required }) {
 	return (
@@ -1213,106 +709,6 @@ function Input({ value, onChange, type, placeholder, required }) {
 			id={String(Math.random() * 10000)}
 			label={placeholder}
 		/>
-	);
-}
-
-// Allocate Driver Section Modal
-function ListDrivers({ id, setOpen }) {
-	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]);
-	// const { updateValue } = useBooking();
-	const dispatch = useDispatch();
-
-	useEffect(() => {
-		getAllDrivers().then((res) => {
-			setData(res.users.filter((user) => user.roleString !== 'Admin'));
-		});
-		setLoading(true);
-		setLoading(false);
-	}, []);
-
-	function handleAttactDriver(driver) {
-		dispatch(updateValue(id, 'userId', driver.id));
-		setOpen(false);
-	}
-
-	return (
-		<div className='bg-gray-100 w-[25vw] px-2 py-10 rounded'>
-			<div className='header flex w-full flex-col gap-5 text-center text-gray-700'>
-				<div className=''>
-					<p className='text-5xl'>
-						<AccountCircleIcon fontSize='35px' />
-					</p>
-					<p className='m-5 font-bold uppercase'>allocate driver</p>
-				</div>
-				<div>
-					<p className='text-2xl font-bold uppercase'>select driver</p>
-				</div>
-				<div className='m-auto w-full h-[50vh] overflow-auto relative'>
-					{loading ? (
-						<Loader />
-					) : (
-						data.map((el, idx) => (
-							<div
-								key={idx}
-								className='bg-gray-200 mb-2 cursor-pointer'
-								onClick={() => handleAttactDriver(el)}
-							>
-								<div className='flex m-auto justify-center items-center align-middle gap-5'>
-									<div
-										style={{ backgroundColor: el.colorRGB }}
-										className={`h-5 w-5 rounded-full`}
-									></div>
-									<p className='text-2xl'>{el?.fullName}</p>
-								</div>
-								<p>{el.regNo}</p>
-							</div>
-						))
-					)}
-				</div>
-			</div>
-		</div>
-	);
-}
-
-// Quote Modal Section
-function QuoteDialog({ onSet, quote }) {
-	return (
-		<div className='flex items-center justify-center w-[20vw] bg-white rounded-lg'>
-			<div className='bg-white p-6 rounded-lg max-w-xs w-full px-12'>
-				<div className='flex justify-center mb-4'>
-					<div className='bg-red-100 rounded-full p-2'>
-						<AccountCircleIcon />
-					</div>
-				</div>
-				<div className='text-center mb-4'>
-					<h2 className='text-lg font-semibold'>Booking Quote</h2>
-				</div>
-				<div className='bg-green-700 text-white py-4 px-8 rounded-lg text-center mb-4'>
-					<p className='text-2xl font-bold'>£{quote.totalPrice.toFixed(2)}</p>
-					<p className='text-sm'>{quote.tariff}</p>
-				</div>
-				<div className='text-center mb-2'>
-					<p className='text-gray-600'>Journey Time</p>
-					<p className='text-lg font-semibold'>{quote.totalMileage} Miles</p>
-				</div>
-				<div className='text-center mb-6'>
-					<p className='text-gray-600'>Distance</p>
-					<p className='text-lg font-semibold'>
-						{Math.floor(quote.totalMinutes / 60)} Hour(s){' '}
-						{quote.totalMinutes % 60} Minutes
-					</p>
-				</div>
-				<div className='text-center'>
-					<button
-						className='bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600'
-						onClick={() => onSet(false)}
-					>
-						Close
-					</button>
-				</div>
-			</div>
-		</div>
 	);
 }
 
