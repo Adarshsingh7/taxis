@@ -70,11 +70,15 @@ const DriverAllocation = () => {
 						EmployeeId: driver.userId,
 						color: driver.colorCode,
 					}));
-					const formattedEmployeeData = res.drivers.map((driver) => ({
-						Text: driver.fullName,
-						Id: driver.userId,
-						Color: driver.colorCode,
-					}));
+					const formattedEmployeeData = res.drivers
+						.map((driver) => ({
+							Text: driver.fullName,
+							Id: driver.userId,
+							Color: driver.colorCode,
+							...driver,
+						}))
+						.filter((driver) => driver.description.includes('UNAVAILABLE'));
+
 					setData(formattedData);
 					setEmployeeData(formattedEmployeeData);
 				}
@@ -84,6 +88,8 @@ const DriverAllocation = () => {
 		};
 		fetchDriverAvailability();
 	}, []);
+
+	console.log(employeeData);
 
 	const onPopupOpen = (args) => {
 		args.cancel = true; // Disable popup editing
