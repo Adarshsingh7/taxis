@@ -554,18 +554,18 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							<Input
 								type='text'
 								placeholder='Phone'
-								value={bookingData.PhoneNumber}
+								value={bookingData.phoneNumber}
 								onChange={(e) => {
 									const value = e.target.value;
 									// Remove non-numeric characters and limit to 12 digits
 									const cleanedValue = value.replace(/\D/g, '').slice(0, 12);
-									updateData('PhoneNumber', cleanedValue);
+									updateData('phoneNumber', cleanedValue);
 								}}
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 							/>
 							<div
 								className='px-3 bg-red-700 hover:bg-opacity-80 rounded-lg flex cursor-pointer'
-								onClick={() => fireCallerEvent()}
+								onClick={() => fireCallerEvent(bookingData.phoneNumber)}
 							>
 								<span
 									style={{ padding: '1rem 0' }}

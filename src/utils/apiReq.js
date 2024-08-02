@@ -253,8 +253,9 @@ async function getAddressSuggestions(location) {
 	}
 }
 
-async function fireCallerEvent(number = '03333444473') {
-	const URL = `${BASE}/api/CallEvents/CallNotification?caller_id=${number}&recipient_id=03333444473`;
+async function fireCallerEvent(number) {
+	const URL = `${BASE}/api/CallEvents/CallerLookup?caller_id=${number}`;
+	if (number.length < 10) return;
 	return await handleGetReq(URL);
 }
 

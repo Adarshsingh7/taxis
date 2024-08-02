@@ -27,7 +27,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { addCaller } from '../context/callerSlice';
 import Pusher from 'pusher-js';
-import DispatcherBooking from "../components/Dispatcher/DispatcherBooking"
+import DispatcherBooking from '../components/Dispatcher/DispatcherBooking';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -84,12 +84,12 @@ export default function Push() {
 		function handleBind(data) {
 			try {
 				const parsedData = JSON.parse(data.message);
+				const PhoneNumber = parsedData.Telephone;
 				if (
 					parsedData.Current.length === 0 &&
 					parsedData.Previous.length === 0
 				) {
-					// dispatch(addCaller({ PhoneNumber: parsedData.Telephone }));
-					dispatch(addData({ phoneNumber: parsedData.Telephone }));
+					dispatch(addData({ PhoneNumber }));
 				} else {
 					// setCallerId((prev) => [...prev, parsedData]);
 					dispatch(addCaller(parsedData));
