@@ -19,6 +19,15 @@ import { useEffect, useState } from 'react';
 import Snackbar from '../components/SnackBar';
 import { useBooking } from '../hooks/useBooking';
 import { useSelector } from 'react-redux';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+
+import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import Button from '@mui/material/Button';
+import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
+import LocalTaxiOutlinedIcon from '@mui/icons-material/LocalTaxiOutlined';
+import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 
 const AceScheduler = () => {
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -31,6 +40,7 @@ const AceScheduler = () => {
 	const activeTestMode = useSelector(
 		(state) => state.bookingForm.isActiveTestMode
 	);
+	const [viewBookingModal, setViewBookingModal] = useState(false);
 
 	const fieldsData = {
 		id: 'bookingId',
@@ -110,7 +120,7 @@ const AceScheduler = () => {
 				editorTemplate={null}
 				popupOpen={(args) => (args.cancel = true)}
 			>
-				{dialogOpen && (
+				{dialogOpen && !viewBookingModal && (
 					<Modal
 						open={dialogOpen}
 						setOpen={setDialogOpen}
@@ -119,6 +129,18 @@ const AceScheduler = () => {
 							closeDialog={() => setDialogOpen(false)}
 							data={selectedBookingData}
 							onDeleteBooking={handleDeleteBooking}
+							setViewBookingModal={setViewBookingModal}
+						/>
+					</Modal>
+				)}
+				{viewBookingModal && (
+					<Modal
+						open={viewBookingModal}
+						setOpen={setViewBookingModal}
+					>
+						<ViewBookingModal
+							data={selectedBookingData}
+							setViewBookingModal={setViewBookingModal}
 						/>
 					</Modal>
 				)}
@@ -128,3 +150,164 @@ const AceScheduler = () => {
 	);
 };
 export default AceScheduler;
+
+function ViewBookingModal({ data, setViewBookingModal }) {
+	console.log(data);
+	return (
+		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
+			<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
+				<CalendarTodayIcon sx={{ color: '#E45454' }} />
+			</div>
+			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
+				<div className='flex w-full flex-col justify-center items-center'>
+					<p className='font-medium '>Booking Details</p>
+					<div className='font-bold'># {data?.bookingId}</div>
+				</div>
+				<div className='bg-[#16A34A] text-center font-medium text-white py-2 px-4 w-full rounded-sm'>
+					<p>Booking Confirmed</p>
+				</div>
+				{/* Pickup */}
+				<div className='bg-[#F3F4F6] w-full flex flex-row justify-between items-center gap-10 border-y-gray-300 border-y'>
+					<HomeOutlinedIcon sx={{ color: '#16A34A', marginLeft: '1rem' }} />
+					<div className='w-full flex flex-col items-start gap-1 mb-2'>
+						<div className='w-full py-1 border-b-gray-300 border-b-[1px]'>
+							<p className='font-medium'>Pickup</p>
+						</div>
+						<div className='w-full flex flex-col items-start'>
+							<p className='font-medium'>
+								{data?.dateCreated?.split('T').join(' ').split('.')[0]}
+							</p>
+							<p className='text-[14px] text-orange-900 cursor-pointer'>
+								{data?.pickupAddress}
+							</p>
+							<p className='text-[14px] text-orange-900 cursor-pointer'>
+								{data?.pickupPostCode}
+							</p>
+						</div>
+					</div>
+				</div>
+				{/* Via if Present */}
+				{data?.vias.length > 0 && (
+					<div className='bg-[#F3F4F6] w-full flex flex-row justify-between items-center gap-10 border-y-gray-300 border-y'>
+						<HomeOutlinedIcon sx={{ color: '#16A34A', marginLeft: '1rem' }} />
+						<div className='w-full flex flex-col items-start gap-1 mb-2'>
+							<div className='w-full py-1 border-b-gray-300 border-b-[1px]'>
+								<p className='font-medium'>Via's</p>
+							</div>
+							{data?.vias.map((via) => (
+								<div className='w-full flex flex-col items-start'>
+									<p className='text-[14px] text-orange-900 cursor-pointer'>
+										{via.address}
+									</p>
+									<p className='text-[14px] text-orange-900 cursor-pointer'>
+										{via.postCode}
+									</p>
+								</div>
+							))}
+						</div>
+					</div>
+				)}
+				{/* Destination */}
+				<div className='bg-[#F3F4F6] w-full flex flex-row justify-between items-center gap-10 border-y-gray-300 border-y '>
+					<HomeOutlinedIcon sx={{ color: '#16A34A', marginLeft: '1rem' }} />
+					<div className='w-full flex flex-col items-start gap-1 mb-2'>
+						<div className='w-full py-1 border-b-gray-300 border-b-[1px]'>
+							<p className='font-medium'>Destination</p>
+						</div>
+						<div className='w-full flex flex-col items-start'>
+							<p className='text-[14px] text-orange-900 cursor-pointer'>
+								{data?.destinationAddress}
+							</p>
+							<p className='text-[14px] text-orange-900 cursor-pointer'>
+								{data?.destinationPostCode}
+							</p>
+						</div>
+					</div>
+				</div>
+				{/* Details - Journey */}
+				<div className='bg-[#F3F4F6] w-full flex flex-row justify-between items-center gap-10 border-y-gray-300 border-y '>
+					<div className='w-full flex flex-col items-start gap-1 mb-2'>
+						<div className='w-full flex justify-end '>
+							<div className='w-[80%] py-1 border-b-gray-300 border-b-[1px]'>
+								<p className='font-medium'>Details</p>
+							</div>
+						</div>
+						<div className='w-full flex flex-row justify-start gap-10 items-center'>
+							<PersonOutlineOutlinedIcon
+								sx={{ marginLeft: '1rem', padding: '1px' }}
+							/>
+							<div className=' w-full flex flex-col py-1'>
+								<p className='font-medium text-black'>{data?.passengerName}</p>
+								<p className='text-[14px] text-black'>
+									{data?.passengers} <span>Passenger(s)</span>
+								</p>
+							</div>
+						</div>
+						<div className='w-full flex flex-row justify-start gap-10 items-center'>
+							<LocalPhoneOutlinedIcon
+								sx={{ marginLeft: '1rem', padding: '1px' }}
+							/>
+							<div className=' w-full flex flex-col py-1'>
+								<p className='text-[14px] text-orange-900 cursor-pointer'>
+									{data.phoneNumber}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				{/* Price - Information */}
+				<div className='bg-[#F3F4F6] w-full flex flex-row justify-between items-center gap-10 border-y-gray-300 border-y '>
+					<div className='w-full flex flex-col items-start gap-1 mb-2'>
+						<div className='w-full flex justify-end '>
+							<div className='w-[80%] py-1 border-b-gray-300 border-b-[1px]'>
+								<p className='font-medium'>Price - Journey Information</p>
+							</div>
+						</div>
+						<div className='w-full flex flex-row justify-start gap-10 items-center'>
+							<WatchLaterOutlinedIcon
+								sx={{ marginLeft: '1rem', padding: '2px' }}
+							/>
+							<div className=' w-full flex flex-col py-1'>
+								<p className='text-[14px] text-black'>
+									{Math.floor(data?.durationMinutes / 60)} <span>Hour(s)</span>{' '}
+									{data?.durationMinutes % 60} <span>Minute(s)</span>
+								</p>
+							</div>
+						</div>
+						{data?.mileageText > 0 && (
+							<div className='w-full flex flex-row justify-start gap-10 items-center'>
+								<LocalTaxiOutlinedIcon
+									sx={{ marginLeft: '1rem', padding: '2px' }}
+								/>
+								<div className=' w-full flex flex-col py-1'>
+									<p className='text-[14px] text-black'>{data?.mileageText}</p>
+								</div>
+							</div>
+						)}
+						{data?.price > 0 && (
+							<div className='w-full flex flex-row justify-start gap-10 items-center'>
+								<CurrencyPoundOutlinedIcon
+									sx={{ marginLeft: '1rem', padding: '3px' }}
+								/>
+								<div className=' w-full flex flex-col py-1'>
+									<p className='text-[14px] text-orange-900 cursor-pointer'>
+										{data.price}
+									</p>
+								</div>
+							</div>
+						)}
+					</div>
+				</div>
+				<Button
+					variant='contained'
+					color='error'
+					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+					className='w-full cursor-pointer'
+					onClick={() => setViewBookingModal(false)}
+				>
+					Back
+				</Button>
+			</div>
+		</div>
+	);
+}
