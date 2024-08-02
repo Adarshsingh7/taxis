@@ -116,7 +116,7 @@ const AceScheduler = () => {
 				editorTemplate={null}
 				popupOpen={(args) => (args.cancel = true)}
 			>
-				{dialogOpen && !viewBookingModal && (
+				{(dialogOpen && !viewBookingModal) && (
 					<Modal
 						open={dialogOpen}
 						setOpen={setDialogOpen}
@@ -127,19 +127,17 @@ const AceScheduler = () => {
 							onDeleteBooking={handleDeleteBooking}
 							setViewBookingModal={setViewBookingModal}
 						/>
-					</Modal>
+					</Modal> 
+					
 				)}
-				{viewBookingModal && (
+				{ viewBookingModal &&
 					<Modal
 						open={viewBookingModal}
 						setOpen={setViewBookingModal}
 					>
-						<ViewBookingModal
-							data={selectedBookingData}
-							setViewBookingModal={setViewBookingModal}
-						/>
+						<ViewBookingModal data={selectedBookingData} setViewBookingModal={setViewBookingModal} />
 					</Modal>
-				)}
+				}
 				<Inject services={[Day, Agenda]} />
 			</ScheduleComponent>
 		</ProtectedRoute>
@@ -148,6 +146,7 @@ const AceScheduler = () => {
 export default AceScheduler;
 
 function ViewBookingModal({ data, setViewBookingModal }) {
+	
 	return (
 		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
 			<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
@@ -204,9 +203,7 @@ function ViewBookingModal({ data, setViewBookingModal }) {
 							</div>
 						</div>
 						<div className='w-full flex flex-row justify-start gap-10 items-center'>
-							<PersonOutlineOutlinedIcon
-								sx={{ marginLeft: '1rem', padding: '1px' }}
-							/>
+							<PersonOutlineOutlinedIcon sx={{ marginLeft: '1rem',  padding: "1px"}} />
 							<div className=' w-full flex flex-col py-1'>
 								<p className='font-medium text-black'>{data?.passengerName}</p>
 								<p className='text-[14px] text-black'>
@@ -215,9 +212,7 @@ function ViewBookingModal({ data, setViewBookingModal }) {
 							</div>
 						</div>
 						<div className='w-full flex flex-row justify-start gap-10 items-center'>
-							<LocalPhoneOutlinedIcon
-								sx={{ marginLeft: '1rem', padding: '1px' }}
-							/>
+							<LocalPhoneOutlinedIcon sx={{ marginLeft: '1rem', padding: "1px"}} />
 							<div className=' w-full flex flex-col py-1'>
 								<p className='text-[14px] text-orange-900'>
 									{data.phoneNumber}
@@ -226,15 +221,7 @@ function ViewBookingModal({ data, setViewBookingModal }) {
 						</div>
 					</div>
 				</div>
-				<Button
-					variant='contained'
-					color='error'
-					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-					className='w-full'
-					onClick={() => setViewBookingModal(false)}
-				>
-					Back
-				</Button>
+				<Button variant='contained' color='error' sx={{paddingY: "0.5rem", marginTop: "4px"}} className='w-full' onClick={() => setViewBookingModal(false)}>Back</Button>
 			</div>
 		</div>
 	);
