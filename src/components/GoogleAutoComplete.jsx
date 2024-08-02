@@ -146,7 +146,11 @@ function PlaceAutocomplete({
 
 	useEffect(() => {
 		if (suggestions.length > 0) setShowOption(true);
-	}, [suggestions]);
+		if (value.length < 3) {
+			setSuggestions([]);
+			setShowOption(false);
+		}
+	}, [suggestions, value.length]);
 
 	return (
 		<div className='relative'>

@@ -58,9 +58,9 @@ function filterData(data) {
 	});
 }
 
-function createObjectForToday(today = new Date()) {
+function createDateObject(today = new Date()) {
 	// Set time to 18:30:00
-	today.setHours(18, 30, 0, 0); // Hours, Minutes, Seconds, Milliseconds
+	today.setHours(0, 0, 0, 0); // Hours, Minutes, Seconds, Milliseconds
 
 	// Calculate "to" date by adding 24 hours
 	const toDate = new Date(today.getTime() + 24 * 60 * 60 * 1000);
@@ -137,12 +137,12 @@ async function makeBooking(data, testMode = false) {
 	return await handlePostReq(URL, filteredData);
 }
 
-const getBookingData = async function (testMode = false) {
+const getBookingData = async function (date, testMode = false) {
 	const accessToken = localStorage.getItem('authToken');
 	if (!accessToken) return;
 
 	const URL = `${testMode ? TEST : BASE}/api/Bookings/DateRange`;
-	const dataToSend = createObjectForToday();
+	const dataToSend = createDateObject(date);
 
 	// Use handlePostReq function
 	const response = await handlePostReq(URL, dataToSend);

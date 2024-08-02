@@ -18,7 +18,7 @@ const GoogleMap = () => {
 	const timeoutRef = useRef(null);
 
 	useEffect(() => {
-		if (mapLoaded && !tileLoaded) {
+		if (!mapLoaded || (mapLoaded && !tileLoaded)) {
 			// Set a timeout to reload the map if tiles are not loaded
 			timeoutRef.current = setTimeout(() => {
 				setReloadKey((prevKey) => prevKey + 1);
@@ -89,24 +89,18 @@ function Direction({ mapRef }) {
 
 	useEffect(() => {
 		if (!routeLibrary || !map) {
-			// console.log('Map or routeLibrary not available');
 			return;
 		}
-		// console.log('Initializing Directions Service and Renderer');
 		setDirectionService(new routeLibrary.DirectionsService());
 		setDirectionRenderer(new routeLibrary.DirectionsRenderer({ map }));
 	}, [map, routeLibrary]);
 
 	useEffect(() => {
 		if (!directionService || !directionRenderer) {
-			// console.log('DirectionService or DirectionRenderer not available');
 			return;
 		}
 
 		if (!pickupAddress || !destinationAddress) {
-			// console.log(
-			// 	'Pickup or Destination address not available, disabling directions'
-			// );
 			directionRenderer.setDirections({ routes: [] });
 
 			if (mapRef.current) {
@@ -120,13 +114,6 @@ function Direction({ mapRef }) {
 		const waypoints = vias.map((via) => ({
 			location: `${via.address}, ${via.postcode}`,
 		}));
-
-		// console.log('Requesting directions', {
-		// 	origin: `${pickupAddress}, ${pickupPostCode}`,
-		// 	destination: `${destinationAddress}, ${destinationPostCode}`,
-		// 	travelMode: window.google.maps.TravelMode.DRIVING,
-		// 	waypoints,
-		// });
 
 		directionService
 			.route({

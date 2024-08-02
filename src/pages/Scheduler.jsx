@@ -18,16 +18,16 @@ import { getBookingData } from '../utils/apiReq';
 import { useEffect, useState } from 'react';
 import Snackbar from '../components/SnackBar';
 import { useBooking } from '../hooks/useBooking';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const AceScheduler = () => {
 	const [dialogOpen, setDialogOpen] = useState(false);
-	const [selectedEvent, setSelectedEvent] = useState(null);
 	const [open, setOpen] = useState(false);
 	const [snackbarMessage, setSnackBarMessage] = useState('');
 	const [data, setData] = useState();
 	const [selectedBookingData, setSelectedBookingData] = useState();
 	const { onDeleteBooking } = useBooking();
+	const [currentDate, setCurrentDate] = useState(new Date());
 	const activeTestMode = useSelector(
 		(state) => state.bookingForm.isActiveTestMode
 	);
@@ -49,17 +49,16 @@ const AceScheduler = () => {
 	}
 
 	useEffect(() => {
-		getBookingData(activeTestMode).then((data) => {
+		getBookingData(currentDate, activeTestMode).then((data) => {
 			if (data.status === 'success') {
 				setData(data.bookings);
-				localStorage.setItem('bookings', JSON.stringify(data.bookings));
 				setSnackBarMessage('Booking Refreshed');
 			} else {
 				setSnackBarMessage(data.message);
 			}
-			setOpen(true);
+			if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 		});
-	}, [activeTestMode]);
+	}, [activeTestMode, currentDate]);
 
 	const eventSettings = {
 		dataSource: data,
@@ -70,7 +69,6 @@ const AceScheduler = () => {
 	};
 
 	const onEventClick = (args) => {
-		setSelectedEvent(args.event);
 		setSelectedBookingData(args.event);
 		setDialogOpen(true);
 	};
@@ -79,7 +77,7 @@ const AceScheduler = () => {
 		onDeleteBooking(bookingId, activeTestMode).then((res) => {
 			if (res.status === 'success') {
 				setDialogOpen(false);
-				getBookingData(activeTestMode).then((data) => {
+				getBookingData(currentDate, activeTestMode).then((data) => {
 					if (data.status === 'success') {
 						setData(data.bookings);
 						localStorage.setItem('bookings', JSON.stringify(data.bookings));
@@ -105,6 +103,7 @@ const AceScheduler = () => {
 			/>
 			<ScheduleComponent
 				currentView='Day'
+				navigating={(args) => setCurrentDate(args.currentDate)}
 				eventSettings={eventSettings}
 				eventRendered={onEventRendered}
 				eventClick={onEventClick}

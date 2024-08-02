@@ -3,6 +3,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { makeBooking, updateBooking } from './../utils/apiReq';
 import { formatDate } from './../utils/formatDate';
+
+// Filter data to avoid undefined values and make the data structure consistent
 const filterData = (data = {}) => ({
 	details: data.Details || '',
 	email: data.Email || '',
@@ -59,6 +61,7 @@ const bookingFormSlice = createSlice({
 	name: 'bookingForm',
 	initialState,
 	reducers: {
+		// update the specific value of the booking form data based on the itemIndex
 		updateDataValue: {
 			prepare(itemIndex, property, value) {
 				return { payload: { itemIndex, property, value } };
@@ -68,10 +71,12 @@ const bookingFormSlice = createSlice({
 				state.bookings[itemIndex][property] = value;
 			},
 		},
+		// add new booking data to the booking form basically to from the CLI caller events
 		addData(state, action) {
 			state.bookings.push(filterData(action.payload));
 			state.activeBookingIndex = state.bookings.length - 1;
 		},
+		// to remove a booking session from the booking form data and from the UI
 		endBooking(state) {
 			const itemIndex = state.activeBookingIndex;
 			if (itemIndex === 0) {
@@ -93,6 +98,7 @@ const bookingFormSlice = createSlice({
 	},
 });
 
+// Action Creator that will indirectly call the updateDataValue with and set FormBusy
 export const updateValue = function (itemIndex, property, value) {
 	return function (dispatch, getState) {
 		const targetBooking = getState().bookingForm.bookings[itemIndex];
@@ -107,6 +113,15 @@ export const updateValue = function (itemIndex, property, value) {
 	};
 };
 
+// Action Creator that will indirectly call the updateDataValue without and set FormBusy
+export const updateValueSilentMode =
+	(itemIndex, property, value) => (dispatch) => {
+		dispatch(
+			bookingFormSlice.actions.updateDataValue(itemIndex, property, value)
+		);
+	};
+
+// Action Creator that will save the booking to the Backend api and return the response
 export const onCreateBooking = (itemIndex) => async (dispatch, getState) => {
 	const targetBooking = getState().bookingForm.bookings[itemIndex];
 	const activeTestMode = getState().bookingForm.isActiveTestMode;
@@ -122,6 +137,7 @@ export const onCreateBooking = (itemIndex) => async (dispatch, getState) => {
 	}
 };
 
+// Action Creator that will update the booking to the Backend api and return the response
 export const onUpdateBooking = (itemIndex) => async (dispatch, getState) => {
 	const targetBooking = getState().bookingForm.bookings[itemIndex];
 	const activeTestMode = getState().bookingForm.isActiveTestMode;
@@ -135,13 +151,7 @@ export const onUpdateBooking = (itemIndex) => async (dispatch, getState) => {
 	}
 };
 
-export const updateValueSilentMode =
-	(itemIndex, property, value) => (dispatch) => {
-		dispatch(
-			bookingFormSlice.actions.updateDataValue(itemIndex, property, value)
-		);
-	};
-
+// Action Creator that will remove the booking from the booking form data
 export const removeBooking = (itemIndex) => (dispatch) => {
 	dispatch(endBooking({ itemIndex }));
 };

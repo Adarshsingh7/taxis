@@ -12,7 +12,6 @@ import Push from './pages/Pusher';
 import Protected from './utils/Protected';
 import Loader from './components/Loader';
 import ErrorPage from './pages/ErrorPage';
-// import './components/LocationSuggestion';
 
 const router = createBrowserRouter([
 	{
@@ -29,7 +28,6 @@ const router = createBrowserRouter([
 						<Push />
 					</Protected>
 				),
-				errorElement: <ErrorPage />,
 				loader: Loader,
 			},
 			{
@@ -41,6 +39,7 @@ const router = createBrowserRouter([
 				),
 			},
 		],
+		errorElement: <ErrorPage />,
 	},
 ]);
 
