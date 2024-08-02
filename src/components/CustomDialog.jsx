@@ -196,6 +196,9 @@ function AllocateModal({ setAllocateModal, data }) {
 }
 
 function ConfirmAllocationModal({ setAllocateModal, driver, setConfirmAllocation }) {
+	const handleConfirmClick = (driver) => {
+       
+    };
 	return (
 		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
 			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
@@ -224,6 +227,7 @@ function ConfirmAllocationModal({ setAllocateModal, driver, setConfirmAllocation
                     color='success'
                     sx={{ paddingY: '0.5rem', marginTop: '4px' }}
                     className='w-full cursor-pointer'
+					onClick={() => handleConfirmClick(driver)}
                 >
                     Confirm
                 </Button>
