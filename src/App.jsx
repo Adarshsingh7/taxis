@@ -6,10 +6,12 @@ import '@fontsource/roboto/700.css';
 // test push
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Login, SignUp } from './pages/Login';
+import { Login } from './pages/Login';
 import AppLayout from './AppLayout';
 import Push from './pages/Pusher';
 import Protected from './utils/Protected';
+import Loader from './components/Loader';
+import ErrorPage from './pages/ErrorPage';
 // import './components/LocationSuggestion';
 
 const router = createBrowserRouter([
@@ -27,6 +29,8 @@ const router = createBrowserRouter([
 						<Push />
 					</Protected>
 				),
+				errorElement: <ErrorPage />,
+				loader: Loader,
 			},
 			{
 				path: '/*',
