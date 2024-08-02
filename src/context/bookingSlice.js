@@ -74,7 +74,10 @@ const bookingFormSlice = createSlice({
 		// add new booking data to the booking form basically to from the CLI caller events
 		addData(state, action) {
 			state.bookings.push(filterData(action.payload));
-			state.activeBookingIndex = state.bookings.length - 1;
+			state.activeBookingIndex = state.bookings[state.activeBookingIndex]
+				.formBusy
+				? state.activeBookingIndex
+				: state.bookings.length - 1;
 		},
 		// to remove a booking session from the booking form data and from the UI
 		endBooking(state) {
