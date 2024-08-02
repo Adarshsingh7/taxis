@@ -19,8 +19,6 @@ function CustomDialog({
 	const { insertData } = useBooking();
 	const [allocateModal, setAllocateModal] = useState(false);
 
-
-	
 	return (
 		<div className='fixed left-[-20vw] inset-0 w-[40vw] z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
 			<div className='relative w-full max-w-md p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
@@ -113,11 +111,9 @@ const BookingButton = ({ text, color, ...props }) => {
 
 export default CustomDialog;
 
-function AllocateModal({setAllocateModal , data }) {
+function AllocateModal({ setAllocateModal, data }) {
 	const [loading, setLoading] = useState(false);
 	const [driverData, setDriverData] = useState([]);
-	
-	
 
 	useEffect(() => {
 		getAllDrivers().then((res) => {
@@ -128,7 +124,6 @@ function AllocateModal({setAllocateModal , data }) {
 	}, []);
 
 	function handleAttactDriver(driver) {
-		
 		setOpen(false);
 	}
 
@@ -155,17 +150,19 @@ function AllocateModal({setAllocateModal , data }) {
 						driverData.map((el, idx) => (
 							<div
 								key={idx}
-								className='bg-gray-200 flex flex-col justify-center items-center mb-2 cursor-pointer'
+								className='bg-gray-200 flex justify-center w-full items-center mx-auto cursor-pointer gap-4 mb-2'
 								onClick={() => handleAttactDriver(el)}
 							>
-								<div className='flex m-auto justify-center items-center align-middle gap-5'>
+								<div className='w-full mx-auto flex justify-center items-center'>
 									<div
 										style={{ backgroundColor: el.colorRGB }}
 										className={`h-5 w-5 rounded-full`}
 									></div>
-									<p className='text-xl'>{el?.fullName}</p>
+									<div className='flex flex-col w-[50%] justify-center items-center'>
+										<p className='text-xl'>{el?.fullName}</p>
+										<p className='text-[.8rem]'>{el.regNo}</p>
+									</div>
 								</div>
-								<p>{el.regNo}</p>
 							</div>
 						))
 					)}
