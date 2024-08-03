@@ -62,7 +62,11 @@ function CustomDialog({
 						open={allocateModal}
 						setOpen={setAllocateModal}
 					>
-						<AllocateModal setAllocateModal={setAllocateModal} data={data} />
+						<AllocateModal
+							setAllocateModal={setAllocateModal}
+							data={data}
+							closeDialog={closeDialog}
+						/>
 					</Modal>
 					<BookingButton
 						onClick={() => insertData(data)}
@@ -113,7 +117,7 @@ const BookingButton = ({ text, color, ...props }) => {
 export default CustomDialog;
 
 // Allocate Driver Modal Structure
-function AllocateModal({ setAllocateModal, data }) {
+function AllocateModal({ setAllocateModal, closeDialog, data }) {
 	// console.log(data)
 	const [loading, setLoading] = useState(false);
 	const [driverData, setDriverData] = useState([]);
@@ -132,7 +136,6 @@ function AllocateModal({ setAllocateModal, data }) {
 		setConfirmAllocation(true);
 		setSelectedDriver(driver);
 		setBookingData(data);
-		
 	}
 
 	return (
@@ -155,7 +158,13 @@ function AllocateModal({ setAllocateModal, data }) {
 					open={confirmAllocation}
 					setOpen={setConfirmAllocation}
 				>
-					<ConfirmAllocationModal driver={selectedDriver} bookingData={bookingData} setConfirmAllocation={setConfirmAllocation}/>
+					<ConfirmAllocationModal
+						driver={selectedDriver}
+						bookingData={bookingData}
+						setAllocateModal={setAllocateModal}
+						closeDialog={closeDialog}
+						setConfirmAllocation={setConfirmAllocation}
+					/>
 				</Modal>
 				<div className='m-auto w-full h-[50vh] overflow-auto'>
 					{loading ? (
@@ -202,20 +211,26 @@ function AllocateModal({ setAllocateModal, data }) {
 
 // Confirm Allocation Modal Structure
 
-function ConfirmAllocationModal({ driver, bookingData, setConfirmAllocation }) {
-	
-	
+function ConfirmAllocationModal({
+	setAllocateModal,
+	closeDialog,
+	driver,
+	bookingData,
+	setConfirmAllocation,
+}) {
 	const user = useAuth();
 	const handleConfirmClick = (driver) => {
-        const newAllocationData = {
-			"bookingId": bookingData.bookingId,
-			"userId": driver.id,
-			"actionByUserId": user.currentUser.id,
-		  }
+		const newAllocationData = {
+			bookingId: bookingData.bookingId,
+			userId: driver.id,
+			actionByUserId: user.currentUser.id,
+		};
 		// console.log("driver", driver);
 		allocateDriver(newAllocationData);
 		setConfirmAllocation(false);
-    };
+		setAllocateModal(false);
+		closeDialog();
+	};
 	return (
 		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
 			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
@@ -231,23 +246,23 @@ function ConfirmAllocationModal({ driver, bookingData, setConfirmAllocation }) {
 			</div>
 			<div className='w-full flex items-center justify-center gap-4'>
 				<Button
-                    variant='contained'
-                    color='error'
-                    sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-                    className='w-full cursor-pointer'
-                    onClick={() => setConfirmAllocation(false)}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    variant='contained'
-                    color='success'
-                    sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-                    className='w-full cursor-pointer'
+					variant='contained'
+					color='error'
+					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+					className='w-full cursor-pointer'
+					onClick={() => setConfirmAllocation(false)}
+				>
+					Cancel
+				</Button>
+				<Button
+					variant='contained'
+					color='success'
+					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+					className='w-full cursor-pointer'
 					onClick={() => handleConfirmClick(driver)}
-                >
-                    Confirm
-                </Button>
+				>
+					Confirm
+				</Button>
 			</div>
 		</div>
 	);
