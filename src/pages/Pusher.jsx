@@ -124,10 +124,28 @@ export default function Push() {
 		};
 	}, []);
 
+	// all for the slider between componenet
+
+	const [leftWidth, setLeftWidth] = useState(60);
+	const [isResizing, setIsResizing] = useState(false);
+
+	const handleMouseDown = () => setIsResizing(true);
+	const handleMouseMove = (e) => {
+		if (!isResizing) return;
+		const containerWidth = e.currentTarget.clientWidth;
+		const newLeftWidth = (e.clientX / containerWidth) * 100;
+		if (newLeftWidth >= 30 && newLeftWidth <= 70) {
+			setLeftWidth(newLeftWidth);
+		}
+	};
+	const handleMouseUp = () => setIsResizing(false);
+
 	return (
 		<Box
 			className='flex justify-between'
 			sx={{ width: '100%' }}
+			onMouseMove={handleMouseMove}
+			onMouseUp={handleMouseUp}
 		>
 			<FullScreenDialog
 				open={viewDispatcher}
@@ -146,9 +164,7 @@ export default function Push() {
 				setIsOpen={setIsConfirmationModalOpen}
 			>
 				<ConfirmDeleteBookingModal
-					deleteBooking={() => {
-						dispatch(endBooking());
-					}}
+					deleteBooking={() => dispatch(endBooking())}
 					id={activeTab}
 					setIsConfirmationModalOpen={setIsConfirmationModalOpen}
 				/>
@@ -158,9 +174,11 @@ export default function Push() {
 					margin: '1vh auto',
 					height: '90vh',
 					overflow: 'auto',
-					width: '60%',
+					width: `${leftWidth}%`,
 					borderColor: '#e5e7eb',
 					borderWidth: '1px',
+					resize: 'horizontal',
+					// overflow: 'hidden',
 				}}
 			>
 				<Tabs
@@ -187,9 +205,7 @@ export default function Push() {
 									index !== 0 ? (
 										<CancelIcon
 											color='error'
-											onClick={() => {
-												setIsConfirmationModalOpen(true);
-											}}
+											onClick={() => setIsConfirmationModalOpen(true)}
 										/>
 									) : null
 								}
@@ -209,7 +225,12 @@ export default function Push() {
 						id={activeTab}
 						onBookingUpload={handleBookingUpload}
 					/>
-					<SimpleSnackbar />
+					<SimpleSnackbar
+						disableReset={true}
+						open={isBookingSnackBarOpen}
+						setOpen={setIsBookingSnackBarOpen}
+						message={snackbarMessage}
+					/>
 				</Box>
 			</Box>
 			<Box
@@ -217,11 +238,27 @@ export default function Push() {
 					margin: '1vh auto',
 					height: '90vh',
 					overflow: 'auto',
-					width: '40%',
+					width: `${100 - leftWidth}%`,
 					borderColor: '#e5e7eb',
 					borderWidth: '1px',
+					resize: 'horizontal',
+					// overflow: 'hidden',
+					position: 'relative',
 				}}
 			>
+				<div
+					style={{
+						width: '10px',
+						backgroundColor: 'gray',
+						cursor: 'col-resize',
+						position: 'absolute',
+						top: '0',
+						left: '-5px',
+						height: '100%',
+						zIndex: '1',
+					}}
+					onMouseDown={handleMouseDown}
+				></div>
 				<Tabs
 					value={secondaryTab}
 					sx={{ backgroundColor: '#e5e7eb' }}
