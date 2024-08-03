@@ -8,7 +8,8 @@ import { useEffect, useState } from 'react';
 import Modal from '../components/Modal';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import { Button } from '@mui/material';
-import { getAllDrivers } from '../utils/apiReq';
+import { allocateDriver, getAllDrivers } from '../utils/apiReq';
+import { useAuth } from '../hooks/useAuth';
 
 function CustomDialog({
 	closeDialog,
@@ -61,7 +62,7 @@ function CustomDialog({
 						open={allocateModal}
 						setOpen={setAllocateModal}
 					>
-						<AllocateModal setAllocateModal={setAllocateModal} />
+						<AllocateModal setAllocateModal={setAllocateModal} data={data} />
 					</Modal>
 					<BookingButton
 						onClick={() => insertData(data)}
@@ -112,8 +113,10 @@ const BookingButton = ({ text, color, ...props }) => {
 export default CustomDialog;
 
 function AllocateModal({ setAllocateModal, data }) {
+	// console.log(data)
 	const [loading, setLoading] = useState(false);
 	const [driverData, setDriverData] = useState([]);
+	const [bookingData, setBookingData] = useState({});
 	const [confirmAllocation, setConfirmAllocation] = useState(false);
 	const [selectedDriver, setSelectedDriver] = useState(null);
 	useEffect(() => {
@@ -127,6 +130,7 @@ function AllocateModal({ setAllocateModal, data }) {
 	function handleAttactDriver(driver) {
 		setConfirmAllocation(true);
 		setSelectedDriver(driver);
+		setBookingData(data);
 		
 	}
 
@@ -150,7 +154,7 @@ function AllocateModal({ setAllocateModal, data }) {
 					open={confirmAllocation}
 					setOpen={setConfirmAllocation}
 				>
-					<ConfirmAllocationModal driver={selectedDriver} setConfirmAllocation={setConfirmAllocation}/>
+					<ConfirmAllocationModal driver={selectedDriver} bookingData={bookingData} setConfirmAllocation={setConfirmAllocation}/>
 				</Modal>
 				<div className='m-auto w-full h-[50vh] overflow-auto'>
 					{loading ? (
@@ -195,9 +199,19 @@ function AllocateModal({ setAllocateModal, data }) {
 	);
 }
 
-function ConfirmAllocationModal({ setAllocateModal, driver, setConfirmAllocation }) {
+function ConfirmAllocationModal({ driver, bookingData, setConfirmAllocation }) {
+	
+	
+	const user = useAuth();
 	const handleConfirmClick = (driver) => {
-       
+        const newAllocationData = {
+			"bookingId": bookingData.bookingId,
+			"userId": driver.id,
+			"actionByUserId": user.currentUser.id,
+		  }
+		// console.log("driver", driver);
+		allocateDriver(newAllocationData);
+		setConfirmAllocation(false);
     };
 	return (
 		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
