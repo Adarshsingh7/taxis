@@ -4,7 +4,10 @@ import Modal from './Modal';
 import { useEffect, useState } from 'react';
 import CallerTable from './CallerTable';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCallerToBooking } from '../context/callerSlice';
+import {
+	addCallerToBooking,
+	updateCurrentBookingWithLookup,
+} from '../context/callerSlice';
 
 function CallerIdPopUp() {
 	const dispatch = useDispatch();
@@ -17,6 +20,8 @@ function CallerIdPopUp() {
 		bookingData.bookings[bookingData.activeBookingIndex].formBusy &&
 		bookingData;
 
+	const callerType = caller.length ? caller[0].callerType : null;
+
 	// the simple use effect to open the popup or modal
 	useEffect(() => {
 		if (caller[0]?.Telephone && !isEmpty) {
@@ -25,16 +30,24 @@ function CallerIdPopUp() {
 	}, [caller, isEmpty]);
 
 	useEffect(() => {
+		if (callerType === 'lookup') {
+			setOpen(true);
+			return;
+		}
 		if (isCurrentTabActive) return;
 		if (caller.length > 0) setOpen(true);
-	}, [caller.length, isCurrentTabActive]);
+	}, [caller.length, isCurrentTabActive, callerType]);
 
 	function handleSubmit(selectedRow, activeTab) {
-		dispatch(addCallerToBooking(selectedRow, activeTab));
+		if (callerType === 'stack') {
+			dispatch(addCallerToBooking(selectedRow, activeTab));
+		} else if (callerType === 'lookup') {
+			dispatch(updateCurrentBookingWithLookup(selectedRow, activeTab));
+		}
 		setOpen(false);
 	}
 
-	if (isCurrentTabActive) return null;
+	if (isCurrentTabActive && callerType === 'stack') return null;
 
 	return (
 		<Modal

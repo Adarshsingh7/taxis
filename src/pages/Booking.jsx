@@ -26,6 +26,8 @@ import RepeatBooking from '../components/BookingForm/RepeatBooking';
 import AddAndEditVia from '../components/BookingForm/AddAndEditVia';
 import ListDrivers from '../components/BookingForm/ListDrivers';
 import QuoteDialog from '../components/BookingForm/QuoteDialog';
+import { addCallerToLookup } from '../context/callerSlice';
+import { convertKeysToFirstUpper } from '../utils/casingConverter';
 
 function Booking({ bookingData, id, onBookingUpload }) {
 	// All Hooks and Contexts for the data flow and management
@@ -111,6 +113,12 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		dispatch(removeBooking(id));
 	}
 
+	async function handleFireCallerEvent() {
+		const data = await fireCallerEvent(bookingData.phoneNumber);
+		if (data.status === 'success')
+			dispatch(addCallerToLookup(convertKeysToFirstUpper(data)));
+	}
+
 	// This Function formats the date to the required format
 	function formatDate(dateStr) {
 		const date = new Date(dateStr);
@@ -167,7 +175,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		bookingData.pickupDateTime,
 		bookingData.passengers,
 		bookingData.scope,
-		dispatch,
+		// dispatch,
 		id,
 	]);
 
@@ -565,7 +573,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							/>
 							<div
 								className='px-3 bg-red-700 hover:bg-opacity-80 rounded-lg flex cursor-pointer'
-								onClick={() => fireCallerEvent(bookingData.phoneNumber)}
+								onClick={() => handleFireCallerEvent()}
 							>
 								<span
 									style={{ padding: '1rem 0' }}

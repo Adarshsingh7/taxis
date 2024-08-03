@@ -89,6 +89,13 @@ const bookingFormSlice = createSlice({
 				state.activeBookingIndex -= 1;
 			}
 		},
+		updateBookingData(state, action) {
+			const currentBooking = state.bookings[state.activeBookingIndex];
+			state.bookings[state.activeBookingIndex] = {
+				...currentBooking,
+				...action.payload,
+			};
+		},
 		setLoading(state, action) {
 			state.isLoading = action.payload;
 		},
@@ -159,7 +166,12 @@ export const removeBooking = (itemIndex) => (dispatch) => {
 	dispatch(endBooking({ itemIndex }));
 };
 
-export const { addData, endBooking, setActiveTabChange, setActiveTestMode } =
-	bookingFormSlice.actions;
+export const {
+	addData,
+	endBooking,
+	setActiveTabChange,
+	setActiveTestMode,
+	updateBookingData,
+} = bookingFormSlice.actions;
 
 export default bookingFormSlice.reducer;

@@ -79,6 +79,7 @@ const BookingTable = ({ onConfirm, onSet, numBooking }) => {
 	function handleCreateNewBookingWithTelephone() {
 		onConfirm({ PhoneNumber: bookings.Telephone });
 	}
+	console.log(activeTab);
 
 	return (
 		<div className='w-[75vw] mx-auto bg-white rounded-lg shadow-lg p-5'>
