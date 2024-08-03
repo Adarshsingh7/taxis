@@ -77,7 +77,7 @@ const DriverAllocation = () => {
 							Color: driver.colorCode,
 							...driver,
 						}))
-						.filter((driver) => driver.description.includes('UNAVAILABLE'));
+						.filter((driver) => !driver.description.includes('UNAVAILABLE'));
 
 					setData(formattedData);
 					setEmployeeData(formattedEmployeeData);
