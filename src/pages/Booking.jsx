@@ -115,8 +115,15 @@ function Booking({ bookingData, id, onBookingUpload }) {
 
 	async function handleFireCallerEvent() {
 		const data = await fireCallerEvent(bookingData.phoneNumber);
-		if (data.status === 'success')
-			dispatch(addCallerToLookup(convertKeysToFirstUpper(data)));
+		if (data.status === 'success') {
+			if (data.current.length && data.previous.length) {
+				dispatch(addCallerToLookup(convertKeysToFirstUpper(data)));
+			} else {
+				setSnackbarMessage('No caller found');
+				// setSnackbarColor('#035418');
+				setIsQuoteSnackbarActive(true);
+			}
+		}
 	}
 
 	// This Function formats the date to the required format

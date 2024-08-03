@@ -48,6 +48,7 @@ function CallerIdPopUp() {
 	}
 
 	if (isCurrentTabActive && callerType === 'stack') return null;
+	if (isEmpty) return null;
 
 	return (
 		<Modal
