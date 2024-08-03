@@ -182,7 +182,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		bookingData.pickupDateTime,
 		bookingData.passengers,
 		bookingData.scope,
-		// dispatch,
+		dispatch,
 		id,
 	]);
 
@@ -227,11 +227,11 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	useEffect(() => {
 		if (bookingData.formBusy) return;
 		if (bookingData.bookingType === 'previous') {
-			destinationRef.current.focus();
-			destinationRef.current.select();
+			// destinationRef.current.focus();
+			// destinationRef.current.select();
 		} else {
-			pickupRef.current.focus();
-			pickupRef.current.select();
+			// pickupRef.current.focus();
+			// pickupRef.current.select();
 		}
 	}, [
 		bookingData.pickupAddress,

@@ -150,7 +150,7 @@ function PlaceAutocomplete({
 			setSuggestions([]);
 			setShowOption(false);
 		}
-	}, [suggestions, value.length]);
+	}, [suggestions.length, value.length]);
 
 	return (
 		<div className='relative'>

@@ -206,7 +206,7 @@ async function getAccountList() {
 }
 
 async function updateBooking(data, testMode = false) {
-	const URL = testMode ? TEST : BASE + '/api/Bookings/Update';
+	const URL = `${testMode ? TEST : BASE}/api/Bookings/Update`;
 	const filteredData = filterData(data);
 	return await handlePostReq(URL, filteredData);
 }

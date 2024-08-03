@@ -8,6 +8,7 @@ import { formatDate } from './../utils/formatDate';
 const filterData = (data = {}) => ({
 	details: data.Details || '',
 	email: data.Email || '',
+	bookingId: data.Id || null,
 	durationText: data.DurationText || '20',
 	isAllDay: data.IsAllDay || false,
 	passengerName: data.PassengerName || '',

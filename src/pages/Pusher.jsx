@@ -60,7 +60,7 @@ export default function Push() {
 
 	function handleBookingUpload(id = activeTab) {
 		const currentBooking = data[id];
-		if (currentBooking.bookingType === 'current') {
+		if (currentBooking.bookingType === 'Current') {
 			dispatch(onUpdateBooking(id)).then((data) => {
 				setIsBookingSnackBarOpen(true);
 				if (data.status === 'success') {
