@@ -12,7 +12,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import Modal from '../components/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button } from '@mui/material';
-import SimpleSnackbar from '../components/SnackBar';
+import SimpleSnackbar from '../components/Snackbar-v2';
 import FullScreenDialog from '../components/FullScreenModal';
 import Scheduler from './Scheduler';
 import { useSelector } from 'react-redux';
@@ -28,6 +28,7 @@ import { useDispatch } from 'react-redux';
 import { addCaller } from '../context/callerSlice';
 import Pusher from 'pusher-js';
 import DispatcherBooking from '../components/Dispatcher/DispatcherBooking';
+import { openSnackbar } from '../context/snackbarSlice';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -63,18 +64,18 @@ export default function Push() {
 			dispatch(onUpdateBooking(id)).then((data) => {
 				setIsBookingSnackBarOpen(true);
 				if (data.status === 'success') {
-					setSnackbarMessage('Booking Updated Successfully');
+					dispatch(openSnackbar('Booking Updated Successfully', 'success'));
 				} else {
-					setSnackbarMessage('Failed to Update Booking');
+					dispatch(openSnackbar('Failed to Update Booking', 'error'));
 				}
 			});
 		} else {
 			dispatch(onCreateBooking(id)).then((data) => {
 				setIsBookingSnackBarOpen(true);
 				if (data.status === 'success') {
-					setSnackbarMessage(`Booking Created Successfully`);
+					dispatch(openSnackbar('Booking Created Successfully', 'success'));
 				} else {
-					setSnackbarMessage(`Failed to Create booking`);
+					dispatch(openSnackbar('Failed to Create Booking', 'error'));
 				}
 			});
 		}
@@ -208,12 +209,7 @@ export default function Push() {
 						id={activeTab}
 						onBookingUpload={handleBookingUpload}
 					/>
-					<SimpleSnackbar
-						disableReset={true}
-						open={isBookingSnackBarOpen}
-						setOpen={setIsBookingSnackBarOpen}
-						message={snackbarMessage}
-					/>
+					<SimpleSnackbar />
 				</Box>
 			</Box>
 			<Box

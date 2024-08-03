@@ -5,6 +5,7 @@ const initialState = {
 	open: false,
 	message: '',
 	type: 'success',
+	color: '#2F3030',
 };
 
 const snackbarSlice = createSlice({
@@ -20,8 +21,11 @@ const snackbarSlice = createSlice({
 				state.open = true;
 				state.message = message;
 				state.type = type;
+				state.color =
+					type === 'success' ? '#09AF00' : type === 'info' ? '' : '#FF1744';
 			},
 		},
+
 		closeSnackbar(state) {
 			state.open = false;
 		},
