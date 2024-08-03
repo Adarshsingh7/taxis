@@ -16,6 +16,8 @@ import SimpleSnackbar from '../components/Snackbar-v2';
 import FullScreenDialog from '../components/FullScreenModal';
 import Scheduler from './Scheduler';
 import { useSelector } from 'react-redux';
+import { ResizableBox } from 'react-resizable';
+import 'react-resizable/css/styles.css';
 import {
 	addData,
 	endBooking,
@@ -125,27 +127,18 @@ export default function Push() {
 	}, []);
 
 	// all for the slider between componenet
-
 	const [leftWidth, setLeftWidth] = useState(60);
-	const [isResizing, setIsResizing] = useState(false);
 
-	const handleMouseDown = () => setIsResizing(true);
-	const handleMouseMove = (e) => {
-		if (!isResizing) return;
-		const containerWidth = e.currentTarget.clientWidth;
-		const newLeftWidth = (e.clientX / containerWidth) * 100;
-		if (newLeftWidth >= 30 && newLeftWidth <= 70) {
-			setLeftWidth(newLeftWidth);
+	const handleResize = (event, { size }) => {
+		const newWidth = (size.width / window.innerWidth) * 100;
+		if (newWidth >= 30 && newWidth <= 70) {
+			setLeftWidth(newWidth);
 		}
 	};
-	const handleMouseUp = () => setIsResizing(false);
-
 	return (
 		<Box
-			className='flex justify-between'
+			className='flex'
 			sx={{ width: '100%' }}
-			onMouseMove={handleMouseMove}
-			onMouseUp={handleMouseUp}
 		>
 			<FullScreenDialog
 				open={viewDispatcher}
@@ -169,70 +162,79 @@ export default function Push() {
 					setIsConfirmationModalOpen={setIsConfirmationModalOpen}
 				/>
 			</Modal>
-			<Box
-				sx={{
-					margin: '1vh auto',
-					height: '90vh',
-					overflow: 'auto',
-					width: `${leftWidth}%`,
-					borderColor: '#e5e7eb',
-					borderWidth: '1px',
-					resize: 'horizontal',
-					// overflow: 'hidden',
-				}}
+			<ResizableBox
+				width={(leftWidth / 100) * window.innerWidth}
+				height={window.innerHeight * 0.9}
+				minConstraints={[window.innerWidth * 0.3, window.innerHeight * 0.9]}
+				maxConstraints={[window.innerWidth * 0.7, window.innerHeight * 0.9]}
+				axis='x'
+				resizeHandles={['e']}
+				onResize={handleResize}
+				style={{ display: 'flex', overflow: 'hidden' }}
 			>
-				<Tabs
-					value={activeTab}
-					sx={{ backgroundColor: '#e5e7eb' }}
-					onChange={handleChange}
-					variant='scrollable'
-					scrollButtons
-					allowScrollButtonsMobile
-					aria-label='scrollable force tabs example'
+				<Box
+					sx={{
+						margin: '1vh auto',
+						height: '90vh',
+						overflow: 'auto',
+						width: '100%',
+						borderColor: '#e5e7eb',
+						borderWidth: '1px',
+					}}
 				>
-					{data.map((item, index) => {
-						let label = index === 0 ? 'New Booking' : item.phoneNumber;
-						label +=
-							item.bookingType === 'Previous'
-								? ' (New)'
-								: item.bookingType === 'Current'
-								? ' (Edit)'
-								: '';
-						return (
-							<Tab
-								label={label}
-								icon={
-									index !== 0 ? (
-										<CancelIcon
-											color='error'
-											onClick={() => setIsConfirmationModalOpen(true)}
-										/>
-									) : null
-								}
-								iconPosition='end'
-								key={index}
-								style={{
-									color: item.formBusy ? '#B91C1C' : '',
-								}}
-							/>
-						);
-					})}
-				</Tabs>
-				<Box>
-					<Booking
-						bookingData={data[activeTab]}
-						key={activeTab}
-						id={activeTab}
-						onBookingUpload={handleBookingUpload}
-					/>
-					<SimpleSnackbar
-						disableReset={true}
-						open={isBookingSnackBarOpen}
-						setOpen={setIsBookingSnackBarOpen}
-						message={snackbarMessage}
-					/>
+					<Tabs
+						value={activeTab}
+						sx={{ backgroundColor: '#e5e7eb' }}
+						onChange={handleChange}
+						variant='scrollable'
+						scrollButtons
+						allowScrollButtonsMobile
+						aria-label='scrollable force tabs example'
+					>
+						{data.map((item, index) => {
+							let label = index === 0 ? 'New Booking' : item.phoneNumber;
+							label +=
+								item.bookingType === 'Previous'
+									? ' (New)'
+									: item.bookingType === 'Current'
+									? ' (Edit)'
+									: '';
+							return (
+								<Tab
+									label={label}
+									icon={
+										index !== 0 ? (
+											<CancelIcon
+												color='error'
+												onClick={() => setIsConfirmationModalOpen(true)}
+											/>
+										) : null
+									}
+									iconPosition='end'
+									key={index}
+									style={{
+										color: item.formBusy ? '#B91C1C' : '',
+									}}
+								/>
+							);
+						})}
+					</Tabs>
+					<Box>
+						<Booking
+							bookingData={data[activeTab]}
+							key={activeTab}
+							id={activeTab}
+							onBookingUpload={handleBookingUpload}
+						/>
+						<SimpleSnackbar
+							disableReset={true}
+							open={isBookingSnackBarOpen}
+							setOpen={setIsBookingSnackBarOpen}
+							message={snackbarMessage}
+						/>
+					</Box>
 				</Box>
-			</Box>
+			</ResizableBox>
 			<Box
 				sx={{
 					margin: '1vh auto',
@@ -241,24 +243,8 @@ export default function Push() {
 					width: `${100 - leftWidth}%`,
 					borderColor: '#e5e7eb',
 					borderWidth: '1px',
-					resize: 'horizontal',
-					// overflow: 'hidden',
-					position: 'relative',
 				}}
 			>
-				<div
-					style={{
-						width: '10px',
-						backgroundColor: 'gray',
-						cursor: 'col-resize',
-						position: 'absolute',
-						top: '0',
-						left: '-5px',
-						height: '100%',
-						zIndex: '1',
-					}}
-					onMouseDown={handleMouseDown}
-				></div>
 				<Tabs
 					value={secondaryTab}
 					sx={{ backgroundColor: '#e5e7eb' }}
