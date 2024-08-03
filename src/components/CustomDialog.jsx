@@ -112,6 +112,7 @@ const BookingButton = ({ text, color, ...props }) => {
 
 export default CustomDialog;
 
+// Allocate Driver Modal Structure
 function AllocateModal({ setAllocateModal, data }) {
 	// console.log(data)
 	const [loading, setLoading] = useState(false);
@@ -198,6 +199,8 @@ function AllocateModal({ setAllocateModal, data }) {
 		</div>
 	);
 }
+
+// Confirm Allocation Modal Structure
 
 function ConfirmAllocationModal({ driver, bookingData, setConfirmAllocation }) {
 	

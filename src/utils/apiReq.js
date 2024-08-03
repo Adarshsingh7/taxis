@@ -259,7 +259,7 @@ async function fireCallerEvent(number) {
 	return await handleGetReq(URL);
 }
 
-async function AllocateDriver(allocateReqData) {
+async function allocateDriver(allocateReqData) {
 	const URL = `${BASE}/api/Bookings/Allocate`
 	return await handlePostReq(URL, allocateReqData)
 }
@@ -277,4 +277,5 @@ export {
 	getDriverAvailability,
 	getAddressSuggestions,
 	fireCallerEvent,
+	allocateDriver
 };
