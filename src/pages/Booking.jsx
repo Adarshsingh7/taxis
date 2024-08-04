@@ -192,6 +192,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			if (event.key === 'End') {
 				document.getElementById('myForm').requestSubmit();
 			}
+			if (event.key === 'Enter') event.preventDefault(s);
 		};
 
 		window.addEventListener('keydown', handleKeyPress);
@@ -227,11 +228,11 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	useEffect(() => {
 		if (bookingData.formBusy) return;
 		if (bookingData.bookingType === 'previous') {
-			// destinationRef.current.focus();
-			// destinationRef.current.select();
+			destinationRef.current.focus();
+			destinationRef.current.select();
 		} else {
-			// pickupRef.current.focus();
-			// pickupRef.current.select();
+			pickupRef.current.focus();
+			pickupRef.current.select();
 		}
 	}, [
 		bookingData.pickupAddress,

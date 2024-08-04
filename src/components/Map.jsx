@@ -14,22 +14,28 @@ const GoogleMap = () => {
 	const mapRef = useRef(null);
 	const [mapLoaded, setMapLoaded] = useState(false);
 	const [tileLoaded, setTileLoaded] = useState(false);
-	const [reloadKey, setReloadKey] = useState(0); // State to trigger re-render
+	const [reloadKey, setReloadKey] = useState(0);
 	const timeoutRef = useRef(null);
+
+	const handleMapLoad = () => {
+		setMapLoaded(true);
+	};
+
+	const handleMapError = (error) => {
+		console.error('Error loading Google Maps API:', error);
+		setMapLoaded(false);
+	};
 
 	useEffect(() => {
 		if (!mapLoaded || (mapLoaded && !tileLoaded)) {
-			// Set a timeout to reload the map if tiles are not loaded
 			timeoutRef.current = setTimeout(() => {
 				setReloadKey((prevKey) => prevKey + 1);
-			}, 3000);
+			}, 1000);
 		} else if (mapLoaded && tileLoaded) {
-			// Clear the timeout when the map and tiles are fully loaded
 			clearTimeout(timeoutRef.current);
 			timeoutRef.current = null;
 		}
 
-		// Clean up the timeout when the component unmounts or dependencies change
 		return () => {
 			if (timeoutRef.current) {
 				clearTimeout(timeoutRef.current);
@@ -40,11 +46,12 @@ const GoogleMap = () => {
 	return (
 		<APIProvider
 			apiKey={import.meta.env.VITE_GOOGLE_MAP_KEY}
-			onLoad={() => setMapLoaded(true)}
+			onLoad={handleMapLoad}
+			onError={handleMapError}
 		>
 			{mapLoaded ? (
 				<Map
-					key={reloadKey} // Use the state as a key to force re-render
+					key={reloadKey}
 					defaultZoom={13}
 					defaultCenter={pos}
 					disableDefaultUI={true}
@@ -104,9 +111,8 @@ function Direction({ mapRef }) {
 			directionRenderer.setDirections({ routes: [] });
 
 			if (mapRef.current) {
-				// Set the zoom and center to initial values
-				mapRef.current.setZoom(13); // Set to your desired initial zoom level
-				mapRef.current.setCenter({ lat: 51.0388, lng: -2.2799 }); // Set to your default center location
+				mapRef.current.setZoom(13);
+				mapRef.current.setCenter({ lat: 51.0388, lng: -2.2799 });
 			}
 			return;
 		}
@@ -124,10 +130,8 @@ function Direction({ mapRef }) {
 				waypoints,
 			})
 			.then((res) => {
-				// console.log('Directions result:', res);
 				directionRenderer.setDirections(res);
 
-				// Adjust zoom to fit bounds
 				if (mapRef.current && res.routes.length > 0) {
 					const bounds = new window.google.maps.LatLngBounds();
 					res.routes.forEach((route) => {
@@ -138,7 +142,7 @@ function Direction({ mapRef }) {
 				}
 			})
 			.catch((err) =>
-				console.log('Error occurred while fetching directions:', err)
+				console.error('Error occurred while fetching directions:', err)
 			);
 	}, [
 		directionService,
@@ -153,4 +157,5 @@ function Direction({ mapRef }) {
 
 	return null;
 }
+
 export default GoogleMap;
