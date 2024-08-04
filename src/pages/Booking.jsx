@@ -192,7 +192,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			if (event.key === 'End') {
 				document.getElementById('myForm').requestSubmit();
 			}
-			if (event.key === 'Enter') event.preventDefault(s);
+			if (event.key === 'Enter') event.preventDefault();
 		};
 
 		window.addEventListener('keydown', handleKeyPress);
