@@ -220,11 +220,7 @@ export default function Push() {
 							id={activeTab}
 							onBookingUpload={handleBookingUpload}
 						/>
-						<SimpleSnackbar
-							disableReset={true}
-							open={isBookingSnackBarOpen}
-							setOpen={setIsBookingSnackBarOpen}
-						/>
+						<SimpleSnackbar />
 					</Box>
 				</Box>
 			</ResizableBox>

@@ -17,6 +17,10 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import { completeBookings } from '../utils/apiReq';
+import SnackbarSlice, { openSnackbar } from '../context/snackbarSlice';
+import SimpleSnackbar from './Snackbar-v2';
+import { useDispatch } from 'react-redux';
 
 function CustomDialog({
 	closeDialog,
@@ -305,18 +309,22 @@ function ConfirmAllocationModal({
 	bookingData,
 	setConfirmAllocation,
 }) {
+	const dispatch = useDispatch();
 	const user = useAuth();
-	const handleConfirmClick = (driver) => {
+	const handleConfirmClick = async (driver) => {
 		const newAllocationData = {
 			bookingId: bookingData.bookingId,
 			userId: driver.id,
 			actionByUserId: user.currentUser.id,
 		};
 		// console.log("driver", driver);
-		allocateDriver(newAllocationData);
+		const res = await allocateDriver(newAllocationData);
 		setConfirmAllocation(false);
 		setAllocateModal(false);
 		closeDialog();
+		if (res.status === 'success') {
+			dispatch(openSnackbar('Driver Allocated Successfully', 'success'));
+		}
 	};
 	return (
 		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
@@ -357,19 +365,32 @@ function ConfirmAllocationModal({
 
 // Complete Booking Modal Structure
 
-function CompleteBookingModal({ setIsCompleteBookingModal, closeDialog, data }) {
+function CompleteBookingModal({
+	setIsCompleteBookingModal,
+	closeDialog,
+	data,
+}) {
+	const dispatch = useDispatch();
 	const user = useAuth();
-	const handleCompleteClick = (e) => {
+	const handleCompleteClick = async (e) => {
+		console.log('clicked clicked');
 		e.preventDefault();
 		const completedBookingData = {
 			bookingId: data.bookingId,
-			actionByUserId: user.currentUser.id,
+			waitingTime: data.waitingTimeMinutes,
+			parkingCharge: data.parkingCharge,
+			driverPrice: data.price,
+			accountPrice: data.priceAccount,
 		};
 		// console.log("completedBookingData", completedBookingData);
-		completeBookings(completedBookingData);
+		const response = await completeBookings(completedBookingData);
 		setIsCompleteBookingModal(false);
 		closeDialog();
+		if (response.status === 'success') {
+			dispatch(openSnackbar('Booking Completed', 'success'));
+		}
 	};
+
 	return (
 		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
 			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>

@@ -283,4 +283,5 @@ export {
 	getAddressSuggestions,
 	fireCallerEvent,
 	allocateDriver,
+	completeBookings,
 };
