@@ -82,7 +82,20 @@ const AceScheduler = () => {
 			}
 			if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 		});
-	}, [activeTestMode, currentDate]);
+	}, [activeTestMode, currentDate, dispatch]);
+
+	useEffect(() => {
+		const updateBookings = async function () {
+			getBookingData(currentDate, activeTestMode).then((data) => {
+				if (data.status === 'success') {
+					setData(data.bookings);
+				}
+				if (currentDate.getDate() === new Date().getDate()) setOpen(true);
+			});
+		};
+		setInterval(updateBookings, 60000);
+		return () => clearInterval(updateBookings);
+	}, []);
 
 	const eventSettings = {
 		dataSource: data,
@@ -204,8 +217,11 @@ function ViewBookingModal({ data, setViewBookingModal }) {
 								<div className='w-full py-1 border-b-gray-300 border-b-[1px]'>
 									<p className='font-medium'>Via's</p>
 								</div>
-								{data?.vias.map((via) => (
-									<div className='w-full flex flex-col items-start'>
+								{data?.vias.map((via, index) => (
+									<div
+										key={index}
+										className='w-full flex flex-col items-start'
+									>
 										<p className='text-[14px] text-orange-900 cursor-pointer'>
 											{via.address}
 										</p>
