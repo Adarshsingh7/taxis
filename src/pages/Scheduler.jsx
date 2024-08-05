@@ -18,7 +18,7 @@ import { getBookingData } from '../utils/apiReq';
 import { useEffect, useState } from 'react';
 import Snackbar from '../components/SnackBar';
 import { useBooking } from '../hooks/useBooking';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
@@ -29,11 +29,12 @@ import LocalTaxiOutlinedIcon from '@mui/icons-material/LocalTaxiOutlined';
 import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import isLightColor from '../utils/isLight';
+import { openSnackbar } from '../context/snackbarSlice';
 
 const AceScheduler = () => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
-	const [snackbarMessage, setSnackBarMessage] = useState('');
+	// const [snackbarMessage, setSnackBarMessage] = useState('');
 	const [data, setData] = useState();
 	const [selectedBookingData, setSelectedBookingData] = useState();
 	const { onDeleteBooking } = useBooking();
@@ -42,6 +43,7 @@ const AceScheduler = () => {
 		(state) => state.bookingForm.isActiveTestMode
 	);
 	const [viewBookingModal, setViewBookingModal] = useState(false);
+	const dispatch = useDispatch();
 
 	const fieldsData = {
 		id: 'bookingId',
@@ -74,9 +76,9 @@ const AceScheduler = () => {
 		getBookingData(currentDate, activeTestMode).then((data) => {
 			if (data.status === 'success') {
 				setData(data.bookings);
-				setSnackBarMessage('Booking Refreshed');
+				dispatch(openSnackbar('Booking Refreshed'));
 			} else {
-				setSnackBarMessage(data.message);
+				dispatch(openSnackbar(data.message));
 			}
 			if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 		});
@@ -103,9 +105,9 @@ const AceScheduler = () => {
 					if (data.status === 'success') {
 						setData(data.bookings);
 						localStorage.setItem('bookings', JSON.stringify(data.bookings));
-						setSnackBarMessage('Booking Refreshed');
+						dispatchEvent(openSnackbar('Booking Refreshed'));
 					} else {
-						setSnackBarMessage(data.message);
+						dispatch(openSnackbar(data.message));
 					}
 					setOpen(true);
 				});
@@ -117,12 +119,7 @@ const AceScheduler = () => {
 
 	return (
 		<ProtectedRoute>
-			<Snackbar
-				message={snackbarMessage}
-				open={open}
-				disableReset={true}
-				setOpen={setOpen}
-			/>
+			<Snackbar />
 			<ScheduleComponent
 				currentView='Day'
 				navigating={(args) => setCurrentDate(args.currentDate)}

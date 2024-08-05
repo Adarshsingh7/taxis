@@ -22,7 +22,7 @@ const snackbarSlice = createSlice({
 				state.message = message;
 				state.type = type;
 				state.color =
-					type === 'success' ? '#09AF00' : type === 'info' ? '' : '#FF1744';
+					type === 'success' ? '#09AF00' : type === 'info' ? '#FF1744' : '';
 			},
 		},
 

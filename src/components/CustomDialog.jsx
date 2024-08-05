@@ -10,7 +10,8 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import { Button } from '@mui/material';
 import { allocateDriver, getAllDrivers } from '../utils/apiReq';
 import { useAuth } from '../hooks/useAuth';
-
+import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
+import DirectionsOutlinedIcon from '@mui/icons-material/DirectionsOutlined';
 function CustomDialog({
 	closeDialog,
 	data,
@@ -19,20 +20,26 @@ function CustomDialog({
 }) {
 	const { insertData } = useBooking();
 	const [allocateModal, setAllocateModal] = useState(false);
-
+	console.log(data);
 	return (
 		<div className='fixed left-[-20vw] inset-0 w-[40vw] z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
-			<div className='relative w-full max-w-md p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
+			<div className='relative w-full max-w-3xl p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
 				<div className='flex items-center justify-between mb-6'>
-					<h2 className='text-lg font-medium text-card'>Booking Options</h2>
+					<h2 className='text-lg font-medium text-card'>
+						BookingId:{' '}
+						<span className='text-xl font-semibold text-green-900'>
+							{data.bookingId}
+						</span>
+					</h2>
+
 					<button
-						className='trounded-full p-2'
+						className='rounded-full p-2'
 						onClick={closeDialog}
 					>
 						<CancelRoundedIcon />
 					</button>
 				</div>
-				<div className='p-4 border border-card dark:border-popover'>
+				<div className='p-4 grid grid-cols-2 place-content-between mt-4 border border-card dark:border-popover'>
 					<BookingOption
 						Icon={AccountBalanceRoundedIcon}
 						text={data.accountNumber ? 'Account Job' : 'Cash Job'}
@@ -43,10 +50,21 @@ function CustomDialog({
 					/>
 					<BookingOption
 						Icon={HomeRoundedIcon}
-						text={data.cellText}
+						text={data.pickupAddress}
+					/>
+
+					<BookingOption
+						Icon={DirectionsOutlinedIcon}
+						text={data.vias.map((via) => (
+							<span>{via.address},</span>
+						))}
+					/>
+					<BookingOption
+						Icon={PersonPinCircleOutlinedIcon}
+						text={data.destinationAddress}
 					/>
 				</div>
-				<div className='mt-6 space-y-4'>
+				<div className='mt-6 gap-4 flex flex-wrap items-center'>
 					<BookingButton
 						text='View Booking'
 						color='blue'
@@ -58,16 +76,6 @@ function CustomDialog({
 						color='blue'
 						onClick={() => setAllocateModal(true)}
 					/>
-					<Modal
-						open={allocateModal}
-						setOpen={setAllocateModal}
-					>
-						<AllocateModal
-							setAllocateModal={setAllocateModal}
-							data={data}
-							closeDialog={closeDialog}
-						/>
-					</Modal>
 					<BookingButton
 						onClick={() => insertData(data)}
 						text='Edit Booking'
@@ -88,6 +96,16 @@ function CustomDialog({
 					/>
 				</div>
 			</div>
+			<Modal
+				open={allocateModal}
+				setOpen={setAllocateModal}
+			>
+				<AllocateModal
+					setAllocateModal={setAllocateModal}
+					data={data}
+					closeDialog={closeDialog}
+				/>
+			</Modal>
 		</div>
 	);
 }
@@ -107,7 +125,7 @@ const BookingButton = ({ text, color, ...props }) => {
 	return (
 		<button
 			{...props}
-			className={`w-full px-4 py-2 text-white bg-${color}-700 rounded-lg hover:bg-${color}-600`}
+			className={`px-4 py-2 text-white bg-${color}-700 rounded-lg hover:bg-${color}-600 `}
 		>
 			{text}
 		</button>
