@@ -56,6 +56,7 @@ const AceScheduler = () => {
 	function onEventRendered(args) {
 		args.element;
 		args.element.style.backgroundColor = args.data.backgroundColorRGB;
+		args.element.style.borderRadius = '5px';
 	}
 
 	useEffect(() => {
