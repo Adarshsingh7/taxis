@@ -429,7 +429,7 @@ function CompleteBookingModal({
 						</i>
 					</div>
 					<div className='w-full relative flex flex-col justify-center items-start gap-2'>
-						<label className=''>Price</label>
+						<label className=''>Price <span className='text-red-600'>*</span></label>
 						<input
 							required
 							type='number'

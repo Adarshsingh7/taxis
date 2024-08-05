@@ -1,6 +1,6 @@
 /** @format */
 
-import * as React from 'react';
+import  React, {useState} from 'react';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -25,6 +25,7 @@ export default function FullScreenDialog({ children, open, setOpen }) {
 	const handleClose = () => {
 		setOpen(false);
 	};
+	const [isActiveComplete, setIsActiveComplete] = useState(false);
 
 	return (
 		<React.Fragment>
@@ -48,7 +49,18 @@ export default function FullScreenDialog({ children, open, setOpen }) {
 							aria-label='close'
 						>
 							<CloseIcon />
+							
 						</IconButton>
+						<span className='flex flex-row gap-2 items-center align-middle'>
+							<span>Completed</span>
+							<Switch
+								checked={isActiveComplete}
+								onChange={(e) => {
+									setIsActiveComplete(prev => !prev)
+							
+								}}
+							/>
+						</span>
 					</Toolbar>
 				</AppBar>
 				<Box>{children}</Box>
