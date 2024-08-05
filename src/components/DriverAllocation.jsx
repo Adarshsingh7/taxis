@@ -23,12 +23,14 @@ import '@syncfusion/ej2-react-schedule/styles/material.css';
 import './DriverAllocation.css';
 
 import { getDriverAvailability } from '../utils/apiReq';
-const DriverAllocation = () => {
+const DriverAllocation = ({ currentBookingDateTime }) => {
 	const [data, setData] = useState([]);
 	const [employeeData, setEmployeeData] = useState([]);
 
+	const bookingTime = new Date(currentBookingDateTime).getTime();
+
 	// Get current time and end time (5 hours later)
-	const currentTime = new Date(Date.now() - 30 * 60 * 1000);
+	const currentTime = new Date(bookingTime - 30 * 60 * 1000);
 	const endTime = new Date(currentTime.getTime() + 10 * 60 * 60 * 1000);
 
 	// Format the time in HH:mm format

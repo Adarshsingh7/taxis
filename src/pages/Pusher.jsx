@@ -41,10 +41,10 @@ const channel = pusher.subscribe('my-channel');
 
 export default function Push() {
 	const data = useSelector((state) => state.bookingForm.bookings);
-	const caller = useSelector((state) => state.caller);
 	const activeTab = useSelector(
 		(state) => state.bookingForm.activeBookingIndex
 	);
+	const currentBookingDateTime = data[activeTab].pickupDateTime;
 	const dispatch = useDispatch();
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -58,7 +58,6 @@ export default function Push() {
 	};
 
 	const [isBookingSnackBarOpen, setIsBookingSnackBarOpen] = useState(false);
-	const [snackbarMessage, setSnackbarMessage] = useState('');
 
 	function handleBookingUpload(id = activeTab) {
 		const currentBooking = data[id];
@@ -224,7 +223,6 @@ export default function Push() {
 							disableReset={true}
 							open={isBookingSnackBarOpen}
 							setOpen={setIsBookingSnackBarOpen}
-							message={snackbarMessage}
 						/>
 					</Box>
 				</Box>
@@ -251,7 +249,9 @@ export default function Push() {
 					<Tab label='Availability' />
 					<Tab label='Map' />
 				</Tabs>
-				{secondaryTab === 0 && <DriverAllocation />}
+				{secondaryTab === 0 && (
+					<DriverAllocation currentBookingDateTime={currentBookingDateTime} />
+				)}
 				{secondaryTab === 1 && <Map />}
 			</Box>
 		</Box>
