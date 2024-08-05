@@ -45,6 +45,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	const pickupRef = useRef(null);
 	const destinationRef = useRef(null);
 	const userNameRef = useRef(null);
+	const phoneNumberRef = useRef(null);
 	const [snackbarMessage, setSnackbarMessage] = useState('');
 	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
 	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
@@ -141,6 +142,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	function handleChangeFocus(event, ref) {
 		if (event.key === 'Enter') {
 			ref.current.focus();
+			ref.current.select();
 		}
 	}
 
@@ -587,7 +589,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							type='text'
 							placeholder='Name'
 							value={bookingData.passengerName}
-							// ref={userNameRef}
 							inputRef={userNameRef}
 							onChange={(e) => updateData('passengerName', e.target.value)}
 							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
@@ -597,11 +598,17 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								type='text'
 								placeholder='Phone'
 								value={bookingData.phoneNumber}
+								inputRef={phoneNumberRef}
 								onChange={(e) => {
 									const value = e.target.value;
 									// Remove non-numeric characters and limit to 12 digits
 									const cleanedValue = value.replace(/\D/g, '').slice(0, 12);
 									updateData('phoneNumber', cleanedValue);
+								}}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter') {
+										handleFireCallerEvent();
+									}
 								}}
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 							/>
@@ -622,7 +629,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						</div>
 					</div>
 
-					<div className='mb-4'>
+					<div className='mb-4 flex flex-col gap-4'>
 						<Input
 							type='email'
 							placeholder='Email'
