@@ -240,10 +240,9 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		bookingData.formBusy,
 	]);
 
-	// update the time of the form if form is not busy every 1 min
+	// update the time of the form if form is not busy every 30 sec
 	useEffect(() => {
 		function updateToCurrentTime() {
-			console.log('updateToCurrentTime');
 			if (bookingData.formBusy) {
 				clearInterval(updateTimeInterval);
 				return;
