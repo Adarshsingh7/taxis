@@ -18,9 +18,9 @@ import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { completeBookings } from '../utils/apiReq';
-import SnackbarSlice, { openSnackbar } from '../context/snackbarSlice';
-import SimpleSnackbar from './Snackbar-v2';
+import { openSnackbar } from '../context/snackbarSlice';
 import { useDispatch } from 'react-redux';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 function CustomDialog({
 	closeDialog,
@@ -114,7 +114,7 @@ function CustomDialog({
 								text={data.passengerName}
 							/>
 							<BookingOption
-								Icon={AccountCircleRoundedIcon}
+								Icon={GroupAddIcon}
 								text={data.passengers}
 							/>
 						</div>
@@ -429,7 +429,9 @@ function CompleteBookingModal({
 						</i>
 					</div>
 					<div className='w-full relative flex flex-col justify-center items-start gap-2'>
-						<label className=''>Price <span className='text-red-600'>*</span></label>
+						<label className=''>
+							Price <span className='text-red-600'>*</span>
+						</label>
 						<input
 							required
 							type='number'
