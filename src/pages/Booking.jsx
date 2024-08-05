@@ -101,6 +101,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		if (quote.status === 'success') {
 			updateData('price', +quote.totalPrice);
 			updateData('durationText', String(quote.totalMinutes));
+			updateData('quoteOptions', quote);
 			setIsQuoteDialogActive(true);
 			setQuote(quote);
 		} else {
@@ -120,6 +121,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		if (data.status === 'success') {
 			if (data.current.length && data.previous.length) {
 				dispatch(addCallerToLookup(convertKeysToFirstUpper(data)));
+				pickupRef.current.focus();
+				pickupRef.current.select();
 			} else {
 				setSnackbarMessage('No caller found');
 				// setSnackbarColor('#035418');
@@ -146,6 +149,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}
 	}
 
+	console.log(bookingData.quoteOptions);
+
 	// auto calculate the quotes based on Pickup and destination
 	useEffect(() => {
 		if (
@@ -165,6 +170,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}).then((quote) => {
 			if (quote.status === 'success') {
 				dispatch(updateValueSilentMode(id, 'price', +quote.totalPrice));
+				dispatch(updateValueSilentMode(id, 'quoteOptions', quote));
 				dispatch(
 					updateValueSilentMode(id, 'durationText', String(quote.totalMinutes))
 				);

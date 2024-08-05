@@ -29,6 +29,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { addCaller } from '../context/callerSlice';
 import Pusher from 'pusher-js';
+import JourneyQuote from '../components/JourneyQuote';
 
 import { openSnackbar } from '../context/snackbarSlice';
 
@@ -252,7 +253,12 @@ export default function Push() {
 				{secondaryTab === 0 && (
 					<DriverAllocation currentBookingDateTime={currentBookingDateTime} />
 				)}
-				{secondaryTab === 1 && <Map />}
+				{secondaryTab === 1 && (
+					<>
+						<Map />
+						<JourneyQuote quoteOptions={data[activeTab].quoteOptions} />
+					</>
+				)}
 			</Box>
 		</Box>
 	);

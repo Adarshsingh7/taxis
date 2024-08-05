@@ -48,6 +48,7 @@ const filterData = (data = {}) => ({
 	formBusy: data.FormBusy || false,
 	isLoading: data.IsLoading || false,
 	bookingType: data.bookingType || 'New',
+	quoteOptions: null,
 });
 
 const initialState = {
