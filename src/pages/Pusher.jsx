@@ -29,7 +29,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { addCaller } from '../context/callerSlice';
 import Pusher from 'pusher-js';
-import DispatcherBooking from '../components/Dispatcher/DispatcherBooking';
+
 import { openSnackbar } from '../context/snackbarSlice';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
@@ -48,7 +48,7 @@ export default function Push() {
 	const dispatch = useDispatch();
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-	const [viewDispatcher, setViewDispatcher] = useState(false);
+	// const [viewDispatcher, setViewDispatcher] = useState(false);
 
 	const [viewScheduler, setViewScheduler] = useState(false);
 
@@ -108,16 +108,16 @@ export default function Push() {
 	}, [dispatch]);
 
 	const handleKeyDown = (event) => {
-		if (event.key === 'F2') {
+		if (event.key === 'F1') {
 			event.preventDefault();
-			setViewScheduler(false);
-			setViewDispatcher((prev) => !prev);
-		}
-		if (event.key === 'F3') {
-			event.preventDefault();
-			setViewDispatcher(false);
 			setViewScheduler((prev) => !prev);
+			// setViewDispatcher((prev) => !prev);
 		}
+		// if (event.key === 'F1') {
+		// 	event.preventDefault();
+		// 	// setViewDispatcher(false);
+		// 	setViewScheduler((prev) => !prev);
+		// }
 	};
 	useEffect(() => {
 		window.addEventListener('keydown', handleKeyDown);
@@ -140,12 +140,6 @@ export default function Push() {
 			className='flex'
 			sx={{ width: '100%' }}
 		>
-			<FullScreenDialog
-				open={viewDispatcher}
-				setOpen={setViewDispatcher}
-			>
-				<DispatcherBooking />
-			</FullScreenDialog>
 			<FullScreenDialog
 				open={viewScheduler}
 				setOpen={setViewScheduler}
