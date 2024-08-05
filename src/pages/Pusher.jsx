@@ -58,28 +58,25 @@ export default function Push() {
 		dispatch(setActiveTabChange(newValue));
 	};
 
-	const [isBookingSnackBarOpen, setIsBookingSnackBarOpen] = useState(false);
-
-	function handleBookingUpload(id = activeTab) {
+	async function handleBookingUpload(id = activeTab) {
 		const currentBooking = data[id];
-		if (currentBooking.bookingType === 'Current') {
-			dispatch(onUpdateBooking(id)).then((data) => {
-				setIsBookingSnackBarOpen(true);
-				if (data.status === 'success') {
-					dispatch(openSnackbar('Booking Updated Successfully', 'success'));
-				} else {
-					dispatch(openSnackbar('Failed to Update Booking', 'error'));
-				}
-			});
-		} else {
-			dispatch(onCreateBooking(id)).then((data) => {
-				setIsBookingSnackBarOpen(true);
-				if (data.status === 'success') {
-					dispatch(openSnackbar('Booking Created Successfully', 'success'));
-				} else {
-					dispatch(openSnackbar('Failed to Create Booking', 'error'));
-				}
-			});
+		try {
+			let response;
+			if (currentBooking.bookingType === 'Current') {
+				response = await dispatch(onUpdateBooking(id));
+			} else {
+				response = await dispatch(onCreateBooking(id));
+			}
+
+			if (response.status === 'success') {
+				dispatch(openSnackbar('Booking Updated Successfully', 'success'));
+			} else {
+				dispatch(openSnackbar('Failed to Update Booking', 'error'));
+			}
+			return response;
+		} catch (error) {
+			dispatch(openSnackbar('Failed to process booking', 'error'));
+			console.error('Error processing booking:', error);
 		}
 	}
 

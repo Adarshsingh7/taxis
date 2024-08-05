@@ -28,6 +28,7 @@ import ListDrivers from '../components/BookingForm/ListDrivers';
 import QuoteDialog from '../components/BookingForm/QuoteDialog';
 import { addCallerToLookup } from '../context/callerSlice';
 import { convertKeysToFirstUpper } from '../utils/casingConverter';
+import Loader from '../components/Loader';
 
 function Booking({ bookingData, id, onBookingUpload }) {
 	// All Hooks and Contexts for the data flow and management
@@ -50,6 +51,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
 	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
 	const [quote, setQuote] = useState(null);
+	const [formSubmitLoading, setFormSubmitLoading] = useState(false);
 
 	// working for 🔁 button basically toggles between pickup and destination addresses
 	function toggleAddress() {
@@ -62,7 +64,10 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	// Submit the form data to the Puser Component
 	async function handleSubmit(e) {
 		e.preventDefault();
-		onBookingUpload(id);
+		setFormSubmitLoading(true);
+		const data = await onBookingUpload(id);
+		console.log(data);
+		setFormSubmitLoading(false);
 	}
 
 	// Abstract way to call the updateValue redux function setting the ID
@@ -269,6 +274,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	}, [dispatch, id, bookingData.formBusy]);
 
 	if (!bookingData) return null;
+	console.log(formSubmitLoading);
 
 	return (
 		<div className='min-h-screen bg-background text-foreground p-4'>
@@ -279,6 +285,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				onSubmit={handleSubmit}
 			>
 				<>
+					{formSubmitLoading && <Loader />}
 					<Modal
 						open={isRepeatBookingModelActive}
 						setOpen={setIsRepeatBookingModelActive}
