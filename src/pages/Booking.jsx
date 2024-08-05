@@ -44,6 +44,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 
 	const pickupRef = useRef(null);
 	const destinationRef = useRef(null);
+	const userNameRef = useRef(null);
 	const [snackbarMessage, setSnackbarMessage] = useState('');
 	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
 	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
@@ -135,6 +136,12 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		)}-${String(date.getDate()).padStart(2, '0')}T${String(
 			date.getHours()
 		).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+	}
+
+	function handleChangeFocus(event, ref) {
+		if (event.key === 'Enter') {
+			ref.current.focus();
+		}
 	}
 
 	// auto calculate the quotes based on Pickup and destination
@@ -369,6 +376,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							onPushChange={handleAddPickup}
 							onChange={(e) => updateData('pickupAddress', e.target.value)}
 							inputRef={pickupRef}
+							handleChangeRef={(e) => handleChangeFocus(e, destinationRef)}
 						/>
 						<Autocomplete
 							type='postal'
@@ -408,8 +416,9 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							placeholder='Destination Address'
 							value={bookingData.destinationAddress}
 							onPushChange={handleAddDestination}
-							inputRef={destinationRef}
 							onChange={(e) => updateData('destinationAddress', e.target.value)}
+							inputRef={destinationRef}
+							handleChangeRef={(e) => handleChangeFocus(e, userNameRef)}
 						/>
 						<Autocomplete
 							required={false}
@@ -578,6 +587,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							type='text'
 							placeholder='Name'
 							value={bookingData.passengerName}
+							// ref={userNameRef}
+							inputRef={userNameRef}
 							onChange={(e) => updateData('passengerName', e.target.value)}
 							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 						/>
@@ -729,7 +740,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 
 // Via Section Modal
 
-function Input({ value, onChange, type, placeholder, required }) {
+function Input({ value, onChange, type, placeholder, required, ...props }) {
 	return (
 		<TextField
 			autoComplete='new-password'
@@ -739,6 +750,7 @@ function Input({ value, onChange, type, placeholder, required }) {
 			onChange={onChange}
 			id={String(Math.random() * 10000)}
 			label={placeholder}
+			{...props}
 		/>
 	);
 }

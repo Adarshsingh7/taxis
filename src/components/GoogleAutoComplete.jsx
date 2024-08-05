@@ -19,6 +19,7 @@ function PlaceAutocomplete({
 	onChange,
 	onPushChange,
 	inputRef,
+	handleChangeRef,
 }) {
 	const [suggestions, setSuggestions] = useState([]);
 	const [showOption, setShowOption] = useState(false);
@@ -163,6 +164,7 @@ function PlaceAutocomplete({
 				label={placeholder}
 				fullWidth
 				required={true}
+				onKeyDownCapture={handleChangeRef}
 				autoComplete='new-password'
 				id={Math.random().toString(36).substring(7)}
 				className='px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 w-full'
