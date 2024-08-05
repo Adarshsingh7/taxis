@@ -747,7 +747,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							className='bg-primary text-primary-foreground px-4 py-2 rounded-lg text-white bg-gray-900'
 							type='submit'
 						>
-							Create
+							{bookingData.bookingType === 'Current' ? 'Update' : 'Create'}
 						</button>
 					</div>
 				</div>

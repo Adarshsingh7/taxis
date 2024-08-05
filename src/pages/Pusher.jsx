@@ -32,6 +32,7 @@ import Pusher from 'pusher-js';
 import JourneyQuote from '../components/JourneyQuote';
 
 import { openSnackbar } from '../context/snackbarSlice';
+import DriverSection from '../components/DriverSection';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -141,7 +142,16 @@ export default function Push() {
 				open={viewScheduler}
 				setOpen={setViewScheduler}
 			>
-				<Scheduler />
+				<Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+					<Box
+						sx={{ flex: 7, overflow: 'auto', height: '90vh', width: '100vw' }}
+					>
+						<Scheduler />
+					</Box>
+					<Box sx={{ flex: 3 }}>
+						<DriverSection />
+					</Box>
+				</Box>
 			</FullScreenDialog>
 			<Modal
 				open={isConfirmationModalOpen}
