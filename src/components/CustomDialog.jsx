@@ -16,6 +16,7 @@ import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 function CustomDialog({
 	closeDialog,
@@ -25,6 +26,7 @@ function CustomDialog({
 }) {
 	const { insertData } = useBooking();
 	const [allocateModal, setAllocateModal] = useState(false);
+	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
 	console.log(data);
 	return (
 		<div className='fixed left-[-20vw] inset-0 w-[40vw] z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
@@ -56,14 +58,12 @@ function CustomDialog({
 								Icon={AccountBalanceRoundedIcon}
 							/>
 						)}
-						{
-							data.account && (
-								<BookingOption
+						{data.account && (
+							<BookingOption
 								text={data.account}
 								Icon={AccountBalanceRoundedIcon}
 							/>
-							)
-						}
+						)}
 
 						<BookingOption
 							Icon={AccountCircleRoundedIcon}
@@ -76,12 +76,14 @@ function CustomDialog({
 								text={data.pickupAddress}
 							/>
 							{data.vias.length > 0 && (
-								<BookingOption
-									Icon={DirectionsOutlinedIcon}
-									text={data.vias.map((via) => (
-										<span>{via.address},</span>
-									))}
-								/>
+								<ul>
+									<BookingOption
+										Icon={DirectionsOutlinedIcon}
+										text={data.vias.map((via) => (
+											<li>{via.address}</li>
+										))}
+									/>
+								</ul>
 							)}
 							<BookingOption
 								Icon={PersonPinCircleOutlinedIcon}
@@ -104,16 +106,16 @@ function CustomDialog({
 						/>
 						<div>
 							<BookingOption
-								Icon={PersonOutlineOutlinedIcon}
+								Icon={AccountCircleRoundedIcon}
 								text={data.passengerName}
 							/>
 							<BookingOption
-								Icon={PersonOutlineOutlinedIcon}
+								Icon={AccountCircleRoundedIcon}
 								text={data.passengers}
 							/>
 						</div>
 						<BookingOption
-							Icon={PersonOutlineOutlinedIcon}
+							Icon={AccountCircleRoundedIcon}
 							text={data.bookedByName}
 						/>
 						<BookingOption
@@ -146,6 +148,7 @@ function CustomDialog({
 					<BookingButton
 						text='Complete Booking'
 						color='green'
+						onClick={() => setIsCompleteBookingModal(true)}
 					/>
 					<BookingButton
 						text='Cancel Booking'
@@ -164,17 +167,25 @@ function CustomDialog({
 					closeDialog={closeDialog}
 				/>
 			</Modal>
+			<Modal
+				open={isCompleteBookingModal}
+				setOpen={setIsCompleteBookingModal}
+			>
+				<CompleteBookingModal
+					setIsCompleteBookingModal={setIsCompleteBookingModal}
+					data={data}
+					closeDialog={closeDialog}
+				/>
+			</Modal>
 		</div>
 	);
 }
 
 const BookingOption = ({ text, Icon }) => {
 	return (
-		<div className='flex items-center mb-4'>
+		<div className='flex items-start align-middle mb-4'>
 			<Icon />
-			<span className={`text-card dark:text-popover-foreground line-clamp-1`}>
-				{text}
-			</span>
+			<span className={`text-card dark:text-popover-foreground`}>{text}</span>
 		</div>
 	);
 };
@@ -183,7 +194,7 @@ const BookingButton = ({ text, color, ...props }) => {
 	return (
 		<button
 			{...props}
-			className={`px-4 py-2 text-white bg-${color}-700 rounded-lg hover:bg-${color}-600 `}
+			className={`px-4 py-4 text-white bg-${color}-700 hover:bg-${color}-600 `}
 		>
 			{text}
 		</button>
@@ -339,6 +350,98 @@ function ConfirmAllocationModal({
 				>
 					Confirm
 				</Button>
+			</div>
+		</div>
+	);
+}
+
+// Complete Booking Modal Structure
+
+function CompleteBookingModal({ setIsCompleteBookingModal, closeDialog, data }) {
+	const user = useAuth();
+	const handleCompleteClick = (e) => {
+		e.preventDefault();
+		const completedBookingData = {
+			bookingId: data.bookingId,
+			actionByUserId: user.currentUser.id,
+		};
+		// console.log("completedBookingData", completedBookingData);
+		completeBookings(completedBookingData);
+		setIsCompleteBookingModal(false);
+		closeDialog();
+	};
+	return (
+		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
+			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
+				<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
+					<HelpOutlineOutlinedIcon sx={{ color: '#E45454' }} />
+				</div>
+				<div className='flex w-full flex-col justify-center items-center'>
+					<p className='font-medium text-2xl '>Job completion</p>
+				</div>
+				<form
+					onSubmit={handleCompleteClick}
+					className='w-full flex flex-col justify-center items-center gap-3 mt-2'
+				>
+					<div className='w-full relative flex flex-col justify-center items-start gap-2'>
+						<label>Waiting Time Minutes</label>
+						<input
+							type='number'
+							min='0'
+							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
+							placeholder='0'
+						/>
+						<i className='absolute left-4 top-10 text-black'>
+							<AccessTimeOutlinedIcon fontSize='12px' />
+						</i>
+					</div>
+					<div className='w-full relative flex flex-col justify-center items-start gap-2'>
+						<label>Parking Charge</label>
+						<input
+							type='number'
+							min='0'
+							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
+							placeholder='0'
+						/>
+						<i className='absolute left-4 top-10 text-black'>
+							<CurrencyPoundOutlinedIcon fontSize='12px' />
+						</i>
+					</div>
+					<div className='w-full relative flex flex-col justify-center items-start gap-2'>
+						<label className=''>Price</label>
+						<input
+							required
+							type='number'
+							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
+							placeholder='0'
+						/>
+						<i class=' absolute left-4 top-10  text-black'>
+							<CurrencyPoundOutlinedIcon fontSize='12px' />
+						</i>
+					</div>
+					{data.priceAccount > 0 && (
+						<div className='w-full relative flex flex-col justify-center items-start gap-2'>
+							<label className=''>Account Price</label>
+							<input
+								type='number'
+								className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
+								placeholder='0'
+							/>
+							<i class='absolute left-4 top-10  text-black'>
+								<CurrencyPoundOutlinedIcon fontSize='12px' />
+							</i>
+						</div>
+					)}
+					<Button
+						variant='contained'
+						color='error'
+						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+						className='w-full cursor-pointer'
+						type='submit'
+					>
+						Submit
+					</Button>
+				</form>
 			</div>
 		</div>
 	);

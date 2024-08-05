@@ -50,7 +50,13 @@ export default function SimpleSnackbar() {
 	return (
 		<div>
 			<Snackbar
-				sx={{ '& .MuiSnackbarContent-root': { backgroundColor: color,  marginTop: '50px', } }}
+				sx={{
+					'& .MuiSnackbarContent-root': {
+						backgroundColor: color,
+						position: 'absolute',
+						top: '50px',
+					},
+				}}
 				color='error'
 				open={open}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
