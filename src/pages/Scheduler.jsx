@@ -28,6 +28,7 @@ import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
 import LocalTaxiOutlinedIcon from '@mui/icons-material/LocalTaxiOutlined';
 import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import isLightColor from '../utils/isLight';
 
 const AceScheduler = () => {
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -57,6 +58,16 @@ const AceScheduler = () => {
 		args.element;
 		args.element.style.backgroundColor = args.data.backgroundColorRGB;
 		args.element.style.borderRadius = '5px';
+		// console.log("args--", args.data)
+		if (args.data.userId) {
+			args.element.style.background = `repeating-linear-gradient(45deg, rgba(255,255,255,0.5), rgba(255,255,255,0.5) 1px, transparent 1px, transparent 5px), 
+         ${args.data.backgroundColorRGB}`;
+		}
+		if (isLightColor(args.data.backgroundColorRGB)) {
+			args.element.style.color = 'black';
+		} else {
+			args.element.style.color = 'white';
+		}
 	}
 
 	useEffect(() => {

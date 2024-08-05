@@ -264,6 +264,11 @@ async function allocateDriver(allocateReqData) {
 	return await handlePostReq(URL, allocateReqData);
 }
 
+async function completeBookings(completeBookingData) {
+	const URL = `${BASE}/api/Bookings/Complete`;
+	return await handlePostReq(URL, completeBookingData);
+}
+
 export {
 	getBookingData,
 	makeBooking,
