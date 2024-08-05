@@ -149,8 +149,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}
 	}
 
-	console.log(bookingData.quoteOptions);
-
 	// auto calculate the quotes based on Pickup and destination
 	useEffect(() => {
 		if (

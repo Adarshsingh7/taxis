@@ -22,6 +22,7 @@ import '@syncfusion/ej2-splitbuttons/styles/material.css';
 import '@syncfusion/ej2-react-schedule/styles/material.css';
 import './DriverAllocation.css';
 
+import isLightColor from '../utils/isLight';
 import { getDriverAvailability } from '../utils/apiReq';
 const DriverAllocation = ({ currentBookingDateTime }) => {
 	const [data, setData] = useState([]);
@@ -43,22 +44,6 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 	const startHour = formatTime(currentTime);
 	const endHour = formatTime(endTime);
 
-	function isLightColor(hex) {
-		// Remove the leading # if present
-		hex = hex.replace(/^#/, '');
-
-		// Parse the hex color
-		let r = parseInt(hex.substring(0, 2), 16);
-		let g = parseInt(hex.substring(2, 4), 16);
-		let b = parseInt(hex.substring(4, 6), 16);
-
-		// Calculate the relative luminance
-		let luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-
-		// Determine if the color is light
-		return luminance > 0.5;
-	}
-
 	useEffect(() => {
 		const fetchDriverAvailability = async () => {
 			try {
@@ -76,7 +61,7 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 						.map((driver) => ({
 							Text: driver.fullName,
 							Id: driver.userId,
-							Color: driver.colorCode,
+							Color: '#4CAF50',
 							...driver,
 						}))
 						.filter((driver) => !driver.description.includes('UNAVAILABLE'));
@@ -91,8 +76,6 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 		fetchDriverAvailability();
 	}, []);
 
-	console.log(employeeData);
-
 	const onPopupOpen = (args) => {
 		args.cancel = true; // Disable popup editing
 	};
@@ -106,13 +89,23 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 		}
 	};
 
-	function onEventRender(args) {
-		args.element.style.color = isLightColor(args.data.color)
-			? 'black'
-			: 'white';
+	function onEventRender() {
+		// args.element.style.color = isLightColor(args.data.color)
+		// 	? 'black'
+		// 	: 'white';
 	}
 
 	function onRenderCell(args) {
+		if (args.elementType === 'resourceHeader') {
+			args.element.style.backgroundColor =
+				employeeData[args.groupIndex].colorCode;
+			args.element.childNodes[0].style.color = isLightColor(
+				employeeData[args.groupIndex].colorCode
+			)
+				? 'black'
+				: 'white';
+			console.log(isLightColor(employeeData[args.groupIndex].colorCode));
+		}
 		args.element.style.fontWeight = 'bold';
 	}
 
