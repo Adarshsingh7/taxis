@@ -12,6 +12,11 @@ import { allocateDriver, getAllDrivers } from '../utils/apiReq';
 import { useAuth } from '../hooks/useAuth';
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
 import DirectionsOutlinedIcon from '@mui/icons-material/DirectionsOutlined';
+import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
+import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
+
 function CustomDialog({
 	closeDialog,
 	data,
@@ -40,29 +45,82 @@ function CustomDialog({
 					</button>
 				</div>
 				<div className='p-4 grid grid-cols-2 place-content-between mt-4 border border-card dark:border-popover'>
-					<BookingOption
-						Icon={AccountBalanceRoundedIcon}
-						text={data.accountNumber ? 'Account Job' : 'Cash Job'}
-					/>
-					<BookingOption
-						Icon={AccountCircleRoundedIcon}
-						text={data.fullname || 'No Name'}
-					/>
-					<BookingOption
-						Icon={HomeRoundedIcon}
-						text={data.pickupAddress}
-					/>
+					<div>
+						<BookingOption
+							Icon={AccountBalanceRoundedIcon}
+							text={data.accountNumber ? 'Account Job' : 'Cash Job'}
+						/>
+						{data.scope > 0 && (
+							<BookingOption
+								text={data.scope}
+								Icon={AccountBalanceRoundedIcon}
+							/>
+						)}
+						{
+							data.account && (
+								<BookingOption
+								text={data.account}
+								Icon={AccountBalanceRoundedIcon}
+							/>
+							)
+						}
 
-					<BookingOption
-						Icon={DirectionsOutlinedIcon}
-						text={data.vias.map((via) => (
-							<span>{via.address},</span>
-						))}
-					/>
-					<BookingOption
-						Icon={PersonPinCircleOutlinedIcon}
-						text={data.destinationAddress}
-					/>
+						<BookingOption
+							Icon={AccountCircleRoundedIcon}
+							text={data.fullname || 'No Name'}
+						/>
+
+						<div>
+							<BookingOption
+								Icon={HomeRoundedIcon}
+								text={data.pickupAddress}
+							/>
+							{data.vias.length > 0 && (
+								<BookingOption
+									Icon={DirectionsOutlinedIcon}
+									text={data.vias.map((via) => (
+										<span>{via.address},</span>
+									))}
+								/>
+							)}
+							<BookingOption
+								Icon={PersonPinCircleOutlinedIcon}
+								text={data.destinationAddress}
+							/>
+						</div>
+					</div>
+					<div>
+						<BookingOption
+							Icon={CurrencyPoundOutlinedIcon}
+							text={data.price}
+						/>
+						<BookingOption
+							Icon={AccessTimeOutlinedIcon}
+							text={Math.floor(Number(data.durationText) / 60) + ' Hour(s)'}
+						/>
+						<BookingOption
+							Icon={RouteOutlinedIcon}
+							text={data.mileageText}
+						/>
+						<div>
+							<BookingOption
+								Icon={PersonOutlineOutlinedIcon}
+								text={data.passengerName}
+							/>
+							<BookingOption
+								Icon={PersonOutlineOutlinedIcon}
+								text={data.passengers}
+							/>
+						</div>
+						<BookingOption
+							Icon={PersonOutlineOutlinedIcon}
+							text={data.bookedByName}
+						/>
+						<BookingOption
+							Icon={DateRangeOutlinedIcon}
+							text={data.dateCreated.split('T')[0]}
+						/>
+					</div>
 				</div>
 				<div className='mt-6 gap-4 flex flex-wrap items-center'>
 					<BookingButton
