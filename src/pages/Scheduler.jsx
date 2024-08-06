@@ -118,11 +118,12 @@ const AceScheduler = ({ isActiveComplete }) => {
 		onDeleteBooking(bookingId, cancelBlock, activeTestMode).then((res) => {
 			if (res.status === 'success') {
 				setDialogOpen(false);
+				dispatch(openSnackbar('Booking Deleted Successfully', 'success'));
 				getBookingData(currentDate, activeTestMode).then((data) => {
 					if (data.status === 'success') {
 						setData(data.bookings);
 						localStorage.setItem('bookings', JSON.stringify(data.bookings));
-						dispatchEvent(openSnackbar('Booking Refreshed'));
+						dispatch(openSnackbar('Booking Refreshed'));
 					} else {
 						dispatch(openSnackbar(data.message));
 					}

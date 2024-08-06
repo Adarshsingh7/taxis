@@ -143,7 +143,6 @@ function CustomDialog({
 					<BookingButton
 						text='Driver Arrived'
 						color='blue'
-						// onClick={() => onDeleteBooking(data.bookingId)}
 					/>
 					<BookingButton
 						text='Complete Booking'
