@@ -156,7 +156,7 @@ export default function Push() {
 							/>
 						</div>
 					</Box>
-					<Box sx={{ flex: 3 }}>
+					<Box sx={{ flex: 3, padding: '20px 0 0 0', overflow: 'hidden' }}>
 						<DriverSection />
 					</Box>
 				</Box>
