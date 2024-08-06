@@ -28,9 +28,8 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 	const [data, setData] = useState([]);
 	const [employeeData, setEmployeeData] = useState([]);
 
-	const bookingTime = new Date(currentBookingDateTime).getTime();
-	console.log('bookingTime', bookingTime);
-
+	const bookingTime = new Date(currentBookingDateTime + ':00').getTime();
+	console.log(bookingTime);
 	// Get current time and end time (5 hours later)
 	const currentTime = new Date(bookingTime - 30 * 60 * 1000);
 	const endTime = new Date(currentTime.getTime() + 10 * 60 * 60 * 1000);
@@ -65,7 +64,7 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 			try {
 				const res = await getDriverAvailability();
 				const data = Object.values(
-					await getDriversAvailablity(currentBookingDateTime)
+					await getDriversAvailablity(currentBookingDateTime + ':00')
 				);
 				data.pop();
 				let driverData = transformData(data);

@@ -261,7 +261,7 @@ export default function Push() {
 				</Tabs>
 				{secondaryTab === 0 && (
 					<DriverAllocation
-						currentBookingDateTime={currentBookingDateTime.split('T')[0]}
+						currentBookingDateTime={currentBookingDateTime.split(':')[0]}
 					/>
 				)}
 				{secondaryTab === 1 && (
