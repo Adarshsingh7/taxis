@@ -14,7 +14,7 @@ registerLicense(import.meta.env.VITE_SYNCFUSION_KEY);
 
 import './scheduler.css';
 import ProtectedRoute from '../utils/Protected';
-import { getBookingData } from '../utils/apiReq';
+import { allocateDriver, getBookingData } from '../utils/apiReq';
 import { useEffect, useState } from 'react';
 import Snackbar from '../components/Snackbar-v2';
 import { useBooking } from '../hooks/useBooking';
@@ -72,6 +72,23 @@ const AceScheduler = ({ isActiveComplete }) => {
 		}
 	}
 
+	function allocateDriverToBooking(newAllocationData, activeTestMode) {
+		allocateDriver(newAllocationData, activeTestMode).then((res) => {
+			if (res.status === 'success') {
+				setDialogOpen(false);
+				getBookingData(currentDate, activeTestMode).then((data) => {
+					if (data.status === 'success') {
+						setData(data.bookings);
+					}
+					setOpen(true);
+				});
+			} else {
+				alert('failed to delete');
+			}
+			return res;
+		});
+	}
+
 	useEffect(() => {
 		getBookingData(currentDate, activeTestMode).then((data) => {
 			if (data.status === 'success') {
@@ -92,7 +109,11 @@ const AceScheduler = ({ isActiveComplete }) => {
 		const updateBookings = async function () {
 			getBookingData(currentDate, activeTestMode).then((data) => {
 				if (data.status === 'success') {
-					setData(data.bookings);
+					if (isActiveComplete) {
+						setData(data.bookings.filter((booking) => booking.status === 3));
+					} else {
+						setData(data.bookings);
+					}
 				}
 				if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 			});
@@ -157,6 +178,7 @@ const AceScheduler = ({ isActiveComplete }) => {
 							data={selectedBookingData}
 							onDeleteBooking={handleDeleteBooking}
 							setViewBookingModal={setViewBookingModal}
+							allocateDriverToBooking={allocateDriverToBooking}
 						/>
 					</Modal>
 				)}

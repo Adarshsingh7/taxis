@@ -23,9 +23,8 @@ function CustomDialog({
 	closeDialog,
 	data,
 	onDeleteBooking,
-	setViewBookingModal,
+	allocateDriverToBooking,
 }) {
-	const { insertData } = useBooking();
 	const [allocateModal, setAllocateModal] = useState(false);
 	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
 	const [editBookingModal, setEditBookingModal] = useState(false);
@@ -73,8 +72,8 @@ function CustomDialog({
 							{data.vias.length > 0 && (
 								<ul className=''>
 									<BookingOption
-										text={data.vias.map((via) => (
-											<li>{via.address}</li>
+										text={data.vias.map((via, idx) => (
+											<li key={idx}>{via.address}</li>
 										))}
 										head='Vias'
 									/>
@@ -162,6 +161,7 @@ function CustomDialog({
 			>
 				<AllocateModal
 					setAllocateModal={setAllocateModal}
+					allocateDriverToBooking={allocateDriverToBooking}
 					data={data}
 					closeDialog={closeDialog}
 				/>
@@ -236,7 +236,12 @@ const BookingButton = ({ text, color, ...props }) => {
 export default CustomDialog;
 
 // Allocate Driver Modal Structure
-function AllocateModal({ setAllocateModal, closeDialog, data }) {
+function AllocateModal({
+	setAllocateModal,
+	closeDialog,
+	data,
+	allocateDriverToBooking,
+}) {
 	// console.log(data)
 	const [loading, setLoading] = useState(false);
 	const [driverData, setDriverData] = useState([]);
@@ -283,6 +288,7 @@ function AllocateModal({ setAllocateModal, closeDialog, data }) {
 						setAllocateModal={setAllocateModal}
 						closeDialog={closeDialog}
 						setConfirmAllocation={setConfirmAllocation}
+						allocateDriverToBooking={allocateDriverToBooking}
 					/>
 				</Modal>
 				<div className='m-auto w-full h-[50vh] overflow-auto'>
@@ -336,6 +342,7 @@ function ConfirmAllocationModal({
 	driver,
 	bookingData,
 	setConfirmAllocation,
+	allocateDriverToBooking,
 }) {
 	const dispatch = useDispatch();
 	const user = useAuth();
@@ -349,7 +356,10 @@ function ConfirmAllocationModal({
 			actionByUserId: user.currentUser.id,
 		};
 		// console.log("driver", driver);
-		const res = await allocateDriver(newAllocationData, activeTestMode);
+		const res = await allocateDriverToBooking(
+			newAllocationData,
+			activeTestMode
+		);
 		setConfirmAllocation(false);
 		setAllocateModal(false);
 		closeDialog();

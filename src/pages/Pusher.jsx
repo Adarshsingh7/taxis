@@ -149,10 +149,12 @@ export default function Push() {
 					<Box
 						sx={{ flex: 7, overflow: 'auto', height: '90vh', width: '100vw' }}
 					>
-						<Scheduler
-							setIsActiveComplete={setIsActiveComplete}
-							isActiveComplete={isActiveComplete}
-						/>
+						<div className='relative w-full'>
+							<Scheduler
+								setIsActiveComplete={setIsActiveComplete}
+								isActiveComplete={isActiveComplete}
+							/>
+						</div>
 					</Box>
 					<Box sx={{ flex: 3 }}>
 						<DriverSection />

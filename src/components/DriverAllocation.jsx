@@ -33,7 +33,6 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 	// const currentTime = new Date(bookingTime - 30 * 60 * 1000);
 	const currentTime = new Date(new Date(bookingTime).setHours(1, 0, 0, 0));
 	const endTime = new Date(currentTime.getTime() + 22 * 60 * 60 * 1000);
-	console.log(currentTime, endTime);
 
 	// Format the time in HH:mm format
 	const formatTime = (date) => {
@@ -69,6 +68,7 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 				);
 				data.pop();
 				let driverData = transformData(data);
+				console.log(data);
 				if (res.status === 'success') {
 					const formattedData = driverData.map((driver) => ({
 						Id: driver.userId,
@@ -78,12 +78,14 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 						EmployeeId: driver.userId,
 						color: driver.colorCode,
 					}));
-					const formattedEmployeeData = data.map((driver) => ({
-						Text: driver.fullName,
-						Id: driver.userId,
-						Color: '#4CAF50',
-						...driver,
-					}));
+					const formattedEmployeeData = data
+						.map((driver) => ({
+							Text: driver.fullName,
+							Id: driver.userId,
+							Color: '#4CAF50',
+							...driver,
+						}))
+						.filter((driver) => driver.availableHours.length > 0);
 
 					setData(formattedData);
 					setEmployeeData(formattedEmployeeData);
