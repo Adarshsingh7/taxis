@@ -66,7 +66,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		e.preventDefault();
 		setFormSubmitLoading(true);
 		const data = await onBookingUpload(id);
-		console.log(data);
 		setFormSubmitLoading(false);
 	}
 
@@ -274,7 +273,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	}, [dispatch, id, bookingData.formBusy]);
 
 	if (!bookingData) return null;
-	console.log(formSubmitLoading);
 
 	return (
 		<div className='min-h-screen bg-background text-foreground p-4'>

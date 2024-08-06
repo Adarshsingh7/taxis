@@ -23,7 +23,7 @@ import '@syncfusion/ej2-react-schedule/styles/material.css';
 import './DriverAllocation.css';
 
 import isLightColor from '../utils/isLight';
-import { getDriverAvailability } from '../utils/apiReq';
+import { getDriverAvailability, getDriversAvailablity } from '../utils/apiReq';
 const DriverAllocation = ({ currentBookingDateTime }) => {
 	const [data, setData] = useState([]);
 	const [employeeData, setEmployeeData] = useState([]);
@@ -45,26 +45,45 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 	const endHour = formatTime(endTime);
 
 	useEffect(() => {
+		function transformData(data) {
+			return data.flatMap((item) => {
+				return item.availableHours.map((hours) => ({
+					userId: item.userId,
+					fullName: item.fullName,
+					date: item.date,
+					colorCode: item.colorCode,
+					vehicleType: item.vehicleType,
+					from: hours.from,
+					to: hours.to,
+					note: hours.note,
+				}));
+			});
+		}
+
 		const fetchDriverAvailability = async () => {
 			try {
 				const res = await getDriverAvailability();
+				const data = Object.values(
+					await getDriversAvailablity(currentBookingDateTime)
+				);
+				data.pop();
+				let driverData = transformData(data);
 				if (res.status === 'success') {
-					const formattedData = res.drivers.map((driver) => ({
+					const formattedData = driverData.map((driver) => ({
 						Id: driver.userId,
-						Subject: driver.description,
+						Subject: driver.note,
 						from: new Date(driver.date.split('T')[0] + 'T' + driver.from),
 						to: new Date(driver.date.split('T')[0] + 'T' + driver.to),
 						EmployeeId: driver.userId,
 						color: driver.colorCode,
 					}));
-					const formattedEmployeeData = res.drivers
-						.map((driver) => ({
-							Text: driver.fullName,
-							Id: driver.userId,
-							Color: '#4CAF50',
-							...driver,
-						}))
-						.filter((driver) => !driver.description.includes('UNAVAILABLE'));
+					const formattedEmployeeData = data.map((driver) => ({
+						Text: driver.fullName,
+						Id: driver.userId,
+						Color: '#4CAF50',
+						...driver,
+					}));
+					// .filter((driver) => !driver.description.includes('UNAVAILABLE'));
 
 					setData(formattedData);
 					setEmployeeData(formattedEmployeeData);
@@ -74,7 +93,7 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 			}
 		};
 		fetchDriverAvailability();
-	}, []);
+	}, [currentBookingDateTime]);
 
 	const onPopupOpen = (args) => {
 		args.cancel = true; // Disable popup editing
@@ -104,7 +123,6 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 			)
 				? 'black'
 				: 'white';
-			console.log(isLightColor(employeeData[args.groupIndex].colorCode));
 		}
 		args.element.style.fontWeight = 'bold';
 	}

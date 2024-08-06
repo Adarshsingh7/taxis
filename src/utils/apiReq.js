@@ -1,6 +1,7 @@
 /** @format */
 
 import axios from 'axios';
+import { formatDate } from './formatDate';
 // const BASE = 'https://abacusonline-001-site1.atempurl.com';
 const BASE = 'https://api.acetaxisdorset.co.uk';
 const TEST = 'https://abacusonline-001-site1.atempurl.com';
@@ -227,6 +228,11 @@ async function getDriverAvailability() {
 	return await handlePostReq(URL, { date: new Date().toISOString() });
 }
 
+async function getDriversAvailablity(dueDate = '2024-08-06T00:00:00') {
+	const URL = `${TEST}/api/Availability/General?date=${dueDate}`;
+	return await handleGetReq(URL);
+}
+
 async function getAddressSuggestions(location) {
 	const apiKey = import.meta.env.VITE_GETADDRESS_KEY;
 	try {
@@ -280,6 +286,7 @@ export {
 	updateBooking,
 	deleteSchedulerBooking,
 	getDriverAvailability,
+	getDriversAvailablity,
 	getAddressSuggestions,
 	fireCallerEvent,
 	allocateDriver,
