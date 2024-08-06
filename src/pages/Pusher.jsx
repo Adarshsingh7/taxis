@@ -51,7 +51,7 @@ export default function Push() {
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 	// const [viewDispatcher, setViewDispatcher] = useState(false);
-
+	const [isActiveComplete, setIsActiveComplete] = useState(false);
 	const [viewScheduler, setViewScheduler] = useState(false);
 
 	const handleChange = (event, newValue) => {
@@ -146,7 +146,7 @@ export default function Push() {
 					<Box
 						sx={{ flex: 7, overflow: 'auto', height: '90vh', width: '100vw' }}
 					>
-						<Scheduler />
+						<Scheduler setIsActiveComplete={setIsActiveComplete} isActiveComplete={isActiveComplete} />
 					</Box>
 					<Box sx={{ flex: 3 }}>
 						<DriverSection />

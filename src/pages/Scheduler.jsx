@@ -31,7 +31,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import isLightColor from '../utils/isLight';
 import { openSnackbar } from '../context/snackbarSlice';
 
-const AceScheduler = () => {
+const AceScheduler = ({ setIsActiveComplete, isActiveComplete }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
 	// const [snackbarMessage, setSnackBarMessage] = useState('');
@@ -73,12 +73,19 @@ const AceScheduler = () => {
 	}
 
 	useEffect(() => {
-		getBookingData(currentDate, activeTestMode).then((data) => {
-			if (data.status === 'success') {
-				setData(data.bookings);
-				dispatch(openSnackbar('Booking Refreshed'));
+		getBookingData(currentDate, activeTestMode).then((res) => {
+			if (res.status === 'success') {
+				if (isActiveComplete) {
+					const data = res.bookings.filter((booking) => booking.status === 3);
+					setData(data.bookings);
+					dispatch(openSnackbar('Booking Refreshed'));
+				} else {
+					const data = res.bookings;
+					setData(data.bookings);
+					dispatch(openSnackbar('Booking Refreshed'));
+				}
 			} else {
-				dispatch(openSnackbar(data.message));
+				dispatch(openSnackbar(res.message));
 			}
 			if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 		});

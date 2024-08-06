@@ -21,11 +21,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	);
 });
 
-export default function FullScreenDialog({ children, open, setOpen }) {
+export default function FullScreenDialog({ children, open, setOpen, isActiveComplete, setIsActiveComplete }) {
 	const handleClose = () => {
 		setOpen(false);
 	};
-	const [isActiveComplete, setIsActiveComplete] = useState(false);
+	
 
 	return (
 		<React.Fragment>
