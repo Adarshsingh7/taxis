@@ -26,7 +26,8 @@ function CustomDialog({
 	const { insertData } = useBooking();
 	const [allocateModal, setAllocateModal] = useState(false);
 	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
-	console.log('data aya', data);
+	const [editBookingModal, setEditBookingModal] = useState(false);
+	const [deleteModal, setDeleteModal] = useState(false);
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
 			<div className='relative w-full max-w-7xl p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
@@ -129,7 +130,7 @@ function CustomDialog({
 						onClick={() => setAllocateModal(true)}
 					/>
 					<BookingButton
-						onClick={() => insertData(data)}
+						onClick={() => setEditBookingModal(true)}
 						text='Edit Booking'
 						color='blue'
 					/>
@@ -150,7 +151,7 @@ function CustomDialog({
 					<BookingButton
 						text='Cancel Booking'
 						color='red'
-						onClick={() => onDeleteBooking(data.bookingId)}
+						onClick={() => setDeleteModal(true)}
 					/>
 				</div>
 			</div>
@@ -172,6 +173,27 @@ function CustomDialog({
 					setIsCompleteBookingModal={setIsCompleteBookingModal}
 					data={data}
 					closeDialog={closeDialog}
+				/>
+			</Modal>
+			<Modal
+				open={editBookingModal}
+				setOpen={setEditBookingModal}
+			>
+				<EditBookingModal
+					setEditBookingModal={setEditBookingModal}
+					data={data}
+					closeDialog={closeDialog}
+				/>
+			</Modal>
+			<Modal
+				open={deleteModal}
+				setOpen={setDeleteModal}
+			>
+				<DeleteBookingModal
+					setDeleteModal={setDeleteModal}
+					data={data}
+					closeDialog={closeDialog}
+					onDeleteBooking={onDeleteBooking}
 				/>
 			</Modal>
 		</div>
@@ -486,3 +508,90 @@ function CompleteBookingModal({
 		</div>
 	);
 }
+
+function EditBookingModal({ setEditBookingModal, data, closeDialog }) {
+	console.log(data);
+	return (
+		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
+			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
+				<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
+					<PersonOutlineOutlinedIcon sx={{ color: '#E45454' }} />
+				</div>
+				<div className='flex w-full flex-col justify-center items-center'>
+					<p className='font-medium text-xl '>Edit Your Bookings</p>
+				</div>
+			</div>
+
+			<div className='w-full flex items-center justify-center gap-4'>
+				{data.recurrenceID && data.recurrenceRule ? (
+					<Button
+						variant='contained'
+						color='success'
+						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+						className='w-full cursor-pointer'
+						// onClick={() => handleConfirmClick(driver)}
+					>
+						Edit All
+					</Button>
+				) : (
+					<Button
+						variant='contained'
+						color='error'
+						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+						className='w-full cursor-pointer'
+						// onClick={() => setConfirmAllocation(false)}
+					>
+						Edit
+					</Button>
+				)}
+			</div>
+		</div>
+	);
+}
+
+function DeleteBookingModal({ setDeleteModal, data, closeDialog, onDeleteBooking }) {
+	console.log(data);
+	const handleSingleDelete = (id) => {
+		onDeleteBooking(id);
+		closeDialog();
+	}
+	return (
+		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
+			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
+				<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
+					<PersonOutlineOutlinedIcon sx={{ color: '#E45454' }} />
+				</div>
+				<div className='flex w-full flex-col justify-center items-center'>
+					<p className='font-medium text-xl '>Delete Your Bookings</p>
+				</div>
+			</div>
+			<div className='text-center w-full'>
+				Are you sure you wish to delete the selected booking?
+			</div>
+			<div className='w-full flex items-center justify-center gap-4'>
+				{data.recurrenceID && data.recurrenceRule ? (
+					<Button
+						variant='contained'
+						color='error'
+						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+						className='w-full cursor-pointer'
+						// onClick={() => handleConfirmClick(driver)}
+					>
+						Delete All
+					</Button>
+				) : (
+					<Button
+						variant='contained'
+						color='error'
+						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+						className='w-full cursor-pointer'
+						onClick={() => handleSingleDelete(data.bookingId)}
+					>
+						Delete
+					</Button>
+				)}
+			</div>
+		</div>
+	);
+}
+
