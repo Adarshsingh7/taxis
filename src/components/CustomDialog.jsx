@@ -67,7 +67,7 @@ function CustomDialog({
 
 						<div>
 							<BookingOption
-								text={data.pickupAddress}
+								text={`${data.pickupAddress}, ${data.pickupPostCode}`}
 								head='Pickup Address'
 							/>
 							{data.vias.length > 0 && (
@@ -81,7 +81,7 @@ function CustomDialog({
 								</ul>
 							)}
 							<BookingOption
-								text={data.destinationAddress}
+								text={`${data.destinationAddress}, ${data.destinationPostCode}`}
 								head='Destination Address'
 							/>
 						</div>
@@ -114,7 +114,7 @@ function CustomDialog({
 							head='Booked By'
 						/>
 						<BookingOption
-							text={data.dateCreated.split('T')[0]}
+							text={getTodayInEnGbFormat(data.dateCreated.split('T')[0])}
 							head='Booked On'
 						/>
 					</div>
@@ -201,10 +201,20 @@ function CustomDialog({
 	);
 }
 
+function getTodayInEnGbFormat(date) {
+	const today = new Date(date);
+	const enGbFormatter = new Intl.DateTimeFormat('en-GB', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+	});
+	return enGbFormatter.format(today);
+}
+
 const BookingOption = ({ text, head }) => {
 	return (
 		<div className='flex items-center align-middle mb-4'>
-			<p className=' text-lg font-medium pr-2'>{head}:- </p>
+			<p className=' text-lg font-medium pr-2'>{head}: </p>
 			<span className={`text-card dark:text-popover-foreground text-[1rem]`}>
 				{text}
 			</span>
