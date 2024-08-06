@@ -73,19 +73,16 @@ const AceScheduler = ({ setIsActiveComplete, isActiveComplete }) => {
 	}
 
 	useEffect(() => {
-		getBookingData(currentDate, activeTestMode).then((res) => {
-			if (res.status === 'success') {
+		getBookingData(currentDate, activeTestMode).then((data) => {
+			if (data.status === 'success') {
 				if (isActiveComplete) {
-					const data = res.bookings.filter((booking) => booking.status === 3);
-					setData(data.bookings);
-					dispatch(openSnackbar('Booking Refreshed'));
+					setData(data.bookings.filter((booking) => booking.status === 3));
 				} else {
-					const data = res.bookings;
-					setData(data.bookings);
-					dispatch(openSnackbar('Booking Refreshed'));
+					setData(bookings.data);
 				}
+				dispatch(openSnackbar('Booking Refreshed'));
 			} else {
-				dispatch(openSnackbar(res.message));
+				dispatch(openSnackbar(data.message));
 			}
 			if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 		});

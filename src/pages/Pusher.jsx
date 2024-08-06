@@ -51,7 +51,7 @@ export default function Push() {
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 	// const [viewDispatcher, setViewDispatcher] = useState(false);
-	const [isActiveComplete, setIsActiveComplete] = useState(false);
+	const [isActiveComplete, setIsActiveComplete] = useState(true);
 	const [viewScheduler, setViewScheduler] = useState(false);
 
 	const handleChange = (event, newValue) => {
@@ -141,12 +141,17 @@ export default function Push() {
 			<FullScreenDialog
 				open={viewScheduler}
 				setOpen={setViewScheduler}
+				setIsActiveComplete={setIsActiveComplete}
+				isActiveComplete={isActiveComplete}
 			>
 				<Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
 					<Box
 						sx={{ flex: 7, overflow: 'auto', height: '90vh', width: '100vw' }}
 					>
-						<Scheduler setIsActiveComplete={setIsActiveComplete} isActiveComplete={isActiveComplete} />
+						<Scheduler
+							setIsActiveComplete={setIsActiveComplete}
+							isActiveComplete={isActiveComplete}
+						/>
 					</Box>
 					<Box sx={{ flex: 3 }}>
 						<DriverSection />
