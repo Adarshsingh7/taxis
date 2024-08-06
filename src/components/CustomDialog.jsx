@@ -519,7 +519,7 @@ function DeleteBookingModal({
 }) {
 	// console.log(data);
 	const handleSingleDelete = (id) => {
-		onDeleteBooking(id);
+		onDeleteBooking(id, false);
 		setDeleteModal(false);
 		closeDialog();
 	};
