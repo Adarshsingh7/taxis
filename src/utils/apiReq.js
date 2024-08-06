@@ -212,13 +212,17 @@ async function updateBooking(data, testMode = false) {
 	return await handlePostReq(URL, filteredData);
 }
 
-async function deleteSchedulerBooking(data, testMode = false) {
+async function deleteSchedulerBooking(
+	data,
+	cancelBlock = false,
+	testMode = true
+) {
 	const URL = `${testMode ? TEST : BASE}/api/Bookings/Cancel`;
 	return await handlePostReq(URL, {
 		bookingId: data.bookingId,
 		cancelledByName: data.cancelledByName,
 		actionByUserId: data.actionByUserId,
-		cancelBlock: false,
+		cancelBlock: cancelBlock,
 		cancelledOnArrival: false,
 	});
 }

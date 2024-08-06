@@ -517,11 +517,19 @@ function DeleteBookingModal({
 	closeDialog,
 	onDeleteBooking,
 }) {
-	console.log(data);
+	// console.log(data);
 	const handleSingleDelete = (id) => {
 		onDeleteBooking(id);
+		setDeleteModal(false);
 		closeDialog();
 	};
+
+	const handleDeleteAllRepeat = async (id) => {
+		onDeleteBooking(id, true);
+		setDeleteModal(false);
+		closeDialog();
+	};
+
 	return (
 		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
 			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
@@ -537,15 +545,26 @@ function DeleteBookingModal({
 			</div>
 			<div className='w-full flex items-center justify-center gap-4'>
 				{data.recurrenceID && data.recurrenceRule ? (
-					<Button
-						variant='contained'
-						color='error'
-						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-						className='w-full cursor-pointer'
-						// onClick={() => handleConfirmClick(driver)}
-					>
-						Delete All
-					</Button>
+					<>
+						<Button
+							variant='contained'
+							color='error'
+							sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+							className='w-full cursor-pointer'
+							onClick={() => handleSingleDelete(data.bookingId)}
+						>
+							Delete
+						</Button>
+						<Button
+							variant='contained'
+							color='error'
+							sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+							className='w-full cursor-pointer'
+							onClick={() => handleDeleteAllRepeat(data.bookingId)}
+						>
+							Delete All
+						</Button>
+					</>
 				) : (
 					<Button
 						variant='contained'
