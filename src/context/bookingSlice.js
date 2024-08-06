@@ -83,7 +83,7 @@ const bookingFormSlice = createSlice({
 		},
 		addDataFromSchedulerInEditMode(state, action) {
 			const data = filterData({});
-			filterData.bookingType = 'Current';
+			data.bookingType = 'Current';
 			state.bookings.push({ ...data, ...action.payload });
 			state.activeBookingIndex = state.bookings.length - 1;
 		},
