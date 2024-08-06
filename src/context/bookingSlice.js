@@ -81,6 +81,12 @@ const bookingFormSlice = createSlice({
 				? state.activeBookingIndex
 				: state.bookings.length - 1;
 		},
+		addDataFromSchedulerInEditMode(state, action) {
+			const data = filterData({});
+			filterData.bookingType = 'Current';
+			state.bookings.push({ ...data, ...action.payload });
+			state.activeBookingIndex = state.bookings.length - 1;
+		},
 		// to remove a booking session from the booking form data and from the UI
 		endBooking(state) {
 			const itemIndex = state.activeBookingIndex;
@@ -174,6 +180,7 @@ export const {
 	setActiveTabChange,
 	setActiveTestMode,
 	updateBookingData,
+	addDataFromSchedulerInEditMode,
 } = bookingFormSlice.actions;
 
 export default bookingFormSlice.reducer;
