@@ -31,7 +31,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import isLightColor from '../utils/isLight';
 import { openSnackbar } from '../context/snackbarSlice';
 
-const AceScheduler = ({ setIsActiveComplete, isActiveComplete }) => {
+const AceScheduler = ({ isActiveComplete }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
 	// const [snackbarMessage, setSnackBarMessage] = useState('');
@@ -78,7 +78,7 @@ const AceScheduler = ({ setIsActiveComplete, isActiveComplete }) => {
 				if (isActiveComplete) {
 					setData(data.bookings.filter((booking) => booking.status === 3));
 				} else {
-					setData(bookings.data);
+					setData(data.bookings);
 				}
 				dispatch(openSnackbar('Booking Refreshed'));
 			} else {
@@ -86,7 +86,7 @@ const AceScheduler = ({ setIsActiveComplete, isActiveComplete }) => {
 			}
 			if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 		});
-	}, [activeTestMode, currentDate, dispatch]);
+	}, [activeTestMode, currentDate, dispatch, isActiveComplete]);
 
 	useEffect(() => {
 		const updateBookings = async function () {

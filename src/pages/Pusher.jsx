@@ -51,7 +51,7 @@ export default function Push() {
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 	// const [viewDispatcher, setViewDispatcher] = useState(false);
-	const [isActiveComplete, setIsActiveComplete] = useState(true);
+	const [isActiveComplete, setIsActiveComplete] = useState(false);
 	const [viewScheduler, setViewScheduler] = useState(false);
 
 	const handleChange = (event, newValue) => {
@@ -133,6 +133,7 @@ export default function Push() {
 			setLeftWidth(newWidth);
 		}
 	};
+
 	return (
 		<Box
 			className='flex'
@@ -259,7 +260,9 @@ export default function Push() {
 					<Tab label='Map' />
 				</Tabs>
 				{secondaryTab === 0 && (
-					<DriverAllocation currentBookingDateTime={currentBookingDateTime} />
+					<DriverAllocation
+						currentBookingDateTime={currentBookingDateTime.split('T')[0]}
+					/>
 				)}
 				{secondaryTab === 1 && (
 					<>

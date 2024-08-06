@@ -29,6 +29,7 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 	const [employeeData, setEmployeeData] = useState([]);
 
 	const bookingTime = new Date(currentBookingDateTime).getTime();
+	console.log('bookingTime', bookingTime);
 
 	// Get current time and end time (5 hours later)
 	const currentTime = new Date(bookingTime - 30 * 60 * 1000);
@@ -130,8 +131,7 @@ const DriverAllocation = ({ currentBookingDateTime }) => {
 	return (
 		<ScheduleComponent
 			renderCell={onRenderCell}
-			// height={'50%'}
-			selectedDate={new Date(Date.now() - 30 * 60 * 1000)}
+			selectedDate={new Date(currentTime - 30 * 60 * 1000)}
 			eventRendered={onEventRender}
 			eventSettings={{
 				dataSource: data,
