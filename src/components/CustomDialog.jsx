@@ -1,8 +1,6 @@
 /** @format */
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
-import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+
 import { useBooking } from '../hooks/useBooking';
 import { useEffect, useState } from 'react';
 import Modal from '../components/Modal';
@@ -10,18 +8,14 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import { Button } from '@mui/material';
 import { allocateDriver, getAllDrivers } from '../utils/apiReq';
 import { useAuth } from '../hooks/useAuth';
-import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
-import DirectionsOutlinedIcon from '@mui/icons-material/DirectionsOutlined';
+
 import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
-import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
+
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { completeBookings } from '../utils/apiReq';
 import { openSnackbar } from '../context/snackbarSlice';
 import { useDispatch } from 'react-redux';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-
 function CustomDialog({
 	closeDialog,
 	data,
@@ -31,10 +25,10 @@ function CustomDialog({
 	const { insertData } = useBooking();
 	const [allocateModal, setAllocateModal] = useState(false);
 	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
-	console.log(data);
+	console.log('data aya', data);
 	return (
-		<div className='fixed left-[-20vw] inset-0 w-[40vw] z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
-			<div className='relative w-full max-w-3xl p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
+		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
+			<div className='relative w-full max-w-7xl p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
 				<div className='flex items-center justify-between mb-6'>
 					<h2 className='text-lg font-medium text-card'>
 						BookingId:{' '}
@@ -53,87 +47,80 @@ function CustomDialog({
 				<div className='p-4 grid grid-cols-2 place-content-between mt-4 border border-card dark:border-popover'>
 					<div>
 						<BookingOption
-							Icon={AccountBalanceRoundedIcon}
+							head='Scope'
 							text={data.accountNumber ? 'Account Job' : 'Cash Job'}
 						/>
-						{data.scope > 0 && (
-							<BookingOption
-								text={data.scope}
-								Icon={AccountBalanceRoundedIcon}
-							/>
-						)}
-						{data.account && (
+						{data.scope >= 0 && (
 							<BookingOption
 								text={data.account}
-								Icon={AccountBalanceRoundedIcon}
+								head='Account'
 							/>
 						)}
-
 						<BookingOption
-							Icon={AccountCircleRoundedIcon}
 							text={data.fullname || 'No Name'}
+							head='Allocated Driver'
 						/>
 
 						<div>
 							<BookingOption
-								Icon={HomeRoundedIcon}
 								text={data.pickupAddress}
+								head='Pickup Address'
 							/>
 							{data.vias.length > 0 && (
-								<ul>
+								<ul className=''>
 									<BookingOption
-										Icon={DirectionsOutlinedIcon}
 										text={data.vias.map((via) => (
 											<li>{via.address}</li>
 										))}
+										head='Vias'
 									/>
 								</ul>
 							)}
 							<BookingOption
-								Icon={PersonPinCircleOutlinedIcon}
 								text={data.destinationAddress}
+								head='Destination Address'
 							/>
 						</div>
 					</div>
 					<div>
 						<BookingOption
-							Icon={CurrencyPoundOutlinedIcon}
 							text={data.price}
+							head='Price'
 						/>
 						<BookingOption
-							Icon={AccessTimeOutlinedIcon}
-							text={Math.floor(Number(data.durationText) / 60) + ' Hour(s)'}
+							text={Math.floor(Number(data.durationMinutes) / 60) + ' Hour(s)'}
+							head='Time'
 						/>
 						<BookingOption
-							Icon={RouteOutlinedIcon}
 							text={data.mileageText}
+							head='Distance'
 						/>
 						<div>
 							<BookingOption
-								Icon={AccountCircleRoundedIcon}
 								text={data.passengerName}
+								head='Passenger Name'
 							/>
 							<BookingOption
-								Icon={GroupAddIcon}
 								text={data.passengers}
+								head='Passenger Count'
 							/>
 						</div>
 						<BookingOption
-							Icon={AccountCircleRoundedIcon}
 							text={data.bookedByName}
+							head='Booked By'
 						/>
 						<BookingOption
-							Icon={DateRangeOutlinedIcon}
 							text={data.dateCreated.split('T')[0]}
+							head='Booked On'
 						/>
 					</div>
 				</div>
 				<div className='mt-6 gap-4 flex flex-wrap items-center'>
-					<BookingButton
+					{/* <BookingButton
 						text='View Booking'
 						color='blue'
-						onClick={() => setViewBookingModal(true)}
-					/>
+						// onClick={() => setViewBookingModal(true)}
+					/> */}
 
 					<BookingButton
 						text='Allocate Booking'
@@ -148,6 +135,11 @@ function CustomDialog({
 					<BookingButton
 						text='Duplicate Booking'
 						color='blue'
+					/>
+					<BookingButton
+						text='Driver Arrived'
+						color='blue'
+						// onClick={() => onDeleteBooking(data.bookingId)}
 					/>
 					<BookingButton
 						text='Complete Booking'
@@ -185,11 +177,13 @@ function CustomDialog({
 	);
 }
 
-const BookingOption = ({ text, Icon }) => {
+const BookingOption = ({ text, head }) => {
 	return (
-		<div className='flex items-start align-middle mb-4'>
-			<Icon />
-			<span className={`text-card dark:text-popover-foreground`}>{text}</span>
+		<div className='flex items-center align-middle mb-4'>
+			<p className=' text-lg font-medium pr-2'>{head}:- </p>
+			<span className={`text-card dark:text-popover-foreground text-[1rem]`}>
+				{text}
+			</span>
 		</div>
 	);
 };
