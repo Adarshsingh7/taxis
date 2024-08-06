@@ -60,15 +60,10 @@ function filterData(data) {
 }
 
 function createDateObject(today = new Date()) {
-	// Set time to 18:30:00
-	today.setHours(0, 0, 0, 0); // Hours, Minutes, Seconds, Milliseconds
-
-	// Calculate "to" date by adding 24 hours
-	const toDate = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-
-	// Format dates in ISO 8601
-	const formattedFrom = today.toISOString();
-	const formattedTo = toDate.toISOString();
+	const formattedFrom = formatDate(new Date(today).setHours(0, 0, 0, 0));
+	const formattedTo = formatDate(
+		new Date(today).setHours(0, 0, 0, 0) + 24 * 60 * 60 * 1000
+	);
 
 	return {
 		from: formattedFrom,
