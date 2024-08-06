@@ -265,13 +265,13 @@ async function fireCallerEvent(number) {
 	return await handleGetReq(URL);
 }
 
-async function allocateDriver(allocateReqData) {
-	const URL = `${BASE}/api/Bookings/Allocate`;
+async function allocateDriver(allocateReqData, testMode = false) {
+	const URL = `${testMode ? TEST : BASE}/api/Bookings/Allocate`;
 	return await handlePostReq(URL, allocateReqData);
 }
 
-async function completeBookings(completeBookingData) {
-	const URL = `${BASE}/api/Bookings/Complete`;
+async function completeBookings(completeBookingData, testMode = false) {
+	const URL = `${testMode ? TEST : BASE}/api/Bookings/Complete`;
 	return await handlePostReq(URL, completeBookingData);
 }
 

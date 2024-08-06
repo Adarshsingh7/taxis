@@ -15,7 +15,8 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { completeBookings } from '../utils/apiReq';
 import { openSnackbar } from '../context/snackbarSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Loader from './Loader';
 function CustomDialog({
 	closeDialog,
 	data,
@@ -305,6 +306,9 @@ function ConfirmAllocationModal({
 }) {
 	const dispatch = useDispatch();
 	const user = useAuth();
+	const activeTestMode = useSelector(
+		(store) => store.bookingForm.isActiveTestMode
+	);
 	const handleConfirmClick = async (driver) => {
 		const newAllocationData = {
 			bookingId: bookingData.bookingId,
@@ -312,7 +316,7 @@ function ConfirmAllocationModal({
 			actionByUserId: user.currentUser.id,
 		};
 		// console.log("driver", driver);
-		const res = await allocateDriver(newAllocationData);
+		const res = await allocateDriver(newAllocationData, activeTestMode);
 		setConfirmAllocation(false);
 		setAllocateModal(false);
 		closeDialog();
@@ -364,20 +368,31 @@ function CompleteBookingModal({
 	closeDialog,
 	data,
 }) {
+	const [accountPrice, setAccountPrice] = useState(data.priceAccount);
+	const [waitingTime, setWaitingTime] = useState(data.waitingTime);
+	const [parkingCharge, setParkingCharge] = useState(data.parkingCharge);
+	const [price, setPrice] = useState(data.price);
+	const isActiveTestMode = useSelector(
+		(store) => store.bookingForm.isActiveTestMode
+	);
+
 	const dispatch = useDispatch();
-	const user = useAuth();
+
 	const handleCompleteClick = async (e) => {
 		console.log('clicked clicked');
 		e.preventDefault();
 		const completedBookingData = {
 			bookingId: data.bookingId,
-			waitingTime: data.waitingTimeMinutes,
-			parkingCharge: data.parkingCharge,
-			driverPrice: data.price,
+			waitingTime,
+			parkingCharge,
+			driverPrice: price,
 			accountPrice: data.priceAccount,
 		};
 		// console.log("completedBookingData", completedBookingData);
-		const response = await completeBookings(completedBookingData);
+		const response = await completeBookings(
+			completedBookingData,
+			isActiveTestMode
+		);
 		setIsCompleteBookingModal(false);
 		closeDialog();
 		if (response.status === 'success') {
@@ -403,6 +418,8 @@ function CompleteBookingModal({
 						<input
 							type='number'
 							min='0'
+							value={waitingTime}
+							onChange={(e) => setWaitingTime(e.target.value)}
 							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
 							placeholder='0'
 						/>
@@ -414,6 +431,8 @@ function CompleteBookingModal({
 						<label>Parking Charge</label>
 						<input
 							type='number'
+							value={parkingCharge}
+							onChange={(e) => setParkingCharge(e.target.value)}
 							min='0'
 							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
 							placeholder='0'
@@ -429,10 +448,12 @@ function CompleteBookingModal({
 						<input
 							required
 							type='number'
+							value={price}
+							onChange={(e) => setPrice(e.target.value)}
 							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
 							placeholder='0'
 						/>
-						<i class=' absolute left-4 top-10  text-black'>
+						<i className=' absolute left-4 top-10  text-black'>
 							<CurrencyPoundOutlinedIcon fontSize='12px' />
 						</i>
 					</div>
@@ -441,10 +462,12 @@ function CompleteBookingModal({
 							<label className=''>Account Price</label>
 							<input
 								type='number'
+								value={accountPrice}
+								onChange={(e) => setAccountPrice(e.target.value)}
 								className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
 								placeholder='0'
 							/>
-							<i class='absolute left-4 top-10  text-black'>
+							<i className='absolute left-4 top-10  text-black'>
 								<CurrencyPoundOutlinedIcon fontSize='12px' />
 							</i>
 						</div>
