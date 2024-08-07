@@ -88,6 +88,7 @@ const AceScheduler = ({ isActiveComplete }) => {
 		});
 	}
 
+
 	useEffect(() => {
 		getBookingData(currentDate, activeTestMode).then((data) => {
 			if (data.status === 'success') {

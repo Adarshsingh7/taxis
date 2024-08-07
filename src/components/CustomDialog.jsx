@@ -5,8 +5,8 @@ import { useBooking } from '../hooks/useBooking';
 import { useEffect, useState } from 'react';
 import Modal from '../components/Modal';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import { Button } from '@mui/material';
-import { allocateDriver, getAllDrivers } from '../utils/apiReq';
+import { Button, Switch } from '@mui/material';
+import { allocateDriver, getAllDrivers, makeBooking } from '../utils/apiReq';
 import { useAuth } from '../hooks/useAuth';
 
 import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
@@ -19,6 +19,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from './Loader';
 import EditBookingModal from './Scheduler/EditBookingModal';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
+
+import { formatDate } from '../utils/formatDate';
+import { getRefreshedBooking } from '../context/schedulerSlice';
 function CustomDialog({
 	closeDialog,
 	data,
@@ -29,6 +33,7 @@ function CustomDialog({
 	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
 	const [editBookingModal, setEditBookingModal] = useState(false);
 	const [deleteModal, setDeleteModal] = useState(false);
+	const [duplicateBookingModal, setDuplicateBookingModal] = useState(false);
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
 			<div className='relative w-full max-w-7xl p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
@@ -138,6 +143,7 @@ function CustomDialog({
 					<BookingButton
 						text='Duplicate Booking'
 						color='blue'
+						onClick={() => setDuplicateBookingModal(true)}
 					/>
 					<BookingButton
 						text='Driver Arrived'
@@ -182,6 +188,16 @@ function CustomDialog({
 			>
 				<EditBookingModal
 					setEditBookingModal={setEditBookingModal}
+					data={data}
+					closeDialog={closeDialog}
+				/>
+			</Modal>
+			<Modal
+				open={duplicateBookingModal}
+				setOpen={setDuplicateBookingModal}
+			>
+				<DuplicateBookingModal
+					setDuplicateBookingModal={setDuplicateBookingModal}
 					data={data}
 					closeDialog={closeDialog}
 				/>
@@ -595,6 +611,86 @@ function DeleteBookingModal({
 						Delete
 					</Button>
 				)}
+			</div>
+		</div>
+	);
+}
+
+// Duplicate Booking button Modal
+function DuplicateBookingModal({
+	data,
+	setDuplicateBookingModal,
+	closeDialog,
+}) {
+	const [isToggleTrue, setToogleTrue] = useState(true);
+	const [newDate, setNewDate] = useState(formatDate(data.pickupDateTime));
+	const handleToogleChange = () => {
+		setToogleTrue(!isToggleTrue);
+	};
+	const handleDateChange = (e) => {
+		setNewDate(e.target.value);
+	};
+	const handleSave = async(data) => {
+		const newData = {
+			...data,
+			pickupDateTime: newDate,
+		};
+		console.log(newData);
+		setDuplicateBookingModal(false);
+		closeDialog();
+		const res = await makeBooking(newData, true);
+		if (res.status === 'success') {
+			dispatch(openSnackbar('Booking Created Successfully!', 'success'));
+		}
+		getRefreshedBooking();
+	};
+	const createDuplicateBooking = (originalBookingData, newPickupDateTime) => {
+		// Replace this with the actual implementation to create a new booking
+		// using the selected date and the original booking data.
+		console.log('Creating new booking with date:', newPickupDateTime);
+	};
+
+	return (
+		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
+			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
+				<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
+					<FileCopyOutlinedIcon sx={{ color: '#E45454' }} />
+				</div>
+				<div className='flex w-full flex-col justify-center items-center'>
+					<p className='font-medium text-xl '>Duplicate Booking</p>
+				</div>
+			</div>
+			<div className='text-center w-full'>
+				Select a new pickup time for the duplicate booking:
+			</div>
+			<div className='w-full flex items-center justify-start gap-1'>
+				<Switch
+					checked={isToggleTrue}
+					onChange={handleToogleChange}
+				/>
+				<span>Use existing booking datetime</span>
+			</div>
+			{!isToggleTrue && (
+				<div className='w-full'>
+					<input
+						required
+						type='datetime-local'
+						className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
+						value={newDate}
+						onChange={handleDateChange}
+					/>
+				</div>
+			)}
+			<div className='w-full flex items-center justify-center gap-4'>
+				<Button
+					variant='contained'
+					color='error'
+					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
+					className='w-full cursor-pointer'
+					onClick={() => handleSave({ ...data, bookingId: null })}
+				>
+					Save
+				</Button>
 			</div>
 		</div>
 	);

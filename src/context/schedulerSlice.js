@@ -42,3 +42,5 @@ export function deleteSchedulerBooking(bookingId) {
 		return data;
 	};
 }
+
+export default schedulerSlice.reducer;
