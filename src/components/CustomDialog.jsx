@@ -622,10 +622,10 @@ function DuplicateBookingModal({
 	setDuplicateBookingModal,
 	closeDialog,
 }) {
-	const [isToggleTrue, setToogleTrue] = useState(true);
+	const [isToggleTrue, setToggleTrue] = useState(true);
 	const [newDate, setNewDate] = useState(formatDate(data.pickupDateTime));
-	const handleToogleChange = () => {
-		setToogleTrue(!isToggleTrue);
+	const handleToggleChange = () => {
+		setToggleTrue(!isToggleTrue);
 	};
 	const handleDateChange = (e) => {
 		setNewDate(e.target.value);
@@ -666,7 +666,7 @@ function DuplicateBookingModal({
 			<div className='w-full flex items-center justify-start gap-1'>
 				<Switch
 					checked={isToggleTrue}
-					onChange={handleToogleChange}
+					onChange={handleToggleChange}
 				/>
 				<span>Use existing booking datetime</span>
 			</div>
