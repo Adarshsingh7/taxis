@@ -230,7 +230,7 @@ function getTodayInEnGbFormat(date) {
 const BookingOption = ({ text, head }) => {
 	return (
 		<div className='flex items-center align-middle mb-4'>
-			<p className=' text-lg font-medium pr-2'>{head}: </p>
+			<p className='text-lg font-medium pr-2'>{head}: </p>
 			<span className={`text-card dark:text-popover-foreground text-[1rem]`}>
 				{text}
 			</span>

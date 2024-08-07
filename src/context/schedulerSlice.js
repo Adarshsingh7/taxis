@@ -4,7 +4,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
 	getBookingData,
 	deleteSchedulerBooking as deleteBooking,
+	allocateDriver,
 } from '../utils/apiReq';
+import { type } from 'os';
+import { scheduler } from 'timers/promises';
 
 const schedulerSlice = createSlice({
 	name: 'scheduler',
@@ -40,6 +43,14 @@ export function deleteSchedulerBooking(bookingId) {
 		const data = await response.json();
 		dispatch({ type: 'scheduler/removeBooking', payload: { bookingId } });
 		return data;
+	};
+}
+
+export function allocateBookingToDriver(currentBooking, driverId) {
+	return async (dispatch) => {
+		const response = await allocateDriver(currentBooking, driverId);
+		const data = await response.json();
+		dispatch({ type: 'scheduler/insertBooking', payload: { bookings: data } });
 	};
 }
 
