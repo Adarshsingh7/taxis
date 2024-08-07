@@ -59,11 +59,10 @@ const AceScheduler = ({ isActiveComplete }) => {
 	function onEventRendered(args) {
 		args.element;
 		args.element.style.backgroundColor = args.data.backgroundColorRGB;
-		args.element.style.borderRadius = '5px';
-		// console.log("args--", args.data)
-		if (args.data.userId) {
-			args.element.style.background = `repeating-linear-gradient(45deg, rgba(255,255,255,0.5), rgba(255,255,255,0.5) 1px, transparent 1px, transparent 5px), 
-         ${args.data.backgroundColorRGB}`;
+		args.element.style.borderRadius = '10px';
+		// console.log('args--', args.data.status);
+		if (args.data.status === 1) {
+			args.element.style.background = `repeating-linear-gradient(-40deg,  ${args.data.backgroundColorRGB}, ${args.data.backgroundColorRGB} 10px, rgb(187, 187, 187) 20px, rgb(187, 187, 187) 20px) ${args.data.backgroundColorRGB}`;
 		}
 		if (isLightColor(args.data.backgroundColorRGB)) {
 			args.element.style.color = 'black';
