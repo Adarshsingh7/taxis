@@ -438,7 +438,7 @@ function CompleteBookingModal({
 	const dispatch = useDispatch();
 
 	const handleCompleteClick = async (e) => {
-		console.log('clicked clicked');
+		// console.log('clicked clicked');
 		e.preventDefault();
 		const completedBookingData = {
 			bookingId: data.bookingId,
@@ -622,6 +622,8 @@ function DuplicateBookingModal({
 	setDuplicateBookingModal,
 	closeDialog,
 }) {
+	const user = useAuth();
+	// console.log('user---', user);
 	const [isToggleTrue, setToggleTrue] = useState(true);
 	const [newDate, setNewDate] = useState(formatDate(data.pickupDateTime));
 	const handleToggleChange = () => {
@@ -630,12 +632,12 @@ function DuplicateBookingModal({
 	const handleDateChange = (e) => {
 		setNewDate(e.target.value);
 	};
-	const handleSave = async(data) => {
+	const handleSave = async (data) => {
 		const newData = {
 			...data,
 			pickupDateTime: newDate,
 		};
-		console.log(newData);
+		console.log("newData---", newData);
 		setDuplicateBookingModal(false);
 		closeDialog();
 		const res = await makeBooking(newData, true);
@@ -643,11 +645,6 @@ function DuplicateBookingModal({
 			dispatch(openSnackbar('Booking Created Successfully!', 'success'));
 		}
 		getRefreshedBooking();
-	};
-	const createDuplicateBooking = (originalBookingData, newPickupDateTime) => {
-		// Replace this with the actual implementation to create a new booking
-		// using the selected date and the original booking data.
-		console.log('Creating new booking with date:', newPickupDateTime);
 	};
 
 	return (
@@ -687,7 +684,20 @@ function DuplicateBookingModal({
 					color='error'
 					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
 					className='w-full cursor-pointer'
-					onClick={() => handleSave({ ...data, bookingId: null })}
+					onClick={() =>
+						handleSave({
+							...data,
+							backgroundColorRGB: '#795548',
+							bookingId: 0,
+							userId: null,
+							actionByUserId: user.currentUser.id,
+							updatedByName: user.currentUser.name,
+							status: null,
+							bookedByName: user.currentUser.name,
+							recurrenceID: null,
+							recurrenceRule: null,
+						})
+					}
 				>
 					Save
 				</Button>

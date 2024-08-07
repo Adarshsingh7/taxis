@@ -6,8 +6,8 @@ import {
 	deleteSchedulerBooking as deleteBooking,
 	allocateDriver,
 } from '../utils/apiReq';
-import { type } from 'os';
-import { scheduler } from 'timers/promises';
+
+
 
 const schedulerSlice = createSlice({
 	name: 'scheduler',
@@ -54,4 +54,4 @@ export function allocateBookingToDriver(currentBooking, driverId) {
 	};
 }
 
-export default schedulerSlice.reducer;
+
