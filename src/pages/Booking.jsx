@@ -258,7 +258,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				updateValueSilentMode(id, 'pickupDateTime', formatDate(new Date()))
 			);
 		}
-		const updateTimeInterval = setInterval(updateToCurrentTime, 30 * 1000);
+		const updateTimeInterval = setInterval(updateToCurrentTime, 1000);
 		return () => clearInterval(updateTimeInterval);
 	}, [dispatch, id, bookingData.formBusy]);
 

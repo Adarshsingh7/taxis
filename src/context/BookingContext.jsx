@@ -175,11 +175,12 @@ function BookingProvider({ children }) {
 		// setActiveTab(itemIndex === 0 ? 0 : itemIndex - 1);
 	}
 
-	async function onDeleteBooking(bookingId, activeTestMode) {
+	async function onDeleteBooking(bookingId, cancelBlock, activeTestMode) {
 		const res = await deleteSchedulerBooking(
 			{
 				bookingId,
 				cancelledByName: currentUser.fullName,
+				cancelBlock,
 				actionByUserId: currentUser.id,
 			},
 			activeTestMode

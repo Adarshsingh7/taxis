@@ -71,7 +71,7 @@ const AceScheduler = ({ isActiveComplete }) => {
 		}
 	}
 
-	function allocateDriverToBooking(newAllocationData, activeTestMode) {
+	function allocateDriverToBooking(newAllocationData) {
 		allocateDriver(newAllocationData, activeTestMode).then((res) => {
 			if (res.status === 'success') {
 				setDialogOpen(false);
@@ -117,7 +117,7 @@ const AceScheduler = ({ isActiveComplete }) => {
 				if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 			});
 		};
-		setInterval(updateBookings, 60000);
+		setInterval(updateBookings, 10000);
 		return () => clearInterval(updateBookings);
 	}, []);
 
@@ -154,6 +154,8 @@ const AceScheduler = ({ isActiveComplete }) => {
 			}
 		});
 	}
+
+	console.log(currentDate);
 
 	return (
 		<ProtectedRoute>
