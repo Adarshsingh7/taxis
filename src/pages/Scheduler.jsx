@@ -15,7 +15,7 @@ registerLicense(import.meta.env.VITE_SYNCFUSION_KEY);
 import './scheduler.css';
 import ProtectedRoute from '../utils/Protected';
 import { allocateDriver, getBookingData } from '../utils/apiReq';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Snackbar from '../components/Snackbar-v2';
 import { useBooking } from '../hooks/useBooking';
 import { useDispatch, useSelector } from 'react-redux';
@@ -42,6 +42,7 @@ const AceScheduler = ({ isActiveComplete }) => {
 	const activeTestMode = useSelector(
 		(state) => state.bookingForm.isActiveTestMode
 	);
+	const activeTestModeRef = useRef(activeTestMode);
 	const [viewBookingModal, setViewBookingModal] = useState(false);
 	const dispatch = useDispatch();
 
@@ -89,7 +90,11 @@ const AceScheduler = ({ isActiveComplete }) => {
 	}
 
 	useEffect(() => {
-		getBookingData(currentDate, activeTestMode).then((data) => {
+		activeTestModeRef.current = activeTestMode;
+	}, [activeTestMode]);
+
+	useEffect(() => {
+		getBookingData(currentDate, activeTestModeRef.current).then((data) => {
 			if (data.status === 'success') {
 				if (isActiveComplete) {
 					setData(data.bookings.filter((booking) => booking.status === 3));
@@ -106,7 +111,7 @@ const AceScheduler = ({ isActiveComplete }) => {
 
 	useEffect(() => {
 		const updateBookings = async function () {
-			getBookingData(currentDate, activeTestMode).then((data) => {
+			getBookingData(currentDate, activeTestModeRef.current).then((data) => {
 				if (data.status === 'success') {
 					if (isActiveComplete) {
 						setData(data.bookings.filter((booking) => booking.status === 3));
@@ -135,7 +140,7 @@ const AceScheduler = ({ isActiveComplete }) => {
 	};
 
 	function handleDeleteBooking(bookingId, cancelBlock) {
-		onDeleteBooking(bookingId, cancelBlock, activeTestMode).then((res) => {
+		onDeleteBooking(bookingId, cancelBlock).then((res) => {
 			if (res.status === 'success') {
 				setDialogOpen(false);
 				dispatch(openSnackbar('Booking Deleted Successfully', 'success'));
