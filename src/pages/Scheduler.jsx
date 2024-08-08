@@ -31,7 +31,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import isLightColor from '../utils/isLight';
 import { openSnackbar } from '../context/snackbarSlice';
 
-const AceScheduler = ({ isActiveComplete, date }) => {
+const AceScheduler = ({ isActiveComplete, date = new Date() }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
 	// const [snackbarMessage, setSnackBarMessage] = useState('');

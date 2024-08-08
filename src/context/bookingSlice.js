@@ -84,6 +84,7 @@ const bookingFormSlice = createSlice({
 		addDataFromSchedulerInEditMode(state, action) {
 			const data = filterData({});
 			data.bookingType = 'Current';
+			action.payload.pickupDateTime = formatDate(action.payload.pickupDateTime);
 			state.bookings.push({ ...data, ...action.payload });
 			state.activeBookingIndex = state.bookings.length - 1;
 		},
