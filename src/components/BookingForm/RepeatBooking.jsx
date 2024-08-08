@@ -6,6 +6,7 @@ import { RRule } from 'rrule';
 
 import { updateValue } from '../../context/bookingSlice';
 import LongButton from './LongButton';
+import { formatDate } from '../../utils/formatDate';
 
 // This function destructure the recurrence rule and return the days of the week, it will help to mark the days of the week in the repeat booking modal
 function parseRecurrenceRule(rule) {
@@ -20,40 +21,69 @@ function parseRecurrenceRule(rule) {
 	};
 
 	const ruleParts = rule.split(';');
-	const bydayPart = ruleParts.find((part) => part.startsWith('BYDAY='));
+	let frequency = '';
+	let interval = 1;
+	let repeatEnd = false;
+	let repeatEndValue = '';
 
-	if (bydayPart) {
-		const days = bydayPart.replace('BYDAY=', '').split(',');
-		days.forEach((day) => {
-			switch (day) {
-				case 'SU':
-					daysOfWeek.sun = true;
-					break;
-				case 'MO':
-					daysOfWeek.mon = true;
-					break;
-				case 'TU':
-					daysOfWeek.tue = true;
-					break;
-				case 'WE':
-					daysOfWeek.wed = true;
-					break;
-				case 'TH':
-					daysOfWeek.thu = true;
-					break;
-				case 'FR':
-					daysOfWeek.fri = true;
-					break;
-				case 'SA':
-					daysOfWeek.sat = true;
-					break;
-				default:
-					break;
-			}
-		});
+	ruleParts.forEach((part) => {
+		if (part.startsWith('FREQ=')) {
+			frequency = part.replace('FREQ=', '').toLowerCase();
+		} else if (part.startsWith('INTERVAL=')) {
+			interval = parseInt(part.replace('INTERVAL=', ''), 10);
+		} else if (part.startsWith('UNTIL=')) {
+			repeatEnd = true;
+			repeatEndValue = part.replace('UNTIL=', '');
+		} else if (part.startsWith('BYDAY=')) {
+			const days = part.replace('BYDAY=', '').split(',');
+			days.forEach((day) => {
+				switch (day) {
+					case 'SU':
+						daysOfWeek.sun = true;
+						break;
+					case 'MO':
+						daysOfWeek.mon = true;
+						break;
+					case 'TU':
+						daysOfWeek.tue = true;
+						break;
+					case 'WE':
+						daysOfWeek.wed = true;
+						break;
+					case 'TH':
+						daysOfWeek.thu = true;
+						break;
+					case 'FR':
+						daysOfWeek.fri = true;
+						break;
+					case 'SA':
+						daysOfWeek.sat = true;
+						break;
+					default:
+						break;
+				}
+			});
+		}
+	});
+
+	// Convert repeatEndValue to a Date object
+	let repeatEndDate = null;
+	if (repeatEndValue) {
+		// Format the date string to "YYYY-MM-DD"
+		const formattedDate = `${repeatEndValue.slice(0, 4)}-${repeatEndValue.slice(
+			4,
+			6
+		)}-${repeatEndValue.slice(6, 8)}`;
+		repeatEndDate = formattedDate;
 	}
 
-	return daysOfWeek;
+	return {
+		f: frequency,
+		i: interval,
+		re: repeatEnd,
+		rev: repeatEndDate,
+		sd: daysOfWeek,
+	};
 }
 
 function RepeatBooking({ onSet }) {
@@ -61,14 +91,15 @@ function RepeatBooking({ onSet }) {
 	const dispatch = useDispatch();
 	const data = useSelector((state) => state.bookingForm.bookings);
 	const id = useSelector((state) => state.bookingForm.activeBookingIndex);
+	const { f, i, re, rev, sd } = parseRecurrenceRule(data[id].recurrenceRule);
+	console.log({ f, i, rev, sd });
 
 	// setting local state for repeat booking
-	const [frequency, setFrequency] = useState(data[id].frequency);
-	const [repeatEnd, setRepeatEnd] = useState(data[id].repeatEnd);
-	const [repeatEndValue, setRepeatEndValue] = useState(data[id].repeatEndValue);
-	const [selectedDays, setSelectedDays] = useState(
-		parseRecurrenceRule(data[id].recurrenceRule)
-	);
+	const [frequency, setFrequency] = useState(f);
+	const [repeatEnd, setRepeatEnd] = useState(re ? 'until' : 'never');
+	const [repeatEndValue, setRepeatEndValue] = useState(rev);
+	const [selectedDays, setSelectedDays] = useState(sd);
+	console.log({ frequency, repeatEnd, repeatEndValue, selectedDays });
 	const dayLabels = [
 		{ key: 'sun', label: 'S' },
 		{ key: 'mon', label: 'M' },
@@ -205,7 +236,7 @@ function RepeatBooking({ onSet }) {
 				</div>
 				{frequency === 'daily' ? null : (
 					<>
-						{frequency !== 'none' ? (
+						{frequency === 'weekly' ? (
 							<div>
 								<label className='block text-sm font-medium text-foreground mb-1'>
 									Days
