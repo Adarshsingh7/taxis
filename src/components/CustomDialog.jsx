@@ -110,9 +110,9 @@ function CustomDialog({
 						</div>
 					</div>
 					<div className='border border-card p-4 hover:shadow-lg rounded-lg relative'>
-					<h3 className='text-xl absolute top-[-18px] bg-white text-red-700 flex justify-center items-center font-semibold'>
-									Details
-								</h3>
+						<h3 className='text-xl absolute top-[-18px] bg-white text-red-700 flex justify-center items-center font-semibold'>
+							Details
+						</h3>
 						<BookingOption
 							text={data.details ? data.details : 'NA'}
 							head='Details'
@@ -131,7 +131,7 @@ function CustomDialog({
 									: ''
 							}
 						/>
-						{data.scope === 0 && (
+						{data.scope === 1 && (
 							<BookingOption
 								text={data.accountNumber ? data.accountNumber : 'NA'}
 								head='Account'
@@ -166,10 +166,12 @@ function CustomDialog({
 							/>
 						)}
 
-						<BookingOption
-							text={data.recurrenceID ? '✅' : '❎'}
-							head='Repeat Booking'
-						/>
+						{data.recurrenceID && (
+							<BookingOption
+								text={data.recurrenceID ? 'Yes' : 'No'}
+								head='Repeat Booking'
+							/>
+						)}
 						<div className='flex justify-start items-center gap-4'>
 							<BookingOption
 								text={
