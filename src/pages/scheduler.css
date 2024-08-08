@@ -28,8 +28,8 @@
 }
 
 .e-toolbar .e-tbar-pos {
-	position: fixed;
-	z-index: 10;
+	/* position: fixed; */
+	/* z-index: 10; */
 	/* width: 100%; */
 	background-color: white;
 }

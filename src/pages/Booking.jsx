@@ -29,6 +29,7 @@ import QuoteDialog from '../components/BookingForm/QuoteDialog';
 import { addCallerToLookup } from '../context/callerSlice';
 import { convertKeysToFirstUpper } from '../utils/casingConverter';
 import Loader from '../components/Loader';
+import { formatDate } from '../utils/formatDate';
 
 function Booking({ bookingData, id, onBookingUpload }) {
 	// All Hooks and Contexts for the data flow and management
@@ -65,7 +66,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	async function handleSubmit(e) {
 		e.preventDefault();
 		setFormSubmitLoading(true);
-		const data = await onBookingUpload(id);
+		await onBookingUpload(id);
 		setFormSubmitLoading(false);
 	}
 
@@ -133,17 +134,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				setIsQuoteSnackbarActive(true);
 			}
 		}
-	}
-
-	// This Function formats the date to the required format
-	function formatDate(dateStr) {
-		const date = new Date(dateStr);
-		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-			2,
-			'0'
-		)}-${String(date.getDate()).padStart(2, '0')}T${String(
-			date.getHours()
-		).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 	}
 
 	function handleChangeFocus(event, ref) {
