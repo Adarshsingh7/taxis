@@ -34,6 +34,7 @@ function CustomDialog({
 	const [editBookingModal, setEditBookingModal] = useState(false);
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [duplicateBookingModal, setDuplicateBookingModal] = useState(false);
+	console.log('Data for custom dialog', data);
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
 			<div className='relative w-full max-w-7xl p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
@@ -55,18 +56,8 @@ function CustomDialog({
 				<div className='p-4 grid grid-cols-2 place-content-between mt-4 border border-card dark:border-popover'>
 					<div>
 						<BookingOption
-							head='Scope'
-							text={data.accountNumber ? 'Account Job' : 'Cash Job'}
-						/>
-						{data.scope >= 0 && (
-							<BookingOption
-								text={data.account}
-								head='Account'
-							/>
-						)}
-						<BookingOption
-							text={data.fullname || 'No Name'}
-							head='Allocated Driver'
+							text={getTodayInEnGbFormat(data.pickupDateTime)}
+							head='Booking Date'
 						/>
 
 						<div>
@@ -74,51 +65,94 @@ function CustomDialog({
 								text={`${data.pickupAddress}, ${data.pickupPostCode}`}
 								head='Pickup Address'
 							/>
-							{data.vias.length > 0 && (
-								<ul className=''>
+							{data.vias.length > 0 &&
+								data.vias.map((via, idx) => (
 									<BookingOption
-										text={data.vias.map((via, idx) => (
-											<li key={idx}>{via.address}</li>
-										))}
-										head='Vias'
+										head={`Via ${idx + 1}`}
+										text={`${via.address}, ${via.postCode}`}
 									/>
-								</ul>
-							)}
+								))}
 							<BookingOption
 								text={`${data.destinationAddress}, ${data.destinationPostCode}`}
 								head='Destination Address'
 							/>
+							<div>
+								<BookingOption
+									text={data.passengerName ? data.passengerName : "NA"}
+									head='Passenger Name'
+								/>
+								<BookingOption
+									text={data.email ? data.email : 'NA'}
+									head='Email'
+								/>
+								<BookingOption
+									text={data.phoneNumber ? data.phoneNumber : 'NA'}
+									head='Phone Number'
+								/>
+								<BookingOption
+									text={data.passengers ? data.passengers : "NA"}
+									head='Passenger Count'
+								/>
+								<BookingOption text={data.details ? data.details : "NA"} head="Details" />
+							</div>
 						</div>
 					</div>
 					<div>
 						<BookingOption
-							text={data.price}
+							head='Scope'
+							text={data.accountNumber ? 'Account Job' : 'Cash Job'}
+						/>
+						{data.scope >= 0 && (
+							<BookingOption
+								text={data.account ? data.account : 'NA'}
+								head='Account'
+							/>
+						)}
+						<BookingOption
+							text={data.fullname || 'NA'}
+							head='Allocated Driver'
+						/>
+						<BookingOption
+							text={data.price ? data.price : 'NA'}
 							head='Price'
 						/>
 						<BookingOption
-							text={Math.floor(Number(data.durationMinutes) / 60) + ' Hour(s)'}
+							text={
+								data.durationMinutes
+									? Math.floor(Number(data.durationMinutes) / 60) + ' Hour(s)'
+									: 'NA'
+							}
 							head='Time'
 						/>
 						<BookingOption
-							text={data.mileageText}
+							text={data.mileageText ? data.mileageText : 'NA'}
 							head='Distance'
 						/>
-						<div>
-							<BookingOption
-								text={data.passengerName}
-								head='Passenger Name'
-							/>
-							<BookingOption
-								text={data.passengers}
-								head='Passenger Count'
-							/>
-						</div>
 						<BookingOption
-							text={data.bookedByName}
+                            text={data.isAllDay? "✅" : "❎"}
+                            head='All Day'
+                        />
+						<BookingOption
+                            text={data.recurrenceID ? "✅" : "❎"}
+                            head='Repeat Booking'
+                        />
+						<BookingOption
+                            text={data.paymentStatus === 0 ? "Not Paid" : data.paymentStatus === 1 ? "Paid" : data.paymentStatus === 2 ? "Awaiting payment": ""}
+                            head='Payment Status'
+                        />
+						<BookingOption
+                            text={data.confirmationStatus ? "✅" : "❎"}
+                            head='Confirmation Status'
+                        />
+
+						<BookingOption
+							text={data.bookedByName ? data.bookedByName : 'NA'}
 							head='Booked By'
 						/>
 						<BookingOption
-							text={getTodayInEnGbFormat(data.dateCreated.split('T')[0])}
+							text={
+								data.dateCreated ? getTodayInEnGbFormat(data.dateCreated) : 'NA'
+							}
 							head='Booked On'
 						/>
 					</div>
@@ -637,7 +671,7 @@ function DuplicateBookingModal({
 			...data,
 			pickupDateTime: newDate,
 		};
-		console.log("newData---", newData);
+		console.log('newData---', newData);
 		setDuplicateBookingModal(false);
 		closeDialog();
 		const res = await makeBooking(newData, true);
