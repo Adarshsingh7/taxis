@@ -26,10 +26,3 @@
 	top: 0;
 	z-index: 1;
 }
-
-.e-toolbar .e-tbar-pos {
-	/* position: fixed; */
-	/* z-index: 10; */
-	/* width: 100%; */
-	background-color: white;
-}

@@ -164,6 +164,7 @@ const AceScheduler = ({ isActiveComplete, date }) => {
 		<ProtectedRoute>
 			<Snackbar />
 			<ScheduleComponent
+				height={window.innerHeight - 150}
 				currentView='Day'
 				selectedDate={new Date(date)}
 				navigating={(args) => setCurrentDate(args.currentDate)}
