@@ -294,6 +294,7 @@ export default function Push() {
 					<Scheduler
 						setIsActiveComplete={setIsActiveComplete}
 						isActiveComplete={isActiveComplete}
+						date={currentBookingDateTime.split('T')[0]}
 					/>
 				)}
 				{secondaryTab === 3 && <DriverSection />}

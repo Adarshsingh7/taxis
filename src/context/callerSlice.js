@@ -62,7 +62,7 @@ export const updateCurrentBookingWithLookup = function (
 			...targetCallerData,
 		};
 		dispatch({
-			type: ' /updateBookingData',
+			type: 'bookingForm/updateBookingData',
 			payload: updatedBooking,
 		});
 		dispatch({ type: 'caller/removeCaller' });

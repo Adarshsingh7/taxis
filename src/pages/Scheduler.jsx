@@ -31,7 +31,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import isLightColor from '../utils/isLight';
 import { openSnackbar } from '../context/snackbarSlice';
 
-const AceScheduler = ({ isActiveComplete }) => {
+const AceScheduler = ({ isActiveComplete, date }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
 	// const [snackbarMessage, setSnackBarMessage] = useState('');
@@ -160,13 +160,12 @@ const AceScheduler = ({ isActiveComplete }) => {
 		});
 	}
 
-	console.log(currentDate);
-
 	return (
 		<ProtectedRoute>
 			<Snackbar />
 			<ScheduleComponent
 				currentView='Day'
+				selectedDate={new Date(date)}
 				navigating={(args) => setCurrentDate(args.currentDate)}
 				eventSettings={eventSettings}
 				eventRendered={onEventRendered}
