@@ -139,7 +139,7 @@ export default function Push() {
 			className='flex'
 			sx={{ width: '100%' }}
 		>
-			<FullScreenDialog
+			{/* <FullScreenDialog
 				open={viewScheduler}
 				setOpen={setViewScheduler}
 				setIsActiveComplete={setIsActiveComplete}
@@ -167,7 +167,7 @@ export default function Push() {
 						<DriverSection />
 					</Box>
 				</Box>
-			</FullScreenDialog>
+			</FullScreenDialog> */}
 			<Modal
 				open={isConfirmationModalOpen}
 				setIsOpen={setIsConfirmationModalOpen}
@@ -188,6 +188,7 @@ export default function Push() {
 				onResize={handleResize}
 				style={{ display: 'flex', overflow: 'hidden' }}
 			>
+				{/*  box containg the form*/}
 				<Box
 					sx={{
 						margin: '1vh auto',
@@ -246,6 +247,8 @@ export default function Push() {
 					</Box>
 				</Box>
 			</ResizableBox>
+
+			{/* box containing the map and driver avialibility */}
 			<Box
 				sx={{
 					margin: '1vh auto',
@@ -256,9 +259,15 @@ export default function Push() {
 					borderWidth: '1px',
 				}}
 			>
+				{/* driver availibility tab */}
 				<Tabs
 					value={secondaryTab}
-					sx={{ backgroundColor: '#e5e7eb' }}
+					sx={{
+						backgroundColor: '#e5e7eb',
+						position: 'sticky',
+						top: 0,
+						zIndex: 10,
+					}}
 					onChange={(event, newValue) => setSecondaryTab(newValue)}
 					variant='scrollable'
 					scrollButtons
@@ -267,6 +276,8 @@ export default function Push() {
 				>
 					<Tab label='Availability' />
 					<Tab label='Map' />
+					<Tab label='Scheduler' />
+					<Tab label='Messages' />
 				</Tabs>
 				{secondaryTab === 0 && (
 					<DriverAllocation
@@ -279,6 +290,13 @@ export default function Push() {
 						<JourneyQuote quoteOptions={data[activeTab].quoteOptions} />
 					</>
 				)}
+				{secondaryTab === 2 && (
+					<Scheduler
+						setIsActiveComplete={setIsActiveComplete}
+						isActiveComplete={isActiveComplete}
+					/>
+				)}
+				{secondaryTab === 3 && <DriverSection />}
 			</Box>
 		</Box>
 	);
