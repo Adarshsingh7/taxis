@@ -30,8 +30,9 @@ import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import isLightColor from '../utils/isLight';
 import { openSnackbar } from '../context/snackbarSlice';
+import { Switch } from '@mui/material';
 
-const AceScheduler = ({ isActiveComplete, date = new Date() }) => {
+const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
 	// const [snackbarMessage, setSnackBarMessage] = useState('');
@@ -99,7 +100,7 @@ const AceScheduler = ({ isActiveComplete, date = new Date() }) => {
 				if (isActiveComplete) {
 					setData(data.bookings.filter((booking) => booking.status === 3));
 				} else {
-					setData(data.bookings);
+					setData(data.bookings.filter((booking) => booking.status !== 3));
 				}
 				dispatch(openSnackbar('Booking Refreshed'));
 			} else {
@@ -201,6 +202,17 @@ const AceScheduler = ({ isActiveComplete, date = new Date() }) => {
 				)}
 				<Inject services={[Day, Agenda]} />
 			</ScheduleComponent>
+			<div className='flex justify-end w-[95%] fixed top-[185px] right-[20px] z-[1000]'>
+				<span className='flex flex-row gap-2 items-center align-middle'>
+					<span>Completed</span>
+					<Switch
+						checked={isActiveComplete}
+						onChange={(e) => {
+							setIsActiveComplete((prev) => !prev);
+						}}
+					/>
+				</span>
+			</div>
 		</ProtectedRoute>
 	);
 };

@@ -51,16 +51,6 @@ export default function FullScreenDialog({ children, open, setOpen, isActiveComp
 							<CloseIcon />
 							
 						</IconButton>
-						<span className='flex flex-row gap-2 items-center align-middle'>
-							<span>Completed</span>
-							<Switch
-								checked={isActiveComplete}
-								onChange={(e) => {
-									setIsActiveComplete(prev => !prev)
-							
-								}}
-							/>
-						</span>
 					</Toolbar>
 				</AppBar>
 				<Box>{children}</Box>
