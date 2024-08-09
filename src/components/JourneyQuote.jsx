@@ -25,7 +25,7 @@ function JourneyQuote({ quoteOptions }) {
 						JOURNEY TIME:
 					</h2>
 					<p className='text-md font-semibold text-gray-700 flex-grow'>
-						{quoteOptions.mileageText}
+						{quoteOptions.durationText}
 					</p>
 				</div>
 
@@ -34,7 +34,7 @@ function JourneyQuote({ quoteOptions }) {
 						JOURNEY MILEAGE:
 					</h2>
 					<p className='text-md font-semibold text-gray-700 flex-grow'>
-						{quoteOptions.durationText}
+						{quoteOptions.mileageText}
 					</p>
 				</div>
 
