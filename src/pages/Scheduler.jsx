@@ -32,7 +32,7 @@ import isLightColor from '../utils/isLight';
 import { openSnackbar } from '../context/snackbarSlice';
 import { Switch } from '@mui/material';
 
-const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete }) => {
+const AceScheduler = ({ isActiveComplete }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
 	// const [snackbarMessage, setSnackBarMessage] = useState('');
@@ -44,6 +44,7 @@ const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete
 		(state) => state.bookingForm.isActiveTestMode
 	);
 	const activeTestModeRef = useRef(activeTestMode);
+	const currentDateRef = useRef(currentDate);
 	const [viewBookingModal, setViewBookingModal] = useState(false);
 	const dispatch = useDispatch();
 
@@ -79,7 +80,7 @@ const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete
 	// 	return bookings.map((booking) =>{
 	// 		return {
 	// 		  ...booking,
-	// 		  subject: booking.scope === 0 
+	// 		  subject: booking.scope === 0
 	// 			? `${booking.pickupAddress} - ${booking.destinationAddress}`
 	// 			: booking.passengerName
 	// 		};
@@ -108,33 +109,41 @@ const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete
 	}, [activeTestMode]);
 
 	useEffect(() => {
-		getBookingData(currentDate, activeTestModeRef.current).then((data) => {
-			if (data.status === 'success') {
-				if (isActiveComplete) {
-					setData(data.bookings.filter((booking) => booking.status === 3));
-				} else {
-					setData(data.bookings);
-				}
-				dispatch(openSnackbar('Booking Refreshed'));
-			} else {
-				dispatch(openSnackbar(data.message));
-			}
-			if (currentDate.getDate() === new Date().getDate()) setOpen(true);
-		});
-	}, [activeTestMode, currentDate, dispatch, isActiveComplete]);
+		currentDateRef.current = currentDate;
+	}, [currentDate]);
 
 	useEffect(() => {
-		const updateBookings = async function () {
-			getBookingData(currentDate, activeTestModeRef.current).then((data) => {
+		getBookingData(currentDateRef.current, activeTestModeRef.current).then(
+			(data) => {
 				if (data.status === 'success') {
 					if (isActiveComplete) {
 						setData(data.bookings.filter((booking) => booking.status === 3));
 					} else {
 						setData(data.bookings);
 					}
+					dispatch(openSnackbar('Booking Refreshed'));
+				} else {
+					dispatch(openSnackbar(data.message));
 				}
 				if (currentDate.getDate() === new Date().getDate()) setOpen(true);
-			});
+			}
+		);
+	}, [activeTestMode, currentDate, dispatch, isActiveComplete]);
+
+	useEffect(() => {
+		const updateBookings = async function () {
+			getBookingData(currentDateRef.current, activeTestModeRef.current).then(
+				(data) => {
+					if (data.status === 'success') {
+						if (isActiveComplete) {
+							setData(data.bookings.filter((booking) => booking.status === 3));
+						} else {
+							setData(data.bookings);
+						}
+					}
+					if (currentDate.getDate() === new Date().getDate()) setOpen(true);
+				}
+			);
 		};
 		setInterval(updateBookings, 10000);
 		return () => clearInterval(updateBookings);
@@ -173,6 +182,7 @@ const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete
 			}
 		});
 	}
+	console.log(currentDate);
 
 	return (
 		<ProtectedRoute>
@@ -180,7 +190,7 @@ const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete
 			<ScheduleComponent
 				height={window.innerHeight - 150}
 				currentView='Day'
-				selectedDate={new Date(date)}
+				selectedDate={currentDate}
 				navigating={(args) => setCurrentDate(args.currentDate)}
 				eventSettings={eventSettings}
 				eventRendered={onEventRendered}
