@@ -73,6 +73,19 @@ const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete
 		}
 	}
 
+	// created by Tanya - 9Aug
+
+	// function transformData(bookings) {
+	// 	return bookings.map((booking) =>{
+	// 		return {
+	// 		  ...booking,
+	// 		  subject: booking.scope === 0 
+	// 			? `${booking.pickupAddress} - ${booking.destinationAddress}`
+	// 			: booking.passengerName
+	// 		};
+	// 	  });
+	// 	}
+
 	function allocateDriverToBooking(newAllocationData) {
 		allocateDriver(newAllocationData, activeTestMode).then((res) => {
 			if (res.status === 'success') {
@@ -100,7 +113,7 @@ const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete
 				if (isActiveComplete) {
 					setData(data.bookings.filter((booking) => booking.status === 3));
 				} else {
-					setData(data.bookings.filter((booking) => booking.status !== 3));
+					setData(data.bookings);
 				}
 				dispatch(openSnackbar('Booking Refreshed'));
 			} else {
@@ -202,7 +215,8 @@ const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete
 				)}
 				<Inject services={[Day, Agenda]} />
 			</ScheduleComponent>
-			<div className='flex justify-end w-[95%] fixed top-[185px] right-[20px] z-[1000]'>
+			{/* Changed by Tanya - (9 Aug) */}
+			{/* <div className='flex justify-end w-[95%] fixed top-[185px] right-[20px] z-[1000]'>
 				<span className='flex flex-row gap-2 items-center align-middle'>
 					<span>Completed</span>
 					<Switch
@@ -212,7 +226,7 @@ const AceScheduler = ({ isActiveComplete, date = new Date(), setIsActiveComplete
 						}}
 					/>
 				</span>
-			</div>
+			</div> */}
 		</ProtectedRoute>
 	);
 };
