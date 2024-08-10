@@ -13,7 +13,7 @@ import Modal from '../components/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button } from '@mui/material';
 import SimpleSnackbar from '../components/Snackbar-v2';
-import FullScreenDialog from '../components/FullScreenModal';
+// import FullScreenDialog from '../components/FullScreenModal';
 import Scheduler from './Scheduler';
 import { useSelector } from 'react-redux';
 import { ResizableBox } from 'react-resizable';
@@ -65,15 +65,20 @@ export default function Push() {
 			let response;
 			if (currentBooking.bookingType === 'Current') {
 				response = await dispatch(onUpdateBooking(id));
+				if (response.status === 'success') {
+					dispatch(openSnackbar('Booking Updated Successfully', 'success'));
+				} else {
+					dispatch(openSnackbar('Failed to Update Booking', 'error'));
+				}
 			} else {
 				response = await dispatch(onCreateBooking(id));
+				if (response.status === 'success') {
+					dispatch(openSnackbar('Booking Created Successfully', 'success'));
+				} else {
+					dispatch(openSnackbar('Failed to Create Booking', 'error'));
+				}
 			}
 
-			if (response.status === 'success') {
-				dispatch(openSnackbar('Booking Updated Successfully', 'success'));
-			} else {
-				dispatch(openSnackbar('Failed to Update Booking', 'error'));
-			}
 			return response;
 		} catch (error) {
 			dispatch(openSnackbar('Failed to process booking', 'error'));

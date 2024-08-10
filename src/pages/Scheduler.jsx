@@ -149,9 +149,9 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
 							)
 						);
 					}
-					dispatch(openSnackbar('Booking Refreshed'));
+					dispatch(openSnackbar('Booking Refreshed', "info"));
 				} else {
-					dispatch(openSnackbar(data.message));
+					dispatch(openSnackbar(`${data.message}`, "info"));
 				}
 				if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 			}
@@ -205,11 +205,23 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
 				dispatch(openSnackbar('Booking Deleted Successfully', 'success'));
 				getBookingData(currentDate, activeTestMode).then((data) => {
 					if (data.status === 'success') {
-						setData(data.bookings);
+						if (isActiveCompleteRef.current) {
+							setData(
+								transformData(
+									data.bookings.filter((booking) => booking.status === 3)
+								)
+							);
+						} else {
+							setData(
+								transformData(
+									data.bookings.filter((booking) => booking.status !== 3)
+								)
+							);
+						}
 						localStorage.setItem('bookings', JSON.stringify(data.bookings));
-						dispatch(openSnackbar('Booking Refreshed'));
+						dispatch(openSnackbar('Booking Refreshed', "info"));
 					} else {
-						dispatch(openSnackbar(data.message));
+						dispatch(openSnackbar(`${data.message}`, "info"));
 					}
 					setOpen(true);
 				});
@@ -267,7 +279,7 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
 					<span className='select-none'>Completed</span>
 					<Switch
 						checked={isActiveComplete}
-						onChange={(e) => {
+						onChange={() => {
 							setIsActiveComplete((prev) => !prev);
 						}}
 					/>

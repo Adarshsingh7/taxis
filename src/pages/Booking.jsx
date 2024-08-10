@@ -17,7 +17,7 @@ import { makeBookingQuoteRequest, fireCallerEvent } from '../utils/apiReq';
 // All local component utilitys
 import Autocomplete from '../components/AutoComplete';
 import Modal from '../components/Modal';
-import SimpleSnackbar from '../components/SnackBar';
+import SimpleSnackbar from '../components/Snackbar-v2';
 import GoogleAutoComplete from '../components/GoogleAutoComplete';
 import LongButton from '../components/BookingForm/LongButton';
 
@@ -30,6 +30,7 @@ import { addCallerToLookup } from '../context/callerSlice';
 import { convertKeysToFirstUpper } from '../utils/casingConverter';
 import Loader from '../components/Loader';
 import { formatDate } from '../utils/formatDate';
+import { openSnackbar } from '../context/snackbarSlice';
 
 function Booking({ bookingData, id, onBookingUpload }) {
 	// All Hooks and Contexts for the data flow and management
@@ -49,9 +50,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	const userNameRef = useRef(null);
 	const phoneNumberRef = useRef(null);
 	const pickupDateTimeRef = useRef(null);
-
-	const [snackbarMessage, setSnackbarMessage] = useState('');
-	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
 	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
 	const [quote, setQuote] = useState(null);
 	const [formSubmitLoading, setFormSubmitLoading] = useState(false);
@@ -72,7 +70,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			const returnTime = new Date(bookingData.returnDateTime).getTime();
 
 			if (returnTime < pickup) {
-				setSnackbarMessage('Return time should be after pickup time');
+				dispatch(openSnackbar('Return time must be after pickup', 'error'));
 				setIsQuoteSnackbarActive(true);
 				pickupDateTimeRef.current.focus();
 				pickupDateTimeRef.current.select();
@@ -125,7 +123,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			setQuote(quote);
 		} else {
 			setQuote(null);
-			setSnackbarMessage('Failed to get quote');
+			dispatch(openSnackbar('Failed to get quote', 'error'));
 			setIsQuoteSnackbarActive(true);
 		}
 	}
@@ -143,8 +141,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				pickupRef.current.focus();
 				pickupRef.current.select();
 			} else {
-				setSnackbarMessage('No caller found');
-				// setSnackbarColor('#035418');
+				dispatch(openSnackbar('No caller found', 'info'));
 				setIsQuoteSnackbarActive(true);
 			}
 		}
@@ -191,7 +188,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			} else {
 				// setQuote(null);
 				updateData('price', '');
-				setSnackbarMessage('Failed to get quote');
+				dispatch(openSnackbar('Failed to get quote', 'error'));
 			}
 		});
 	}, [
@@ -240,8 +237,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	useEffect(() => {
 		if (callerId.length > 0 && bookingData.formBusy) {
 			setIsQuoteSnackbarActive(true);
-			setSnackbarMessage(`${callerId.length} Caller Waiting`);
-			setSnackbarColor('#035418');
+			dispatch(openSnackbar(`${callerId.length} Caller Waiting`, 'error'));
 		}
 	}, [callerId.length, bookingData.formBusy]);
 
@@ -319,13 +315,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							quote={quote}
 						/>
 					</Modal>
-					<SimpleSnackbar
-						disableReset={true}
-						open={isQuoteSnackbarActive}
-						setOpen={setIsQuoteSnackbarActive}
-						message={snackbarMessage}
-						color={snackBarColor}
-					/>
+					<SimpleSnackbar />
 				</>
 				<div className='max-w-3xl mx-auto bg-card p-6 rounded-lg shadow-lg'>
 					<div className='flex items-center justify-between mb-4'>
