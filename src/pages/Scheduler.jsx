@@ -105,11 +105,19 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete, date }) => {
 				setDialogOpen(false);
 				getBookingData(currentDate, activeTestMode).then((data) => {
 					if (data.status === 'success') {
-						setData(
-							transformData(
-								data.bookings.filter((booking) => booking.status !== 3)
-							)
-						);
+						if (isActiveCompleteRef.current) {
+							setData(
+								transformData(
+									data.bookings.filter((booking) => booking.status === 3)
+								)
+							);
+						} else {
+							setData(
+								transformData(
+									data.bookings.filter((booking) => booking.status !== 3)
+								)
+							);
+						}
 					}
 					setOpen(true);
 				});
