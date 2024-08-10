@@ -201,8 +201,8 @@ export default function Push() {
 				<Box
 					sx={{
 						margin: '1vh auto',
-						height: '90vh',
-						overflow: 'auto',
+						// height: '90vh',
+						// overflow: 'auto',
 						width: '100%',
 						borderColor: '#e5e7eb',
 						borderWidth: '1px',

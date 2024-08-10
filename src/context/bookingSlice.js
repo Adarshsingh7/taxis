@@ -24,7 +24,7 @@ const filterData = (data = {}) => ({
 	recurrenceRule: data.RecurrenceRule || '',
 	price: data.Price || 0,
 	priceAccount: data.PriceAccount || 0,
-	chargeFromBase: data.ChargeFromBase || false,
+	chargeFromBase: true,
 	userId: data.UserId || null,
 	returnDateTime: data.ReturnDateTime || null,
 	vias:
