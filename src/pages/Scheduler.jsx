@@ -194,8 +194,8 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete, date }) => {
 				}
 			);
 		};
-		setInterval(updateBookings, 10000);
-		return () => clearInterval(updateBookings);
+		const refreshInterval = setInterval(updateBookings, 10000);
+		return () => clearInterval(refreshInterval);
 	}, []);
 
 	const eventSettings = {

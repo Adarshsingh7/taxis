@@ -114,13 +114,17 @@ export default function Push() {
 		if (event.key === 'F1') {
 			event.preventDefault();
 			setViewScheduler((prev) => !prev);
-			// setViewDispatcher((prev) => !prev);
+			setSecondaryTab(0);
+		} else if (event.key === 'F2') {
+			event.preventDefault();
+			setSecondaryTab(1);
+		} else if (event.key === 'F3') {
+			event.preventDefault();
+			setSecondaryTab(2);
+		} else if (event.key === 'F4') {
+			event.preventDefault();
+			setSecondaryTab(3);
 		}
-		// if (event.key === 'F1') {
-		// 	event.preventDefault();
-		// 	// setViewDispatcher(false);
-		// 	setViewScheduler((prev) => !prev);
-		// }
 	};
 	useEffect(() => {
 		window.addEventListener('keydown', handleKeyDown);
@@ -295,13 +299,13 @@ export default function Push() {
 						<JourneyQuote quoteOptions={data[activeTab].quoteOptions} />
 					</>
 				)}
-				{secondaryTab === 2 && (
+				{secondaryTab === 2 ? (
 					<Scheduler
 						setIsActiveComplete={setIsActiveComplete}
 						isActiveComplete={isActiveComplete}
 						date={currentBookingDateTime?.split('T')[0]}
 					/>
-				)}
+				) : null}
 				{secondaryTab === 3 && <DriverSection />}
 			</Box>
 		</Box>
