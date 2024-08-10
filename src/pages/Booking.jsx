@@ -275,7 +275,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	if (!bookingData) return null;
 
 	return (
-		<div className='min-h-screen bg-background text-foreground p-4'>
+		<div className=' bg-background text-foreground p-4'>
 			<form
 				autoComplete='off'
 				id='myForm'
@@ -375,7 +375,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 					</div>
 					{/* Google AutoSuggestion 1 */}
 
-					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-2'>
 						<GoogleAutoComplete
 							placeholder='Pickup Address'
 							value={bookingData.pickupAddress}
@@ -394,7 +394,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						/>
 					</div>
 					{/* Toogle Button Start*/}
-					<div className='flex justify-center mb-4'>
+					<div className='flex justify-center mb-2'>
 						<button
 							type='button'
 							onClick={toggleAddress}
@@ -404,7 +404,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								viewBox='0 0 24 24'
 								fill='currentColor'
 								aria-hidden='true'
-								className='h-7 w-7 text-red-600 mx-auto'
+								className='h-6 w-6 text-red-600 mx-auto'
 							>
 								<path
 									fillRule='evenodd'
@@ -417,7 +417,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 					{/* Toogle Button Ends */}
 
 					{/* Google AutoSuggestion 2 */}
-					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-2'>
 						<GoogleAutoComplete
 							placeholder='Destination Address'
 							value={bookingData.destinationAddress}
@@ -438,7 +438,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						/>
 					</div>
 
-					<div className='mb-4'>
+					<div className='mb-2'>
 						<textarea
 							placeholder='Booking Details'
 							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
@@ -453,52 +453,9 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						</LongButton>
 					</div>
 
-					<div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 '>
-						<div className='flex items-center'>
-							<label className='mr-2'>Passengers</label>
-							<select
-								value={bookingData.passengers}
-								onChange={(e) => updateData('passengers', e.target.value)}
-								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-							>
-								<option value={1}>1</option>
-								<option value={2}>2</option>
-								<option value={3}>3</option>
-								<option value={4}>4</option>
-								<option value={5}>5</option>
-								<option value={6}>6</option>
-								<option value={7}>7</option>
-								<option value={8}>8</option>
-								<option value={9}>9</option>
-							</select>
-						</div>
-						<label className='flex items-center'>
-							<span className='mr-2'>Charge From Base</span>
-							<Switch
-								color='error'
-								checked={bookingData.chargeFromBase}
-								onChange={() =>
-									updateData('chargeFromBase', !bookingData.chargeFromBase)
-								}
-							/>
-						</label>
-						<div className='mb-4'>
-							{bookingData.scope !== 1 && (
-								<>
-									{bookingData.price ? (
-										<LongButton onClick={() => updateData('price', '')}>
-											Reset Price
-										</LongButton>
-									) : (
-										<LongButton onClick={findQuote}>Get Quote</LongButton>
-									)}
-								</>
-							)}
-						</div>
-					</div>
-					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+					<div className='grid grid-cols-1 md:grid-cols-4 place-content-center gap-4 mb-4 '>
 						<div className='flex items-center gap-2'>
-							<span>£</span>
+							{/* <span>£</span> */}
 							<Input
 								type='number'
 								required={true}
@@ -521,7 +478,68 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								}
 							/>
 						</div>
+						<div className='flex items-center justify-center'>
+							<label className='mr-2'>Passengers</label>
+							<select
+								value={bookingData.passengers}
+								onChange={(e) => updateData('passengers', e.target.value)}
+								className='w-[30%] bg-input text-foreground p-2 rounded-lg border border-border'
+							>
+								<option value={1}>1</option>
+								<option value={2}>2</option>
+								<option value={3}>3</option>
+								<option value={4}>4</option>
+								<option value={5}>5</option>
+								<option value={6}>6</option>
+								<option value={7}>7</option>
+								<option value={8}>8</option>
+								<option value={9}>9</option>
+							</select>
+						</div>
+						{/* <label className='flex items-center'>
+							<span className='mr-2'>Charge From Base</span>
+							<Switch
+								color='error'
+								checked={bookingData.chargeFromBase}
+								onChange={() =>
+									updateData('chargeFromBase', !bookingData.chargeFromBase)
+								}
+							/>
+						</label> */}
 
+						<label className='flex items-center justify-center'>
+							<span className='mr-2'>All Day</span>
+							<input
+								type='checkbox'
+								checked={bookingData.isAllDay}
+								onChange={(e) => updateData('isAllDay', e.target.checked)}
+								className='form-checkbox h-5 w-5 text-primary'
+							/>
+						</label>
+						<div className='flex justify-center items-center'>
+							{bookingData.scope !== 1 && (
+								<>
+									{bookingData.price ? (
+										<LongButton onClick={() => updateData('price', '')}>
+											Reset Price
+										</LongButton>
+									) : (
+										<LongButton onClick={findQuote}>Get Quote</LongButton>
+									)}
+								</>
+							)}
+						</div>
+					</div>
+					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+						<Input
+							required
+							type='text'
+							placeholder='Name'
+							value={bookingData.passengerName}
+							inputRef={userNameRef}
+							onChange={(e) => updateData('passengerName', e.target.value)}
+							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
+						/>
 						{/* Hours Duration Section Details */}
 						<div className='flex items-center'>
 							<Input
@@ -575,26 +593,14 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								}
 							/>
 						</div>
-
-						<label className='flex items-center'>
-							<span className='mr-2'>All Day</span>
-							<input
-								type='checkbox'
-								checked={bookingData.isAllDay}
-								onChange={(e) => updateData('isAllDay', e.target.checked)}
-								className='form-checkbox h-5 w-5 text-primary'
-							/>
-						</label>
 					</div>
 
-					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-2'>
 						<Input
-							required
-							type='text'
-							placeholder='Name'
-							value={bookingData.passengerName}
-							inputRef={userNameRef}
-							onChange={(e) => updateData('passengerName', e.target.value)}
+							type='email'
+							placeholder='Email'
+							value={bookingData.email}
+							onChange={(e) => updateData('email', e.target.value)}
 							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 						/>
 						<div className='flex justify-between flex-row items-center gap-1'>
@@ -633,14 +639,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						</div>
 					</div>
 
-					<div className='mb-4 flex flex-col gap-4'>
-						<Input
-							type='email'
-							placeholder='Email'
-							value={bookingData.email}
-							onChange={(e) => updateData('email', e.target.value)}
-							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-						/>
+					<div className='mb-2 flex flex-col gap-4'>
 						{bookingData.scope === 1 ? (
 							<Input
 								type='number'
@@ -661,8 +660,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 
 					{currentUser?.isAdmin ? (
 						<>
-							<p>options</p>
-							<div className='options mb-4 flex justify-between gap-3 align-middle items-center'>
+							{/* <p>options</p> */}
+							<div className='options mb-2 flex justify-between gap-3 align-middle items-center'>
 								<p className='text-gray-700 text-sm'>status:</p>
 								<select
 									name='status'
@@ -722,7 +721,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						</>
 					) : null}
 
-					<div className='flex justify-between gap-5 mb-5'>
+					<div className='flex justify-between gap-5 mb-2'>
 						<LongButton onClick={() => setDriverModalActive(true)}>
 							Allocate Driver
 						</LongButton>
