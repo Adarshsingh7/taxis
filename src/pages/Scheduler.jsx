@@ -32,7 +32,7 @@ import isLightColor from '../utils/isLight';
 import { openSnackbar } from '../context/snackbarSlice';
 import { Switch } from '@mui/material';
 
-const AceScheduler = ({ isActiveComplete }) => {
+const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
 	// const [snackbarMessage, setSnackBarMessage] = useState('');
@@ -45,12 +45,13 @@ const AceScheduler = ({ isActiveComplete }) => {
 	);
 	const activeTestModeRef = useRef(activeTestMode);
 	const currentDateRef = useRef(currentDate);
+	const isActiveCompleteRef = useRef(isActiveComplete);
 	const [viewBookingModal, setViewBookingModal] = useState(false);
 	const dispatch = useDispatch();
 
 	const fieldsData = {
 		id: 'bookingId',
-		subject: { name: 'passengerName' },
+		subject: { name: 'subject' },
 		isAllDay: { name: 'isAllDay' },
 		startTime: { name: 'pickupDateTime' },
 		endTime: { name: 'endTime' },
@@ -76,16 +77,28 @@ const AceScheduler = ({ isActiveComplete }) => {
 
 	// created by Tanya - 9Aug
 
-	// function transformData(bookings) {
-	// 	return bookings.map((booking) =>{
-	// 		return {
-	// 		  ...booking,
-	// 		  subject: booking.scope === 0
-	// 			? `${booking.pickupAddress} - ${booking.destinationAddress}`
-	// 			: booking.passengerName
-	// 		};
-	// 	  });
-	// 	}
+	function transformData(bookings) {
+		console.log(bookings);
+		return bookings.map((booking) => {
+			let subjectString = '';
+			if (booking.scope === 0 && booking.status !== 2) {
+				subjectString = `${booking.pickupAddress} - ${booking.destinationAddress}`;
+			}
+			if (booking.scope === 0 && booking.status === 2) {
+				subjectString = `[R]:${booking.pickupAddress} - ${booking.destinationAddress}`;
+			}
+			if (booking.scope === 1 && booking.status !== 2) {
+				subjectString = booking.passengerName;
+			}
+			if (booking.scope === 1 && booking.status === 2) {
+				subjectString = `[R]:${booking.passengerName}`;
+			}
+			return {
+				...booking,
+				subject: subjectString,
+			};
+		});
+	}
 
 	function allocateDriverToBooking(newAllocationData) {
 		allocateDriver(newAllocationData, activeTestMode).then((res) => {
@@ -93,7 +106,7 @@ const AceScheduler = ({ isActiveComplete }) => {
 				setDialogOpen(false);
 				getBookingData(currentDate, activeTestMode).then((data) => {
 					if (data.status === 'success') {
-						setData(data.bookings);
+						setData(transformData(data.bookings.filter((booking) =>  booking.status !== 3)));
 					}
 					setOpen(true);
 				});
@@ -113,13 +126,25 @@ const AceScheduler = ({ isActiveComplete }) => {
 	}, [currentDate]);
 
 	useEffect(() => {
+		isActiveCompleteRef.current = isActiveComplete;
+	}, [isActiveComplete]);
+
+	useEffect(() => {
 		getBookingData(currentDateRef.current, activeTestModeRef.current).then(
 			(data) => {
 				if (data.status === 'success') {
-					if (isActiveComplete) {
-						setData(data.bookings.filter((booking) => booking.status === 3));
+					if (isActiveCompleteRef.current) {
+						setData(
+							transformData(
+								data.bookings.filter((booking) => booking.status === 3)
+							)
+						);
 					} else {
-						setData(data.bookings);
+						setData(
+							transformData(
+								data.bookings.filter((booking) => booking.status !== 3)
+							)
+						);
 					}
 					dispatch(openSnackbar('Booking Refreshed'));
 				} else {
@@ -135,10 +160,19 @@ const AceScheduler = ({ isActiveComplete }) => {
 			getBookingData(currentDateRef.current, activeTestModeRef.current).then(
 				(data) => {
 					if (data.status === 'success') {
-						if (isActiveComplete) {
-							setData(data.bookings.filter((booking) => booking.status === 3));
+						if (isActiveCompleteRef.current) {
+							setData(
+								transformData(
+									data.bookings.filter((booking) => booking.status === 3)
+								)
+							);
 						} else {
-							setData(data.bookings);
+							console.log('Error----');
+							setData(
+								transformData(
+									data.bookings.filter((booking) => booking.status !== 3)
+								)
+							);
 						}
 					}
 					if (currentDate.getDate() === new Date().getDate()) setOpen(true);
@@ -226,9 +260,9 @@ const AceScheduler = ({ isActiveComplete }) => {
 				<Inject services={[Day, Agenda]} />
 			</ScheduleComponent>
 			{/* Changed by Tanya - (9 Aug) */}
-			{/* <div className='flex justify-end w-[95%] fixed top-[185px] right-[20px] z-[1000]'>
+			<div className='flex justify-end w-[10%] fixed top-[185px] right-[20px] z-[1000]'>
 				<span className='flex flex-row gap-2 items-center align-middle'>
-					<span>Completed</span>
+					<span className='select-none'>Completed</span>
 					<Switch
 						checked={isActiveComplete}
 						onChange={(e) => {
@@ -236,7 +270,7 @@ const AceScheduler = ({ isActiveComplete }) => {
 						}}
 					/>
 				</span>
-			</div> */}
+			</div>
 		</ProtectedRoute>
 	);
 };
