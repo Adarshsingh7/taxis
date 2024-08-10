@@ -33,7 +33,6 @@ import { openSnackbar } from '../context/snackbarSlice';
 import { Switch } from '@mui/material';
 
 const AceScheduler = ({ isActiveComplete, setIsActiveComplete, date }) => {
-	console.log(date);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
 	// const [snackbarMessage, setSnackBarMessage] = useState('');
@@ -120,6 +119,11 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete, date }) => {
 			return res;
 		});
 	}
+
+	useEffect(() => {
+		currentDateRef.current = new Date(date);
+		setCurrentDate(new Date(date));
+	}, [date]);
 
 	useEffect(() => {
 		activeTestModeRef.current = activeTestMode;
@@ -231,7 +235,6 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete, date }) => {
 			}
 		});
 	}
-	console.log(currentDate);
 
 	return (
 		<ProtectedRoute>
