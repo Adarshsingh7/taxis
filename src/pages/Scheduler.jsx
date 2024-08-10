@@ -78,7 +78,6 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
 	// created by Tanya - 9Aug
 
 	function transformData(bookings) {
-		console.log(bookings);
 		return bookings.map((booking) => {
 			let subjectString = '';
 			if (booking.scope === 0 && booking.status !== 2) {
@@ -106,7 +105,11 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
 				setDialogOpen(false);
 				getBookingData(currentDate, activeTestMode).then((data) => {
 					if (data.status === 'success') {
-						setData(transformData(data.bookings.filter((booking) =>  booking.status !== 3)));
+						setData(
+							transformData(
+								data.bookings.filter((booking) => booking.status !== 3)
+							)
+						);
 					}
 					setOpen(true);
 				});
@@ -167,7 +170,6 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
 								)
 							);
 						} else {
-							console.log('Error----');
 							setData(
 								transformData(
 									data.bookings.filter((booking) => booking.status !== 3)

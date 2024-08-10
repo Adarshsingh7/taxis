@@ -133,7 +133,6 @@ export default function Push() {
 			setLeftWidth(newWidth);
 		}
 	};
-	console.log(currentBookingDateTime);
 
 	return (
 		<Box

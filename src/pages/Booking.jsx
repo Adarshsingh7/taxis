@@ -48,6 +48,8 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	const destinationRef = useRef(null);
 	const userNameRef = useRef(null);
 	const phoneNumberRef = useRef(null);
+	const pickupDateTimeRef = useRef(null);
+
 	const [snackbarMessage, setSnackbarMessage] = useState('');
 	const [snackBarColor, setSnackbarColor] = useState('#2F3030');
 	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
@@ -65,6 +67,18 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	// Submit the form data to the Puser Component
 	async function handleSubmit(e) {
 		e.preventDefault();
+		if (bookingData.returnDateTime) {
+			const pickup = new Date(bookingData.pickupDateTime).getTime();
+			const returnTime = new Date(bookingData.returnDateTime).getTime();
+
+			if (returnTime < pickup) {
+				setSnackbarMessage('Return time should be after pickup time');
+				setIsQuoteSnackbarActive(true);
+				pickupDateTimeRef.current.focus();
+				pickupDateTimeRef.current.select();
+				return;
+			}
+		}
 		setFormSubmitLoading(true);
 		await onBookingUpload(id);
 		setFormSubmitLoading(false);
@@ -334,6 +348,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 									type='datetime-local'
 									value={bookingData.returnDateTime}
 									onChange={(e) => updateData('returnDateTime', e.target.value)}
+									ref={pickupDateTimeRef}
 									className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 								/>
 							) : null}

@@ -16,13 +16,21 @@ const schedulerSlice = createSlice({
 		currentlySelectedBookingIndex: -1,
 		selectedDriver: null,
 		activeDate: formatDate(new Date()),
+		activeComplete: false,
 	},
-	reducer: {
+	reducers: {
 		insertBookings: (state, action) => {
+			console.log('action.payload');
 			state.bookings = action.payload;
 		},
 		removeBooking: (state, action) => {
 			state.bookings = state.bookings.splice(action.payload, 1);
+		},
+		completeActiveBookingStatus: (state, action) => {
+			state.activeComplete = action.payload;
+		},
+		changeActiveDate: (state, action) => {
+			state.activeDate = action.payload;
 		},
 	},
 });
@@ -30,17 +38,22 @@ const schedulerSlice = createSlice({
 export function getRefreshedBooking() {
 	return async (dispatch, getState) => {
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
-		const activeDate = getState().scheduler.activeDate;
+		const { activeDate, activeComplete } = getState().scheduler.activeDate;
 
 		const response = await getBookingData(activeDate, activeTestMode);
 
-		console.log(response);
 		if (response.status === 'success') {
-			dispatch({
-				type: 'scheduler/insertBooking',
-				payload: { bookings: response },
-			});
-			schedulerSlice.actions.insertBookings(response.bookings);
+			let filteredBookings = [];
+			if (activeComplete) {
+				filteredBookings = response.bookings.filter(
+					(booking) => booking.status === 3
+				);
+			} else {
+				filteredBookings = response.bookings.filter(
+					(booking) => booking.status !== 3
+				);
+			}
+			schedulerSlice.actions.insertBookings(filteredBookings);
 		}
 		return response;
 	};
