@@ -32,10 +32,16 @@ const schedulerSlice = createSlice({
 		changeActiveDate: (state, action) => {
 			state.activeDate = action.payload;
 		},
+		selectBookingFromScheduler: (state, action) => {
+			state.currentlySelectedBookingIndex = action.payload;
+		},
+		selectDriver: (state, action) => {
+			state.selectedDriver = action.payload;
+		},
 	},
 });
 
-export function getRefreshedBooking() {
+export function getRefreshedBookings() {
 	return async (dispatch, getState) => {
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
 		const { activeDate, activeComplete } = getState().scheduler.activeDate;
@@ -76,17 +82,35 @@ export function deleteSchedulerBooking(cancelBlock) {
 		};
 
 		const data = await deleteBooking(reqData, testMode);
-		dispatch({ type: 'scheduler/removeBooking', payload: { bookingId } });
+		if (data.status === 'success') {
+			dispatch({ type: 'scheduler/removeBooking', payload: { index } });
+		}
 		return data;
 	};
 }
 
-export function allocateBookingToDriver(currentBooking, driverId) {
-	return async (dispatch) => {
-		const response = await allocateDriver(currentBooking, driverId);
-		const data = await response.json();
-		dispatch({ type: 'scheduler/insertBooking', payload: { bookings: data } });
+export function allocateBookingToDriver() {
+	return async (dispatch, getState) => {
+		const activeTestMode = getState().bookingForm.isActiveTestMode;
+		const { bookings, currentlySelectedBookingIndex, selectedDriver } =
+			getState().scheduler;
+		const currentBooking = bookings[currentlySelectedBookingIndex];
+
+		const requestBody = {
+			bookingId: currentBooking.bookingId,
+			userId: selectedDriver.userId,
+			actionByUserId: useAuth().currentUser.id,
+		};
+
+		const data = await allocateDriver(requestBody, activeTestMode);
+		if (data.status === 'success') {
+			dispatch({
+				type: 'scheduler/getRefreshedBookings',
+			});
+		}
 	};
 }
+
+export const { completeActiveBookingStatus } = schedulerSlice.actions;
 
 export default schedulerSlice.reducer;

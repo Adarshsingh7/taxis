@@ -32,7 +32,8 @@ import isLightColor from '../utils/isLight';
 import { openSnackbar } from '../context/snackbarSlice';
 import { Switch } from '@mui/material';
 
-const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
+const AceScheduler = ({ isActiveComplete, setIsActiveComplete, date }) => {
+	console.log(date);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [open, setOpen] = useState(false);
 	// const [snackbarMessage, setSnackBarMessage] = useState('');
@@ -149,9 +150,9 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
 							)
 						);
 					}
-					dispatch(openSnackbar('Booking Refreshed', "info"));
+					dispatch(openSnackbar('Booking Refreshed', 'info'));
 				} else {
-					dispatch(openSnackbar(`${data.message}`, "info"));
+					dispatch(openSnackbar(`${data.message}`, 'info'));
 				}
 				if (currentDate.getDate() === new Date().getDate()) setOpen(true);
 			}
@@ -219,9 +220,9 @@ const AceScheduler = ({ isActiveComplete, setIsActiveComplete }) => {
 							);
 						}
 						localStorage.setItem('bookings', JSON.stringify(data.bookings));
-						dispatch(openSnackbar('Booking Refreshed', "info"));
+						dispatch(openSnackbar('Booking Refreshed', 'info'));
 					} else {
-						dispatch(openSnackbar(`${data.message}`, "info"));
+						dispatch(openSnackbar(`${data.message}`, 'info'));
 					}
 					setOpen(true);
 				});

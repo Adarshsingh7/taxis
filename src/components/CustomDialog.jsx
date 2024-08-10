@@ -1,12 +1,11 @@
 /** @format */
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 
-import { useBooking } from '../hooks/useBooking';
 import { useEffect, useState } from 'react';
 import Modal from '../components/Modal';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import { Button, Switch } from '@mui/material';
-import { allocateDriver, getAllDrivers, makeBooking } from '../utils/apiReq';
+import { getAllDrivers, makeBooking } from '../utils/apiReq';
 import { useAuth } from '../hooks/useAuth';
 
 import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
@@ -20,9 +19,7 @@ import Loader from './Loader';
 import EditBookingModal from './Scheduler/EditBookingModal';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
-import EditRoadIcon from '@mui/icons-material/EditRoad';
 import { formatDate } from '../utils/formatDate';
-import { getRefreshedBooking } from '../context/schedulerSlice';
 function CustomDialog({
 	closeDialog,
 	data,
@@ -74,6 +71,7 @@ function CustomDialog({
 										{data.vias.length > 0 &&
 											data.vias.map((via, idx) => (
 												<BookingOption
+													key={idx}
 													head={`Via ${idx + 1}`}
 													text={`${via.address}, ${via.postCode}`}
 												/>
@@ -715,6 +713,7 @@ function DuplicateBookingModal({
 	// console.log('user---', user);
 	const [isToggleTrue, setToggleTrue] = useState(true);
 	const [newDate, setNewDate] = useState(formatDate(data.pickupDateTime));
+	const dispatch = useDispatch();
 	const handleToggleChange = () => {
 		setToggleTrue(!isToggleTrue);
 	};
@@ -733,7 +732,6 @@ function DuplicateBookingModal({
 		if (res.status === 'success') {
 			dispatch(openSnackbar('Booking Created Successfully!', 'success'));
 		}
-		getRefreshedBooking();
 	};
 
 	return (
