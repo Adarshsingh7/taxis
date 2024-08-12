@@ -149,7 +149,8 @@ export function handleCompleBooking({
 		const { bookings, currentlySelectedBookingIndex: index } =
 			getState().scheduler;
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
-		const { bookingId } = bookings[index].bookingId;
+		const bookingId = bookings[index].bookingId;
+
 		const response = await completeBookings(
 			{
 				bookingId,

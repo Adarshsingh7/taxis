@@ -489,10 +489,10 @@ function CompleteBookingModal({
 	closeDialog,
 	data,
 }) {
-	const [accountPrice, setAccountPrice] = useState(data.priceAccount);
-	const [waitingTime, setWaitingTime] = useState(data.waitingTime);
-	const [parkingCharge, setParkingCharge] = useState(data.parkingCharge);
-	const [price, setPrice] = useState(data.price);
+	const [accountPrice, setAccountPrice] = useState(data.priceAccount || 0);
+	const [waitingTime, setWaitingTime] = useState(data.waitingTime || 0);
+	const [parkingCharge, setParkingCharge] = useState(data.parkingCharge || 0);
+	const [price, setPrice] = useState(data.price || 0);
 	const isActiveTestMode = useSelector(
 		(store) => store.bookingForm.isActiveTestMode
 	);
@@ -538,7 +538,7 @@ function CompleteBookingModal({
 							type='number'
 							min='0'
 							value={waitingTime}
-							onChange={(e) => setWaitingTime(e.target.value)}
+							onChange={(e) => setWaitingTime(+e.target.value)}
 							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
 							placeholder='0'
 						/>
@@ -551,7 +551,7 @@ function CompleteBookingModal({
 						<input
 							type='number'
 							value={parkingCharge}
-							onChange={(e) => setParkingCharge(e.target.value)}
+							onChange={(e) => setParkingCharge(+e.target.value)}
 							min='0'
 							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
 							placeholder='0'
@@ -568,7 +568,7 @@ function CompleteBookingModal({
 							required
 							type='number'
 							value={price}
-							onChange={(e) => setPrice(e.target.value)}
+							onChange={(e) => setPrice(+e.target.value)}
 							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
 							placeholder='0'
 						/>
@@ -582,7 +582,7 @@ function CompleteBookingModal({
 							<input
 								type='number'
 								value={accountPrice}
-								onChange={(e) => setAccountPrice(e.target.value)}
+								onChange={(e) => setAccountPrice(+e.target.value)}
 								className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
 								placeholder='0'
 							/>
