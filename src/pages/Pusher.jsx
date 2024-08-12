@@ -33,6 +33,7 @@ import JourneyQuote from '../components/JourneyQuote';
 
 import { openSnackbar } from '../context/snackbarSlice';
 import DriverSection from '../components/DriverSection';
+import { getRefreshedBookings } from '../context/schedulerSlice';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -65,6 +66,7 @@ export default function Push() {
 			if (currentBooking.bookingType === 'Current') {
 				response = await dispatch(onUpdateBooking(id));
 				if (response.status === 'success') {
+					dispatch(getRefreshedBookings());
 					dispatch(openSnackbar('Booking Updated Successfully', 'success'));
 				} else {
 					dispatch(openSnackbar('Failed to Update Booking', 'error'));
@@ -72,6 +74,7 @@ export default function Push() {
 			} else {
 				response = await dispatch(onCreateBooking(id));
 				if (response.status === 'success') {
+					dispatch(getRefreshedBookings());
 					dispatch(openSnackbar('Booking Created Successfully', 'success'));
 				} else {
 					dispatch(openSnackbar('Failed to Create Booking', 'error'));

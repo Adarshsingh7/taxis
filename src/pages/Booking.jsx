@@ -122,7 +122,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		} else {
 			setQuote(null);
 			dispatch(openSnackbar('Failed to get quote', 'error'));
-			
 		}
 	}
 
@@ -140,7 +139,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				pickupRef.current.select();
 			} else {
 				dispatch(openSnackbar('No caller found', 'info'));
-				
 			}
 		}
 	}
@@ -234,7 +232,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	// Set the snackbar for caller event
 	useEffect(() => {
 		if (callerId.length > 0 && bookingData.formBusy) {
-			
 			dispatch(openSnackbar(`${callerId.length} Caller Waiting`, 'error'));
 		}
 	}, [callerId.length, bookingData.formBusy]);
