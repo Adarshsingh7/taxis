@@ -203,7 +203,6 @@ export default function Push() {
 				<Box
 					sx={{
 						margin: '0vh auto',
-
 						overflow: 'auto',
 						width: '100%',
 						borderColor: '#e5e7eb',
@@ -212,7 +211,16 @@ export default function Push() {
 				>
 					<Tabs
 						value={activeTab}
-						sx={{ backgroundColor: '#e5e7eb' }}
+						sx={{
+							backgroundColor: '#e5e7eb',
+							height: '50px',
+							'& .MuiTabs-flexContainer': {
+								height: '100%',
+							},
+							'& .MuiTab-root': {
+								minHeight: '50px',
+							},
+						}}
 						onChange={handleChange}
 						variant='scrollable'
 						scrollButtons
