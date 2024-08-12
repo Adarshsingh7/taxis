@@ -2,27 +2,39 @@
 
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Button } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteSchedulerBooking } from '../../context/schedulerSlice';
+import { useAuth } from '../../hooks/useAuth';
 
 // Delete Booking Modal Structure
 
-export default function DeleteBookingModal({
-	setDeleteModal,
-	closeDialog,
-	onDeleteBooking,
-}) {
+export default function DeleteBookingModal({ setDeleteModal, closeDialog }) {
+	const dispatch = useDispatch();
 	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
 		(state) => state.scheduler
 	);
 	const data = bookings[index];
-	const handleSingleDelete = (id) => {
-		onDeleteBooking(id, false);
+	const user = useAuth();
+	const handleSingleDelete = () => {
+		dispatch(
+			deleteSchedulerBooking(
+				false,
+				user.currentUser.fullName,
+				user.currentUser.id
+			)
+		);
 		setDeleteModal(false);
 		closeDialog();
 	};
 
-	const handleDeleteAllRepeat = async (id) => {
-		onDeleteBooking(id, true);
+	const handleDeleteAllRepeat = async () => {
+		dispatch(
+			deleteSchedulerBooking(
+				true,
+				user.currentUser.fullName,
+				user.currentUser.id
+			)
+		);
 		setDeleteModal(false);
 		closeDialog();
 	};
@@ -48,7 +60,7 @@ export default function DeleteBookingModal({
 							color='error'
 							sx={{ paddingY: '0.5rem', marginTop: '4px' }}
 							className='w-full cursor-pointer'
-							onClick={() => handleSingleDelete(data.bookingId)}
+							onClick={handleSingleDelete}
 						>
 							Delete
 						</Button>
@@ -57,7 +69,7 @@ export default function DeleteBookingModal({
 							color='error'
 							sx={{ paddingY: '0.5rem', marginTop: '4px' }}
 							className='w-full cursor-pointer'
-							onClick={() => handleDeleteAllRepeat(data.bookingId)}
+							onClick={handleDeleteAllRepeat}
 						>
 							Delete All
 						</Button>
@@ -68,7 +80,7 @@ export default function DeleteBookingModal({
 						color='error'
 						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
 						className='w-full cursor-pointer'
-						onClick={() => handleSingleDelete(data.bookingId)}
+						onClick={handleSingleDelete}
 					>
 						Delete
 					</Button>

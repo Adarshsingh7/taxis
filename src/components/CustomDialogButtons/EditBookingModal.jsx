@@ -1,11 +1,15 @@
 /** @format */
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import { Button } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addDataFromSchedulerInEditMode } from '../../context/bookingSlice';
 
-function EditBookingModal({ setEditBookingModal, data, closeDialog }) {
+function EditBookingModal({ setEditBookingModal, closeDialog }) {
 	const dispatch = useDispatch();
+	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
+		(state) => state.scheduler
+	);
+	const data = bookings[index];
 	function handleEditOne() {
 		data.recurrenceID = '';
 		data.recurrenceRule = '';

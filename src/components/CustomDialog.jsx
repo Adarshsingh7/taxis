@@ -9,7 +9,7 @@ import DeleteBookingModal from './CustomDialogButtons/DeleteBookingModal';
 import DuplicateBookingModal from './CustomDialogButtons/DuplicateBookingModal';
 import { useSelector } from 'react-redux';
 
-function CustomDialog({ closeDialog, onDeleteBooking }) {
+function CustomDialog({ closeDialog }) {
 	const [allocateModal, setAllocateModal] = useState(false);
 	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
 	const [editBookingModal, setEditBookingModal] = useState(false);
@@ -260,7 +260,6 @@ function CustomDialog({ closeDialog, onDeleteBooking }) {
 			>
 				<EditBookingModal
 					setEditBookingModal={setEditBookingModal}
-					data={data}
 					closeDialog={closeDialog}
 				/>
 			</Modal>
@@ -280,7 +279,6 @@ function CustomDialog({ closeDialog, onDeleteBooking }) {
 				<DeleteBookingModal
 					setDeleteModal={setDeleteModal}
 					closeDialog={closeDialog}
-					onDeleteBooking={onDeleteBooking}
 				/>
 			</Modal>
 		</div>
