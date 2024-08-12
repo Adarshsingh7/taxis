@@ -42,7 +42,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	const [isAddVIAOpen, setIsAddVIAOpen] = useState(false);
 	const [isRepeatBookingModelActive, setIsRepeatBookingModelActive] =
 		useState(false);
-	const [isQuoteSnackbarActive, setIsQuoteSnackbarActive] = useState(false);
 	const [isDriverModalActive, setDriverModalActive] = useState(false);
 
 	const pickupRef = useRef(null);
@@ -71,7 +70,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 
 			if (returnTime < pickup) {
 				dispatch(openSnackbar('Return time must be after pickup', 'error'));
-				setIsQuoteSnackbarActive(true);
 				pickupDateTimeRef.current.focus();
 				pickupDateTimeRef.current.select();
 				return;
@@ -124,7 +122,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		} else {
 			setQuote(null);
 			dispatch(openSnackbar('Failed to get quote', 'error'));
-			setIsQuoteSnackbarActive(true);
+			
 		}
 	}
 
@@ -142,7 +140,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				pickupRef.current.select();
 			} else {
 				dispatch(openSnackbar('No caller found', 'info'));
-				setIsQuoteSnackbarActive(true);
+				
 			}
 		}
 	}
@@ -236,7 +234,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	// Set the snackbar for caller event
 	useEffect(() => {
 		if (callerId.length > 0 && bookingData.formBusy) {
-			setIsQuoteSnackbarActive(true);
+			
 			dispatch(openSnackbar(`${callerId.length} Caller Waiting`, 'error'));
 		}
 	}, [callerId.length, bookingData.formBusy]);
