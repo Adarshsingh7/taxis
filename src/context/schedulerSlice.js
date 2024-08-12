@@ -139,7 +139,7 @@ export function allocateBookingToDriver(actionByUserId) {
 	};
 }
 
-export function handleCompleBooking({
+export function handleCompleteBooking({
 	waitingTime,
 	parkingCharge,
 	priceAccount,

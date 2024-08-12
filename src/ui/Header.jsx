@@ -148,7 +148,7 @@ const Navbar = () => {
 	);
 };
 
-function MuiMenu() {
+function MuiMenu() { 
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
 	const handleClick = (event) => {

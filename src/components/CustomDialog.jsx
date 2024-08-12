@@ -1,36 +1,24 @@
 /** @format */
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
-
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Modal from '../components/Modal';
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import { Button, Switch } from '@mui/material';
-import { getAllDrivers, makeBooking } from '../utils/apiReq';
-import { useAuth } from '../hooks/useAuth';
+import EditBookingModal from './CustomDialogButtons/EditBookingModal';
+import AllocateModal from './CustomDialogButtons/AllocateModal';
+import CompleteBookingModal from './CustomDialogButtons/CompleteBookingModal';
+import DeleteBookingModal from './CustomDialogButtons/DeleteBookingModal';
+import DuplicateBookingModal from './CustomDialogButtons/DuplicateBookingModal';
+import { useSelector } from 'react-redux';
 
-import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import { completeBookings } from '../utils/apiReq';
-import { openSnackbar } from '../context/snackbarSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import Loader from './Loader';
-import EditBookingModal from './Scheduler/EditBookingModal';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
-import { formatDate } from '../utils/formatDate';
-import {
-	allocateBookingToDriver,
-	handleCompleBooking,
-	selectDriver,
-} from '../context/schedulerSlice';
-function CustomDialog({ closeDialog, data, onDeleteBooking }) {
+function CustomDialog({ closeDialog, onDeleteBooking }) {
 	const [allocateModal, setAllocateModal] = useState(false);
 	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
 	const [editBookingModal, setEditBookingModal] = useState(false);
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [duplicateBookingModal, setDuplicateBookingModal] = useState(false);
+	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
+		(state) => state.scheduler
+	);
+	const data = bookings[index];
 
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
@@ -254,7 +242,6 @@ function CustomDialog({ closeDialog, data, onDeleteBooking }) {
 			>
 				<AllocateModal
 					setAllocateModal={setAllocateModal}
-					data={data}
 					closeDialog={closeDialog}
 				/>
 			</Modal>
@@ -264,7 +251,6 @@ function CustomDialog({ closeDialog, data, onDeleteBooking }) {
 			>
 				<CompleteBookingModal
 					setIsCompleteBookingModal={setIsCompleteBookingModal}
-					data={data}
 					closeDialog={closeDialog}
 				/>
 			</Modal>
@@ -284,7 +270,6 @@ function CustomDialog({ closeDialog, data, onDeleteBooking }) {
 			>
 				<DuplicateBookingModal
 					setDuplicateBookingModal={setDuplicateBookingModal}
-					data={data}
 					closeDialog={closeDialog}
 				/>
 			</Modal>
@@ -294,7 +279,6 @@ function CustomDialog({ closeDialog, data, onDeleteBooking }) {
 			>
 				<DeleteBookingModal
 					setDeleteModal={setDeleteModal}
-					data={data}
 					closeDialog={closeDialog}
 					onDeleteBooking={onDeleteBooking}
 				/>
@@ -334,434 +318,5 @@ const BookingButton = ({ text, color, ...props }) => {
 		</button>
 	);
 };
-
-// Allocate Driver Modal Structure
-function AllocateModal({ setAllocateModal, closeDialog, data }) {
-	const [loading, setLoading] = useState(false);
-	const [driverData, setDriverData] = useState([]);
-	const [bookingData, setBookingData] = useState({});
-	const [confirmAllocation, setConfirmAllocation] = useState(false);
-	const [selectedDriver, setSelectedDriver] = useState(null);
-	const dispatch = useDispatch();
-	useEffect(() => {
-		getAllDrivers().then((res) => {
-			setDriverData(res.users.filter((user) => user.roleString !== 'Admin'));
-		});
-		setLoading(true);
-		setLoading(false);
-	}, []);
-
-	function handleAttactDriver(driver) {
-		setConfirmAllocation(true);
-		setSelectedDriver(driver);
-		setBookingData(data);
-		dispatch(selectDriver(driver.id));
-	}
-
-	return (
-		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
-			<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
-				<PersonOutlineOutlinedIcon sx={{ color: '#E45454' }} />
-			</div>
-			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
-				<div className='flex w-full flex-col justify-center items-center'>
-					<p className='font-medium '>Allocate Booking</p>
-				</div>
-				<div className='bg-[#16A34A] text-center font-medium text-white py-2 px-4 w-full rounded-sm'>
-					<p>Gillingham station -- Guys Marsh</p>
-				</div>
-
-				<div className='w-full flex justify-center items-center border-b-gray-300 border-b-[1px] p-1'>
-					<p>Select Driver</p>
-				</div>
-				<Modal
-					open={confirmAllocation}
-					setOpen={setConfirmAllocation}
-				>
-					<ConfirmAllocationModal
-						driver={selectedDriver}
-						bookingData={bookingData}
-						setAllocateModal={setAllocateModal}
-						closeDialog={closeDialog}
-						setConfirmAllocation={setConfirmAllocation}
-					/>
-				</Modal>
-				<div className='m-auto w-full h-[50vh] overflow-auto'>
-					{loading ? (
-						<Loader />
-					) : (
-						driverData.map((el, idx) => (
-							<>
-								<div
-									key={idx}
-									className='bg-gray-200 flex justify-center w-full items-center mx-auto cursor-pointer gap-4 mb-2'
-								>
-									<div
-										className='w-full mx-auto flex justify-center items-center'
-										onClick={() => handleAttactDriver(el)}
-									>
-										<div
-											style={{ backgroundColor: el.colorRGB }}
-											className={`h-5 w-5 rounded-full`}
-										></div>
-										<div className='flex flex-col w-[50%] justify-center items-center'>
-											<p className='text-xl'>{el?.fullName}</p>
-											<p className='text-[.8rem]'>{el.regNo}</p>
-										</div>
-									</div>
-								</div>
-							</>
-						))
-					)}
-				</div>
-
-				<Button
-					variant='contained'
-					color='error'
-					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-					className='w-full cursor-pointer'
-					onClick={() => setAllocateModal(false)}
-				>
-					Back
-				</Button>
-			</div>
-		</div>
-	);
-}
-
-// Confirm Allocation Modal Structure
-function ConfirmAllocationModal({
-	setAllocateModal,
-	closeDialog,
-	driver,
-	bookingData,
-	setConfirmAllocation,
-}) {
-	const dispatch = useDispatch();
-	const user = useAuth();
-	const handleConfirmClick = async (driver) => {
-		await dispatch(allocateBookingToDriver(user.currentUser.id));
-
-		setConfirmAllocation(false);
-		setAllocateModal(false);
-		closeDialog();
-	};
-	return (
-		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
-			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
-				<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
-					<PersonOutlineOutlinedIcon sx={{ color: '#E45454' }} />
-				</div>
-				<div className='flex w-full flex-col justify-center items-center'>
-					<p className='font-medium text-xl '>Confirm Driver Allocation</p>
-				</div>
-			</div>
-			<div className='text-center w-full'>
-				Are you sure you wish to select {driver.fullName} as the driver?
-			</div>
-			<div className='w-full flex items-center justify-center gap-4'>
-				<Button
-					variant='contained'
-					color='error'
-					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-					className='w-full cursor-pointer'
-					onClick={() => setConfirmAllocation(false)}
-				>
-					Cancel
-				</Button>
-				<Button
-					variant='contained'
-					color='success'
-					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-					className='w-full cursor-pointer'
-					onClick={() => handleConfirmClick(driver)}
-				>
-					Confirm
-				</Button>
-			</div>
-		</div>
-	);
-}
-
-// Complete Booking Modal Structure
-function CompleteBookingModal({
-	setIsCompleteBookingModal,
-	closeDialog,
-	data,
-}) {
-	const [accountPrice, setAccountPrice] = useState(data.priceAccount || 0);
-	const [waitingTime, setWaitingTime] = useState(data.waitingTime || 0);
-	const [parkingCharge, setParkingCharge] = useState(data.parkingCharge || 0);
-	const [price, setPrice] = useState(data.price || 0);
-	const isActiveTestMode = useSelector(
-		(store) => store.bookingForm.isActiveTestMode
-	);
-
-	const dispatch = useDispatch();
-
-	const handleCompleteClick = async (e) => {
-		e.preventDefault();
-		const completedBookingData = {
-			waitingTime,
-			parkingCharge,
-			driverPrice: price,
-			accountPrice: data.priceAccount,
-		};
-		// const response = await completeBookings(
-		// 	completedBookingData,
-		// 	isActiveTestMode
-		// );
-		const response = dispatch(handleCompleBooking(completedBookingData));
-		setIsCompleteBookingModal(false);
-		closeDialog();
-		if (response.status === 'success') {
-			dispatch(openSnackbar('Booking Completed', 'success'));
-		}
-	};
-
-	return (
-		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
-			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
-				<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
-					<HelpOutlineOutlinedIcon sx={{ color: '#E45454' }} />
-				</div>
-				<div className='flex w-full flex-col justify-center items-center'>
-					<p className='font-medium text-2xl '>Job completion</p>
-				</div>
-				<form
-					onSubmit={handleCompleteClick}
-					className='w-full flex flex-col justify-center items-center gap-3 mt-2'
-				>
-					<div className='w-full relative flex flex-col justify-center items-start gap-2'>
-						<label>Waiting Time Minutes</label>
-						<input
-							type='number'
-							min='0'
-							value={waitingTime}
-							onChange={(e) => setWaitingTime(+e.target.value)}
-							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
-							placeholder='0'
-						/>
-						<i className='absolute left-4 top-10 text-black'>
-							<AccessTimeOutlinedIcon fontSize='12px' />
-						</i>
-					</div>
-					<div className='w-full relative flex flex-col justify-center items-start gap-2'>
-						<label>Parking Charge</label>
-						<input
-							type='number'
-							value={parkingCharge}
-							onChange={(e) => setParkingCharge(+e.target.value)}
-							min='0'
-							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
-							placeholder='0'
-						/>
-						<i className='absolute left-4 top-10 text-black'>
-							<CurrencyPoundOutlinedIcon fontSize='12px' />
-						</i>
-					</div>
-					<div className='w-full relative flex flex-col justify-center items-start gap-2'>
-						<label className=''>
-							Price <span className='text-red-600'>*</span>
-						</label>
-						<input
-							required
-							type='number'
-							value={price}
-							onChange={(e) => setPrice(+e.target.value)}
-							className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
-							placeholder='0'
-						/>
-						<i className=' absolute left-4 top-10  text-black'>
-							<CurrencyPoundOutlinedIcon fontSize='12px' />
-						</i>
-					</div>
-					{data.priceAccount > 0 && (
-						<div className='w-full relative flex flex-col justify-center items-start gap-2'>
-							<label className=''>Account Price</label>
-							<input
-								type='number'
-								value={accountPrice}
-								onChange={(e) => setAccountPrice(+e.target.value)}
-								className='w-full pl-10 pr-4 py-2 p-2 border border-gray-500 rounded-md placeholder:text-slate-900'
-								placeholder='0'
-							/>
-							<i className='absolute left-4 top-10  text-black'>
-								<CurrencyPoundOutlinedIcon fontSize='12px' />
-							</i>
-						</div>
-					)}
-					<Button
-						variant='contained'
-						color='error'
-						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-						className='w-full cursor-pointer'
-						type='submit'
-					>
-						Submit
-					</Button>
-				</form>
-			</div>
-		</div>
-	);
-}
-
-// Delete Booking Modal Structure
-function DeleteBookingModal({
-	setDeleteModal,
-	data,
-	closeDialog,
-	onDeleteBooking,
-}) {
-	const handleSingleDelete = (id) => {
-		onDeleteBooking(id, false);
-		setDeleteModal(false);
-		closeDialog();
-	};
-
-	const handleDeleteAllRepeat = async (id) => {
-		onDeleteBooking(id, true);
-		setDeleteModal(false);
-		closeDialog();
-	};
-
-	return (
-		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
-			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
-				<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
-					<DeleteOutlinedIcon sx={{ color: '#E45454' }} />
-				</div>
-				<div className='flex w-full flex-col justify-center items-center'>
-					<p className='font-medium text-xl '>Delete Your Bookings</p>
-				</div>
-			</div>
-			<div className='text-center w-full'>
-				Are you sure you wish to delete the selected booking?
-			</div>
-			<div className='w-full flex items-center justify-center gap-4'>
-				{data.recurrenceID && data.recurrenceRule ? (
-					<>
-						<Button
-							variant='contained'
-							color='error'
-							sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-							className='w-full cursor-pointer'
-							onClick={() => handleSingleDelete(data.bookingId)}
-						>
-							Delete
-						</Button>
-						<Button
-							variant='contained'
-							color='error'
-							sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-							className='w-full cursor-pointer'
-							onClick={() => handleDeleteAllRepeat(data.bookingId)}
-						>
-							Delete All
-						</Button>
-					</>
-				) : (
-					<Button
-						variant='contained'
-						color='error'
-						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-						className='w-full cursor-pointer'
-						onClick={() => handleSingleDelete(data.bookingId)}
-					>
-						Delete
-					</Button>
-				)}
-			</div>
-		</div>
-	);
-}
-
-// Duplicate Booking button Modal
-function DuplicateBookingModal({
-	data,
-	setDuplicateBookingModal,
-	closeDialog,
-}) {
-	const user = useAuth();
-	const [isToggleTrue, setToggleTrue] = useState(true);
-	const [newDate, setNewDate] = useState(formatDate(data.pickupDateTime));
-	const dispatch = useDispatch();
-	const handleToggleChange = () => {
-		setToggleTrue(!isToggleTrue);
-	};
-	const handleDateChange = (e) => {
-		setNewDate(e.target.value);
-	};
-	const handleSave = async (data) => {
-		const newData = {
-			...data,
-			pickupDateTime: newDate,
-		};
-		setDuplicateBookingModal(false);
-		closeDialog();
-		const res = await makeBooking(newData, true);
-		if (res.status === 'success') {
-			dispatch(openSnackbar('Booking Created Successfully!', 'success'));
-		}
-	};
-
-	return (
-		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
-			<div className='flex w-full flex-col gap-2 justify-center items-center mt-3'>
-				<div className='p-4 flex justify-center items-center text-center rounded-full bg-[#FEE2E2]'>
-					<FileCopyOutlinedIcon sx={{ color: '#E45454' }} />
-				</div>
-				<div className='flex w-full flex-col justify-center items-center'>
-					<p className='font-medium text-xl '>Duplicate Booking</p>
-				</div>
-			</div>
-			<div className='text-center w-full'>
-				Select a new pickup time for the duplicate booking:
-			</div>
-			<div className='w-full flex items-center justify-start gap-1'>
-				<Switch
-					checked={isToggleTrue}
-					onChange={handleToggleChange}
-				/>
-				<span>Use existing booking datetime</span>
-			</div>
-			{!isToggleTrue && (
-				<div className='w-full'>
-					<input
-						required
-						type='datetime-local'
-						className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-						value={newDate}
-						onChange={handleDateChange}
-					/>
-				</div>
-			)}
-			<div className='w-full flex items-center justify-center gap-4'>
-				<Button
-					variant='contained'
-					color='error'
-					sx={{ paddingY: '0.5rem', marginTop: '4px' }}
-					className='w-full cursor-pointer'
-					onClick={() =>
-						handleSave({
-							...data,
-							backgroundColorRGB: '#795548',
-							bookingId: 0,
-							userId: null,
-							actionByUserId: user.currentUser.id,
-							updatedByName: user.currentUser.name,
-							status: null,
-							bookedByName: user.currentUser.name,
-							recurrenceID: null,
-							recurrenceRule: null,
-						})
-					}
-				>
-					Save
-				</Button>
-			</div>
-		</div>
-	);
-}
 
 export default CustomDialog;

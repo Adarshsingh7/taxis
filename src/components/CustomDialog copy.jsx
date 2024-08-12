@@ -16,7 +16,7 @@ import { completeBookings } from '../utils/apiReq';
 import { openSnackbar } from '../context/snackbarSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from './Loader';
-import EditBookingModal from './Scheduler/EditBookingModal';
+import EditBookingModal from './CustomDialogButtons/EditBookingModal';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import { formatDate } from '../utils/formatDate';
