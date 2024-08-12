@@ -200,9 +200,9 @@ export default function Push() {
 				{/*  box containg the form*/}
 				<Box
 					sx={{
-						margin: '1vh auto',
+						margin: '0vh auto',
 
-						// overflow: 'auto',
+						overflow: 'auto',
 						width: '100%',
 						borderColor: '#e5e7eb',
 						borderWidth: '1px',
@@ -260,7 +260,7 @@ export default function Push() {
 			{/* box containing the map and driver avialibility */}
 			<Box
 				sx={{
-					margin: '1vh auto',
+					margin: '0vh auto',
 					height: '90vh',
 					overflow: 'auto',
 					width: `${100 - leftWidth}%`,
