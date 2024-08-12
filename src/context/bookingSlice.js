@@ -56,7 +56,7 @@ const initialState = {
 	isLoading: false,
 	error: null,
 	activeBookingIndex: 0,
-	isActiveTestMode: false,
+	isActiveTestMode: true,
 };
 
 const bookingFormSlice = createSlice({

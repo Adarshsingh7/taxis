@@ -20,18 +20,18 @@ import EditBookingModal from './Scheduler/EditBookingModal';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import { formatDate } from '../utils/formatDate';
-function CustomDialog({
-	closeDialog,
-	data,
-	onDeleteBooking,
-	allocateDriverToBooking,
-}) {
+import {
+	allocateBookingToDriver,
+	handleCompleBooking,
+	selectDriver,
+} from '../context/schedulerSlice';
+function CustomDialog({ closeDialog, data, onDeleteBooking }) {
 	const [allocateModal, setAllocateModal] = useState(false);
 	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
 	const [editBookingModal, setEditBookingModal] = useState(false);
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [duplicateBookingModal, setDuplicateBookingModal] = useState(false);
-	console.log('Data for custom dialog', data);
+
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
 			<div className='relative w-full max-w-7xl p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
@@ -254,7 +254,6 @@ function CustomDialog({
 			>
 				<AllocateModal
 					setAllocateModal={setAllocateModal}
-					allocateDriverToBooking={allocateDriverToBooking}
 					data={data}
 					closeDialog={closeDialog}
 				/>
@@ -336,21 +335,14 @@ const BookingButton = ({ text, color, ...props }) => {
 	);
 };
 
-export default CustomDialog;
-
 // Allocate Driver Modal Structure
-function AllocateModal({
-	setAllocateModal,
-	closeDialog,
-	data,
-	allocateDriverToBooking,
-}) {
-	// console.log(data)
+function AllocateModal({ setAllocateModal, closeDialog, data }) {
 	const [loading, setLoading] = useState(false);
 	const [driverData, setDriverData] = useState([]);
 	const [bookingData, setBookingData] = useState({});
 	const [confirmAllocation, setConfirmAllocation] = useState(false);
 	const [selectedDriver, setSelectedDriver] = useState(null);
+	const dispatch = useDispatch();
 	useEffect(() => {
 		getAllDrivers().then((res) => {
 			setDriverData(res.users.filter((user) => user.roleString !== 'Admin'));
@@ -363,6 +355,7 @@ function AllocateModal({
 		setConfirmAllocation(true);
 		setSelectedDriver(driver);
 		setBookingData(data);
+		dispatch(selectDriver(driver.id));
 	}
 
 	return (
@@ -391,7 +384,6 @@ function AllocateModal({
 						setAllocateModal={setAllocateModal}
 						closeDialog={closeDialog}
 						setConfirmAllocation={setConfirmAllocation}
-						allocateDriverToBooking={allocateDriverToBooking}
 					/>
 				</Modal>
 				<div className='m-auto w-full h-[50vh] overflow-auto'>
@@ -438,37 +430,21 @@ function AllocateModal({
 }
 
 // Confirm Allocation Modal Structure
-
 function ConfirmAllocationModal({
 	setAllocateModal,
 	closeDialog,
 	driver,
 	bookingData,
 	setConfirmAllocation,
-	allocateDriverToBooking,
 }) {
 	const dispatch = useDispatch();
 	const user = useAuth();
-	const activeTestMode = useSelector(
-		(store) => store.bookingForm.isActiveTestMode
-	);
 	const handleConfirmClick = async (driver) => {
-		const newAllocationData = {
-			bookingId: bookingData.bookingId,
-			userId: driver.id,
-			actionByUserId: user.currentUser.id,
-		};
-		// console.log("driver", driver);
-		const res = await allocateDriverToBooking(
-			newAllocationData,
-			activeTestMode
-		);
+		await dispatch(allocateBookingToDriver(user.currentUser.id));
+
 		setConfirmAllocation(false);
 		setAllocateModal(false);
 		closeDialog();
-		if (res.status === 'success') {
-			dispatch(openSnackbar('Driver Allocated Successfully', 'success'));
-		}
 	};
 	return (
 		<div className='flex flex-col items-center justify-center w-[23vw] bg-white rounded-lg px-4 pb-4 pt-5 sm:p-6 sm:pb-4 gap-4'>
@@ -508,7 +484,6 @@ function ConfirmAllocationModal({
 }
 
 // Complete Booking Modal Structure
-
 function CompleteBookingModal({
 	setIsCompleteBookingModal,
 	closeDialog,
@@ -525,20 +500,18 @@ function CompleteBookingModal({
 	const dispatch = useDispatch();
 
 	const handleCompleteClick = async (e) => {
-		// console.log('clicked clicked');
 		e.preventDefault();
 		const completedBookingData = {
-			bookingId: data.bookingId,
 			waitingTime,
 			parkingCharge,
 			driverPrice: price,
 			accountPrice: data.priceAccount,
 		};
-		// console.log("completedBookingData", completedBookingData);
-		const response = await completeBookings(
-			completedBookingData,
-			isActiveTestMode
-		);
+		// const response = await completeBookings(
+		// 	completedBookingData,
+		// 	isActiveTestMode
+		// );
+		const response = dispatch(handleCompleBooking(completedBookingData));
 		setIsCompleteBookingModal(false);
 		closeDialog();
 		if (response.status === 'success') {
@@ -633,13 +606,13 @@ function CompleteBookingModal({
 	);
 }
 
+// Delete Booking Modal Structure
 function DeleteBookingModal({
 	setDeleteModal,
 	data,
 	closeDialog,
 	onDeleteBooking,
 }) {
-	// console.log(data);
 	const handleSingleDelete = (id) => {
 		onDeleteBooking(id, false);
 		setDeleteModal(false);
@@ -710,7 +683,6 @@ function DuplicateBookingModal({
 	closeDialog,
 }) {
 	const user = useAuth();
-	// console.log('user---', user);
 	const [isToggleTrue, setToggleTrue] = useState(true);
 	const [newDate, setNewDate] = useState(formatDate(data.pickupDateTime));
 	const dispatch = useDispatch();
@@ -725,7 +697,6 @@ function DuplicateBookingModal({
 			...data,
 			pickupDateTime: newDate,
 		};
-		console.log('newData---', newData);
 		setDuplicateBookingModal(false);
 		closeDialog();
 		const res = await makeBooking(newData, true);
@@ -792,3 +763,5 @@ function DuplicateBookingModal({
 		</div>
 	);
 }
+
+export default CustomDialog;

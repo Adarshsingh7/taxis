@@ -51,7 +51,6 @@ export default function Push() {
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 	// const [viewDispatcher, setViewDispatcher] = useState(false);
-	const [isActiveComplete, setIsActiveComplete] = useState(false);
 	const [viewScheduler, setViewScheduler] = useState(false);
 
 	const handleChange = (event, newValue) => {
@@ -300,11 +299,7 @@ export default function Push() {
 					</>
 				)}
 				{secondaryTab === 2 ? (
-					<Scheduler
-						setIsActiveComplete={setIsActiveComplete}
-						isActiveComplete={isActiveComplete}
-						date={currentBookingDateTime?.split('T')[0]}
-					/>
+					<Scheduler date={currentBookingDateTime?.split('T')[0]} />
 				) : null}
 				{secondaryTab === 3 && <DriverSection />}
 			</Box>
