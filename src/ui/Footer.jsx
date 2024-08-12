@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 function Footer() {
 	const user = useAuth();
-	console.log('User', user);
+	// console.log('User', user);
 	const { isActiveTestMode } = useSelector((state) => state.bookingForm);
 
 	const [time, setTime] = useState(new Date().toLocaleTimeString());

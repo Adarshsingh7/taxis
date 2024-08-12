@@ -4,11 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Avatar, Menu, MenuItem, Switch } from '@mui/material';
 import { useState } from 'react';
-import { useBooking } from '../hooks/useBooking';
+
 import CallIcon from '@mui/icons-material/Call';
 import Badge from '@mui/material/Badge';
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveTestMode } from '../context/bookingSlice';
+import { bookingFindByKeyword, bookingFindByTerm } from '../utils/apiReq';
+import { openSnackbar } from '../context/snackbarSlice';
 
 const Navbar = () => {
 	const navigate = useNavigate();
@@ -19,6 +21,45 @@ const Navbar = () => {
 		(state) => state.bookingForm.isActiveTestMode
 	);
 	const callerId = useSelector((state) => state.caller);
+	const [openSearchInput, setOpenSearchInput] = useState(false);
+	const [inputData, SetInputData] = useState('');
+	const [finalResponse, setFinalResponse] = useState([]);
+	const bookingKeyword = async (keyword) => {
+		try {
+			const response = await bookingFindByKeyword(keyword, activeTestMode);
+			// console.log(response);
+			return response;
+			// setOpenSearchInput(false);
+		} catch (error) {
+			dispatch(openSnackbar("Couldn't find booking", 'error'));
+		}
+	};
+	const bookingTerm = async (term) => {
+		try {
+			const response = await bookingFindByTerm(term, activeTestMode);
+			// console.log(response);
+			return response;
+			// setOpenSearchInput(false);
+		} catch (error) {
+			dispatch(openSnackbar("Couldn't find booking", 'error'));
+		}
+	};
+
+	const handleClick = async (e) => {
+		e.preventDefault();
+		setOpenSearchInput(true);
+		if (inputData === '') return;
+		const responseOfTerm = await bookingKeyword(inputData);
+		const responseOfKeyword = await bookingTerm(inputData);
+		setFinalResponse([
+			...responseOfTerm.bookings,
+			...responseOfKeyword.results,
+		]);
+	};
+
+	// console.log('finalResponse', finalResponse);
+	const filterRes = finalResponse.filter((booking) => booking.cancelled === false)
+	console.log('filterRes', filterRes);
 
 	return (
 		<nav className='sticky top-0 z-50 flex justify-between items-center bg-[#424242] text-white p-4'>
@@ -63,6 +104,24 @@ const Navbar = () => {
 								<CallIcon />
 							</Badge>
 						)}
+						<div className='flex justify-center items-center gap-4'>
+							{openSearchInput && (
+								<input
+									className='rounded-lg w-64 focus:outline-none focus:ring-0 p-1 px-2 text-black bg-gray-200'
+									placeholder='Search Bookings...'
+									value={inputData}
+									onChange={(e) => SetInputData(e.target.value)}
+								/>
+							)}
+
+							<span
+								className='cursor-pointer'
+								onClick={handleClick}
+							>
+								Search
+							</span>
+						</div>
+
 						<span className='flex flex-row gap-2 items-center align-middle'>
 							<span>Test Mode</span>
 							<Switch

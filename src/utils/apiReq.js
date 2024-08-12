@@ -271,6 +271,15 @@ async function completeBookings(completeBookingData, testMode = false) {
 	return await handlePostReq(URL, completeBookingData);
 }
 
+async function bookingFindByTerm(queryField, testMode = false) {
+	const URL = `${testMode? TEST : BASE}/api/Bookings/FindByTerm?term=${queryField}`;
+    return await handleGetReq(URL);
+}
+
+async function bookingFindByKeyword(queryField, testMode = false) {
+	const URL = `${testMode? TEST : BASE}/api/Bookings/FindByKeyword?keyword=${queryField}`;
+    return await handleGetReq(URL);
+}
 export {
 	getBookingData,
 	makeBooking,
@@ -287,4 +296,6 @@ export {
 	fireCallerEvent,
 	allocateDriver,
 	completeBookings,
+	bookingFindByTerm,
+	bookingFindByKeyword
 };
