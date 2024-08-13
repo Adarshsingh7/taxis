@@ -2,7 +2,7 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { Avatar, Menu, MenuItem, Switch } from '@mui/material';
+import { Avatar, Button, Menu, MenuItem, Switch } from '@mui/material';
 import { useState } from 'react';
 
 import CallIcon from '@mui/icons-material/Call';
@@ -58,7 +58,9 @@ const Navbar = () => {
 	};
 
 	// console.log('finalResponse', finalResponse);
-	const filterRes = finalResponse.filter((booking) => booking.cancelled === false)
+	const filterRes = finalResponse.filter(
+		(booking) => booking.cancelled === false
+	);
 	console.log('filterRes', filterRes);
 
 	return (
@@ -104,6 +106,7 @@ const Navbar = () => {
 								<CallIcon />
 							</Badge>
 						)}
+
 						<div className='flex justify-center items-center gap-4'>
 							{openSearchInput && (
 								<input
@@ -121,7 +124,17 @@ const Navbar = () => {
 								Search
 							</span>
 						</div>
-
+						{activeTestMode && (
+							<span className='flex flex-row gap-2 items-center align-middle'>
+								<span>Send Notification</span>
+								<Switch
+									checked={activeTestMode}
+									onChange={(e) => {
+										dispatch(setActiveTestMode(e.target.checked));
+									}}
+								/>
+							</span>
+						)}
 						<span className='flex flex-row gap-2 items-center align-middle'>
 							<span>Test Mode</span>
 							<Switch
@@ -148,7 +161,7 @@ const Navbar = () => {
 	);
 };
 
-function MuiMenu() { 
+function MuiMenu() {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
 	const handleClick = (event) => {
