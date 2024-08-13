@@ -47,7 +47,7 @@ function Footer() {
 					<div className='border border-gray-500 px-1'>F4-Messages</div>
 					<div
 						className={` ${
-							isActiveTestMode ? 'text-[#C74949]' : 'text-green-600'
+							isActiveTestMode ? 'text-[#fc3939]' : 'text-green-400'
 						} 'border border-gray-500 px-1 cursor-pointer'`}
 					>
 						Mode: {isActiveTestMode ? 'Test' : 'Live'}
