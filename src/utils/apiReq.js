@@ -61,7 +61,10 @@ function filterData(data) {
 }
 
 function createDateObject(today = new Date()) {
-	const formattedFrom = formatDate(new Date(today).setHours(0, 0, 0, 0));
+	const fromDate =
+		new Date(new Date(today).setHours(0, 0, 0, 0)).getTime() -
+		24 * 60 * 60 * 1000;
+	const formattedFrom = formatDate(new Date(fromDate));
 	const formattedTo = formatDate(
 		new Date(today).setHours(0, 0, 0, 0) + 24 * 60 * 60 * 1000
 	);
@@ -272,13 +275,17 @@ async function completeBookings(completeBookingData, testMode = false) {
 }
 
 async function bookingFindByTerm(queryField, testMode = false) {
-	const URL = `${testMode? TEST : BASE}/api/Bookings/FindByTerm?term=${queryField}`;
-    return await handleGetReq(URL);
+	const URL = `${
+		testMode ? TEST : BASE
+	}/api/Bookings/FindByTerm?term=${queryField}`;
+	return await handleGetReq(URL);
 }
 
 async function bookingFindByKeyword(queryField, testMode = false) {
-	const URL = `${testMode? TEST : BASE}/api/Bookings/FindByKeyword?keyword=${queryField}`;
-    return await handleGetReq(URL);
+	const URL = `${
+		testMode ? TEST : BASE
+	}/api/Bookings/FindByKeyword?keyword=${queryField}`;
+	return await handleGetReq(URL);
 }
 export {
 	getBookingData,
@@ -297,5 +304,5 @@ export {
 	allocateDriver,
 	completeBookings,
 	bookingFindByTerm,
-	bookingFindByKeyword
+	bookingFindByKeyword,
 };

@@ -54,7 +54,9 @@ const AceScheduler = ({ date }) => {
 	const isActiveCompleteRef = useRef(activeComplete);
 	const [viewBookingModal, setViewBookingModal] = useState(false);
 	const dispatch = useDispatch();
+	const { fullName, id } = useAuth().currentUser;
 
+	console.log(data);
 	const fieldsData = {
 		id: 'bookingId',
 		subject: { name: 'subject' },
@@ -128,7 +130,6 @@ const AceScheduler = ({ date }) => {
 		dispatch(setActiveBookingIndex(args.event.bookingId));
 	};
 
-	const { fullName, id } = useAuth().currentUser;
 	function handleDeleteBooking(bookingId, cancelBlock) {
 		dispatch(deleteSchedulerBooking(cancelBlock, fullName, id));
 	}

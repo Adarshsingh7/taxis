@@ -34,6 +34,7 @@ import JourneyQuote from '../components/JourneyQuote';
 import { openSnackbar } from '../context/snackbarSlice';
 import DriverSection from '../components/DriverSection';
 import { getRefreshedBookings } from '../context/schedulerSlice';
+import AvailabilityChart from '../components/AvailibiltyChart';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -148,37 +149,8 @@ export default function Push() {
 	return (
 		<Box
 			className='flex'
-			sx={{ width: '100%' }}
+			sx={{ width: '100%', overflow: 'hidden' }}
 		>
-			{/* <FullScreenDialog
-				open={viewScheduler}
-				setOpen={setViewScheduler}
-				setIsActiveComplete={setIsActiveComplete}
-				isActiveComplete={isActiveComplete}
-			>
-				<Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-					<Box
-						sx={{ flex: 7, overflow: 'auto', height: '90vh', width: '100vw' }}
-					>
-						<div className='relative w-full'>
-							<Scheduler
-								setIsActiveComplete={setIsActiveComplete}
-								isActiveComplete={isActiveComplete}
-							/>
-						</div>
-					</Box>
-					<Box
-						sx={{
-							flex: 3,
-							padding: '40px 0 0 0',
-							overflow: 'auto',
-							height: '90vh',
-						}}
-					>
-						<DriverSection />
-					</Box>
-				</Box>
-			</FullScreenDialog> */}
 			<Modal
 				open={isConfirmationModalOpen}
 				setIsOpen={setIsConfirmationModalOpen}
@@ -203,7 +175,8 @@ export default function Push() {
 				<Box
 					sx={{
 						margin: '0vh auto',
-						overflow: 'auto',
+
+						overflow: 'hidden',
 						width: '100%',
 						borderColor: '#e5e7eb',
 						borderWidth: '1px',
@@ -211,16 +184,7 @@ export default function Push() {
 				>
 					<Tabs
 						value={activeTab}
-						sx={{
-							backgroundColor: '#e5e7eb',
-							height: '50px',
-							'& .MuiTabs-flexContainer': {
-								height: '100%',
-							},
-							'& .MuiTab-root': {
-								minHeight: '50px',
-							},
-						}}
+						sx={{ backgroundColor: '#e5e7eb' }}
 						onChange={handleChange}
 						variant='scrollable'
 						scrollButtons
@@ -271,8 +235,8 @@ export default function Push() {
 			<Box
 				sx={{
 					margin: '0vh auto',
-					height: '90vh',
-					overflow: 'auto',
+					// height: '90vh',
+					overflow: 'hidden',
 					width: `${100 - leftWidth}%`,
 					borderColor: '#e5e7eb',
 					borderWidth: '1px',
@@ -299,9 +263,10 @@ export default function Push() {
 					<Tab label='Messages' />
 				</Tabs>
 				{secondaryTab === 0 && (
-					<DriverAllocation
-						currentBookingDateTime={currentBookingDateTime.split(':')[0]}
-					/>
+					// <DriverAllocation
+					// 	currentBookingDateTime={currentBookingDateTime.split(':')[0]}
+					// />
+					<AvailabilityChart />
 				)}
 				{secondaryTab === 1 && (
 					<>

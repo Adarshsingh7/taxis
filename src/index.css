@@ -20,3 +20,12 @@
 		transform: rotate(1turn);
 	}
 }
+
+.MuiChartsLegend-root {
+	display: none;
+}
+
+.MuiChartsAxisHoghlight-root,
+.base-Popper-root {
+	display: none;
+}
