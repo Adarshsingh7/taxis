@@ -5,6 +5,8 @@ import {
 	Day,
 	Agenda,
 	Inject,
+	ViewsDirective,
+	ViewDirective,
 } from '@syncfusion/ej2-react-schedule';
 import { registerLicense } from '@syncfusion/ej2-base';
 import Modal from '../components/Modal';
@@ -40,9 +42,8 @@ import { useAuth } from '../hooks/useAuth';
 const AceScheduler = ({ date }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 
-	const { bookings: data, activeComplete } = useSelector(
-		(state) => state.scheduler
-	);
+	const { bookings, activeComplete, activeSearch, activeSearchResults } =
+		useSelector((state) => state.scheduler);
 	const activeTestMode = useSelector(
 		(state) => state.bookingForm.isActiveTestMode
 	);
@@ -56,7 +57,6 @@ const AceScheduler = ({ date }) => {
 	const dispatch = useDispatch();
 	const { fullName, id } = useAuth().currentUser;
 
-	console.log(data);
 	const fieldsData = {
 		id: 'bookingId',
 		subject: { name: 'subject' },
@@ -117,7 +117,7 @@ const AceScheduler = ({ date }) => {
 	}, [dispatch]);
 
 	const eventSettings = {
-		dataSource: data,
+		dataSource: activeSearch ? activeSearchResults : bookings,
 		fields: fieldsData,
 		allowAdding: false,
 		allowEditing: false,
@@ -139,7 +139,7 @@ const AceScheduler = ({ date }) => {
 			<Snackbar />
 			<ScheduleComponent
 				height={window.innerHeight - 150}
-				currentView='Day'
+				currentView={activeSearch ? 'Agenda' : 'Day'}
 				selectedDate={currentDate}
 				navigating={(args) => setCurrentDate(args.currentDate)}
 				eventSettings={eventSettings}
@@ -176,15 +176,17 @@ const AceScheduler = ({ date }) => {
 			</ScheduleComponent>
 			{/* Changed by Tanya - (9 Aug) */}
 			<div className='flex justify-end w-[10%] fixed top-[185px] right-[20px] z-[1000]'>
-				<span className='flex flex-row gap-2 items-center align-middle'>
-					<span className='select-none'>Completed</span>
-					<Switch
-						checked={activeComplete}
-						onChange={() => {
-							dispatch(completeActiveBookingStatus(!activeComplete));
-						}}
-					/>
-				</span>
+				{!activeSearch && (
+					<span className='flex flex-row gap-2 items-center align-middle'>
+						<span className='select-none'>Completed</span>
+						<Switch
+							checked={activeComplete}
+							onChange={() => {
+								dispatch(completeActiveBookingStatus(!activeComplete));
+							}}
+						/>
+					</span>
+				)}
 			</div>
 		</ProtectedRoute>
 	);

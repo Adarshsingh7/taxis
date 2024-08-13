@@ -6,7 +6,9 @@ import {
 	deleteSchedulerBooking as deleteBooking,
 	allocateDriver,
 	completeBookings,
+	bookingFindByKeyword,
 } from '../utils/apiReq';
+import { transformData } from '../utils/transformDataForBooking';
 
 const schedulerSlice = createSlice({
 	name: 'scheduler',
@@ -16,6 +18,8 @@ const schedulerSlice = createSlice({
 		selectedDriver: null,
 		activeDate: new Date().toISOString(),
 		activeComplete: false,
+		activeSearch: false,
+		activeSearchResults: [],
 	},
 	reducers: {
 		insertBookings: (state, action) => {
@@ -44,31 +48,18 @@ const schedulerSlice = createSlice({
 				}
 			});
 		},
+		makeSearchActive: (state, action) => {
+			state.activeSearch = true;
+			state.activeSearchResults = action.payload;
+		},
+		makeSearchInactive: (state) => {
+			state.activeSearch = false;
+			state.activeSearchResults = [];
+		},
 	},
 });
 
 export function getRefreshedBookings() {
-	function transformData(bookings) {
-		return bookings.map((booking) => {
-			let subjectString = '';
-			if (booking.scope === 0 && booking.status !== 2) {
-				subjectString = `${booking.pickupAddress} - ${booking.destinationAddress}`;
-			}
-			if (booking.scope === 0 && booking.status === 2) {
-				subjectString = `[R]:${booking.pickupAddress} - ${booking.destinationAddress}`;
-			}
-			if (booking.scope === 1 && booking.status !== 2) {
-				subjectString = booking.passengerName;
-			}
-			if (booking.scope === 1 && booking.status === 2) {
-				subjectString = `[R]:${booking.passengerName}`;
-			}
-			return {
-				...booking,
-				subject: subjectString,
-			};
-		});
-	}
 	return async (dispatch, getState) => {
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
 		const { activeDate, activeComplete } = getState().scheduler;
@@ -169,11 +160,25 @@ export function handleCompleteBooking({
 	};
 }
 
+export const handleSearchBooking = function (keyword) {
+	return async (dispatch, getState) => {
+		const activeTestMode = getState().bookingForm.isActiveTestMode;
+		const res = await bookingFindByKeyword(keyword, activeTestMode);
+		if (res.status === 'success') {
+			const results = transformData(
+				res.bookings.filter((booking) => booking.cancelled === false)
+			);
+			dispatch(schedulerSlice.actions.makeSearchActive(results));
+		}
+	};
+};
+
 export const {
 	completeActiveBookingStatus,
 	changeActiveDate,
 	setActiveBookingIndex,
 	selectDriver,
+	makeSearchInactive,
 } = schedulerSlice.actions;
 
 export default schedulerSlice.reducer;

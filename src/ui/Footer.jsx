@@ -8,6 +8,7 @@ function Footer() {
 	const user = useAuth();
 	// console.log('User', user);
 	const { isActiveTestMode } = useSelector((state) => state.bookingForm);
+	const [notification, setNotification] = useState(false);
 
 	const [time, setTime] = useState(new Date().toLocaleTimeString());
 	const [date, setDate] = useState(new Date().toDateString());
@@ -30,6 +31,16 @@ function Footer() {
 				</div>
 
 				<div className='flex justify-center items-center text-gray-200 gap-2 cursor-pointer'>
+					{isActiveTestMode && (
+						<div>
+							<span>sync driver📲</span>
+							<input
+								type='checkbox'
+								checked={notification}
+								onChange={() => setNotification(!notification)}
+							/>
+						</div>
+					)}
 					<div className='border border-gray-500 px-1'>F1-Availability</div>
 					<div className='border border-gray-500 px-1'>F2-Map</div>
 					<div className='border border-gray-500 px-1'>F3-Scheduler</div>
