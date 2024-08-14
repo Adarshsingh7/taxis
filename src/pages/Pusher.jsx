@@ -91,9 +91,8 @@ export default function Push() {
 					parsedData.Current.length === 0 &&
 					parsedData.Previous.length === 0
 				) {
-					dispatch(addData({ PhoneNumber }));
+					dispatch(addData({ PhoneNumber, bookingType: 'Previous' }));
 				} else {
-					// setCallerId((prev) => [...prev, parsedData]);
 					dispatch(addCaller(parsedData));
 				}
 			} catch (error) {
