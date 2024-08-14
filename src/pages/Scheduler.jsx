@@ -5,8 +5,6 @@ import {
 	Day,
 	Agenda,
 	Inject,
-	ViewsDirective,
-	ViewDirective,
 } from '@syncfusion/ej2-react-schedule';
 import { registerLicense } from '@syncfusion/ej2-base';
 import Modal from '../components/Modal';
@@ -16,7 +14,7 @@ registerLicense(import.meta.env.VITE_SYNCFUSION_KEY);
 
 import './scheduler.css';
 import ProtectedRoute from '../utils/Protected';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Snackbar from '../components/Snackbar-v2';
 import { useDispatch, useSelector } from 'react-redux';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -33,30 +31,30 @@ import { Switch } from '@mui/material';
 import {
 	changeActiveDate,
 	completeActiveBookingStatus,
-	deleteSchedulerBooking,
 	getRefreshedBookings,
 	setActiveBookingIndex,
 } from '../context/schedulerSlice';
-import { useAuth } from '../hooks/useAuth';
 
-const AceScheduler = ({ date }) => {
-	const [dialogOpen, setDialogOpen] = useState(false);
-
-	const { bookings, activeComplete, activeSearch, activeSearchResults } =
-		useSelector((state) => state.scheduler);
+const AceScheduler = () => {
+	// taking our global states from the redux
+	const {
+		bookings,
+		activeComplete,
+		activeDate,
+		activeSearch,
+		activeSearchResults,
+	} = useSelector((state) => state.scheduler);
 	const activeTestMode = useSelector(
 		(state) => state.bookingForm.isActiveTestMode
 	);
 
+	// setting some states for the complenent level state management
+	const [dialogOpen, setDialogOpen] = useState(false);
 	const [selectedBookingData, setSelectedBookingData] = useState();
-	const [currentDate, setCurrentDate] = useState(new Date());
-	const activeTestModeRef = useRef(activeTestMode);
-	const currentDateRef = useRef(currentDate);
-	const isActiveCompleteRef = useRef(activeComplete);
 	const [viewBookingModal, setViewBookingModal] = useState(false);
 	const dispatch = useDispatch();
-	const { fullName, id } = useAuth().currentUser;
 
+	// data that syncfusion requires for inside computation of the internal mapping
 	const fieldsData = {
 		id: 'bookingId',
 		subject: { name: 'subject' },
@@ -68,6 +66,7 @@ const AceScheduler = ({ date }) => {
 		Readonly: { name: 'Readonly' },
 	};
 
+	// syncfusion handler funtion for each render of syncfusion element on the screen
 	function onEventRendered(args) {
 		args.element;
 		args.element.style.backgroundColor = args.data.backgroundColorRGB;
@@ -82,32 +81,15 @@ const AceScheduler = ({ date }) => {
 		}
 	}
 
-	useEffect(() => {
-		currentDateRef.current = new Date(date);
-		// setCurrentDate(new Date(date));
-		dispatch(changeActiveDate(new Date(date).toISOString()));
-	}, [date, dispatch]);
-
-	useEffect(() => {
-		activeTestModeRef.current = activeTestMode;
-	}, [activeTestMode]);
-
-	useEffect(() => {
-		currentDateRef.current = currentDate;
-		dispatch(changeActiveDate(new Date(currentDate).toISOString()));
-	}, [currentDate, dispatch]);
-
-	useEffect(() => {
-		isActiveCompleteRef.current = activeComplete;
-	}, [activeComplete]);
-
+	// refresh the booking when activeTestMode, currentDate, dispatch, activeComplete changes
 	useEffect(() => {
 		async function helper() {
 			dispatch(getRefreshedBookings());
 		}
 		helper();
-	}, [activeTestMode, currentDate, dispatch, activeComplete]);
+	}, [activeTestMode, activeDate, dispatch, activeComplete]);
 
+	// refresh the booking every 10000 (10 sec)
 	useEffect(() => {
 		async function helper() {
 			dispatch(getRefreshedBookings());
@@ -116,6 +98,7 @@ const AceScheduler = ({ date }) => {
 		return () => clearInterval(refreshInterval);
 	}, [dispatch]);
 
+	// mapping the remote data to syncfusion components
 	const eventSettings = {
 		dataSource: activeSearch ? activeSearchResults : bookings,
 		fields: fieldsData,
@@ -124,15 +107,12 @@ const AceScheduler = ({ date }) => {
 		allowDeleting: false,
 	};
 
+	// handler funciton for each booking click
 	const onEventClick = (args) => {
 		setSelectedBookingData(args.event);
 		setDialogOpen(true);
 		dispatch(setActiveBookingIndex(args.event.bookingId));
 	};
-
-	function handleDeleteBooking(bookingId, cancelBlock) {
-		dispatch(deleteSchedulerBooking(cancelBlock, fullName, id));
-	}
 
 	return (
 		<ProtectedRoute>
@@ -140,8 +120,8 @@ const AceScheduler = ({ date }) => {
 			<ScheduleComponent
 				height={window.innerHeight - 150}
 				currentView={activeSearch ? 'Agenda' : 'Day'}
-				selectedDate={currentDate}
-				navigating={(args) => setCurrentDate(args.currentDate)}
+				selectedDate={activeDate}
+				navigating={(args) => dispatch(changeActiveDate(args.currentDate))}
 				eventSettings={eventSettings}
 				eventRendered={onEventRendered}
 				eventClick={onEventClick}
@@ -153,12 +133,7 @@ const AceScheduler = ({ date }) => {
 						open={dialogOpen}
 						setOpen={setDialogOpen}
 					>
-						<CustomDialog
-							closeDialog={() => setDialogOpen(false)}
-							data={selectedBookingData}
-							onDeleteBooking={handleDeleteBooking}
-							setViewBookingModal={setViewBookingModal}
-						/>
+						<CustomDialog closeDialog={() => setDialogOpen(false)} />
 					</Modal>
 				)}
 				{viewBookingModal && (

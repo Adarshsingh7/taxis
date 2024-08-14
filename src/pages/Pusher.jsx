@@ -1,23 +1,20 @@
 /** @format */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-// import { useBooking } from '../hooks/useBooking';
-import Booking from './Booking';
-import DriverAllocation from '../components/DriverAllocation';
-import { useState } from 'react';
-import Map from '../components/Map';
 import CancelIcon from '@mui/icons-material/Cancel';
-import Modal from '../components/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button } from '@mui/material';
-import SimpleSnackbar from '../components/Snackbar-v2';
-// import FullScreenDialog from '../components/FullScreenModal';
-import Scheduler from './Scheduler';
 import { useSelector } from 'react-redux';
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
+
+import Booking from './Booking';
+import Map from '../components/Map';
+import Modal from '../components/Modal';
+import SimpleSnackbar from '../components/Snackbar-v2';
+import Scheduler from './Scheduler';
 import {
 	addData,
 	endBooking,
@@ -48,15 +45,11 @@ export default function Push() {
 	const activeTab = useSelector(
 		(state) => state.bookingForm.activeBookingIndex
 	);
-	const currentBookingDateTime = data[activeTab].pickupDateTime;
 	const dispatch = useDispatch();
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-	// const [viewDispatcher, setViewDispatcher] = useState(false);
-	const [viewScheduler, setViewScheduler] = useState(false);
 
 	const handleChange = (event, newValue) => {
-		// onActiveTabChange(newValue);
 		dispatch(setActiveTabChange(newValue));
 	};
 
@@ -116,7 +109,6 @@ export default function Push() {
 	const handleKeyDown = (event) => {
 		if (event.key === 'F1') {
 			event.preventDefault();
-			setViewScheduler((prev) => !prev);
 			setSecondaryTab(0);
 		} else if (event.key === 'F2') {
 			event.preventDefault();
@@ -285,9 +277,7 @@ export default function Push() {
 						<JourneyQuote quoteOptions={data[activeTab].quoteOptions} />
 					</>
 				)}
-				{secondaryTab === 2 ? (
-					<Scheduler date={currentBookingDateTime?.split('T')[0]} />
-				) : null}
+				{secondaryTab === 2 ? <Scheduler /> : null}
 				{secondaryTab === 3 && <DriverSection />}
 			</Box>
 		</Box>
