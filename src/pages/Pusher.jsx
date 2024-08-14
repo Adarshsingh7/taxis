@@ -185,8 +185,8 @@ export default function Push() {
 					<Tabs
 						value={activeTab}
 						sx={{
-							backgroundColor: '#e5e7eb',
-							height: '50px',
+							'backgroundColor': '#e5e7eb',
+							'height': '50px',
 							'& .MuiTabs-flexContainer': {
 								height: '100%',
 							},
@@ -275,7 +275,9 @@ export default function Push() {
 					// <DriverAllocation
 					// 	currentBookingDateTime={currentBookingDateTime.split(':')[0]}
 					// />
-					<AvailabilityChart />
+					<div className='rotate-[90deg] mt-48'>
+						<AvailabilityChart />
+					</div>
 				)}
 				{secondaryTab === 1 && (
 					<>

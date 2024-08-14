@@ -13,15 +13,14 @@ export default function CompleteBookingModal({
 	setIsCompleteBookingModal,
 	closeDialog,
 }) {
-	const [accountPrice, setAccountPrice] = useState(data.priceAccount || 0);
-	const [waitingTime, setWaitingTime] = useState(data.waitingTime || 0);
-	const [parkingCharge, setParkingCharge] = useState(data.parkingCharge || 0);
-	const [price, setPrice] = useState(data.price || 0);
-
 	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
 		(state) => state.scheduler
 	);
 	const data = bookings[index];
+	const [accountPrice, setAccountPrice] = useState(data.priceAccount || 0);
+	const [waitingTime, setWaitingTime] = useState(data.waitingTime || 0);
+	const [parkingCharge, setParkingCharge] = useState(data.parkingCharge || 0);
+	const [price, setPrice] = useState(data.price || 0);
 
 	const dispatch = useDispatch();
 
