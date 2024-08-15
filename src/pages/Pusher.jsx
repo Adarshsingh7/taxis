@@ -116,10 +116,11 @@ export default function Push() {
 		} else if (event.key === 'F3') {
 			event.preventDefault();
 			setSecondaryTab(2);
-		} else if (event.key === 'F4') {
-			event.preventDefault();
-			setSecondaryTab(3);
 		}
+		// else if (event.key === 'F4') {
+		// 	event.preventDefault();
+		// 	setSecondaryTab(3);
+		// }
 	};
 	useEffect(() => {
 		window.addEventListener('keydown', handleKeyDown);
@@ -166,7 +167,7 @@ export default function Push() {
 				{/*  box containg the form*/}
 				<Box
 					sx={{
-						margin: '0vh auto',
+						margin: '0 auto',
 
 						overflow: 'hidden',
 						width: '100%',
@@ -220,13 +221,14 @@ export default function Push() {
 							);
 						})}
 					</Tabs>
-					<Box>
+					<Box sx={{ display: 'flex', gap: '5px', margin: 'auto' }}>
 						<Booking
 							bookingData={data[activeTab]}
 							key={activeTab}
 							id={activeTab}
 							onBookingUpload={handleBookingUpload}
 						/>
+						<CustomDriverAvailibilityChart />
 						<SimpleSnackbar />
 					</Box>
 				</Box>
@@ -258,25 +260,25 @@ export default function Push() {
 					allowScrollButtonsMobile
 					aria-label='scrollable force tabs example'
 				>
-					<Tab label='Availability' />
+					{/* <Tab label='Availability' /> */}
 					<Tab label='Map' />
 					<Tab label='Scheduler' />
 					<Tab label='Messages' />
 				</Tabs>
-				{secondaryTab === 0 && (
+				{/*secondaryTab === 0 && (
 					<CustomDriverAvailibilityChart />
 					// <div className='rotate-[90deg] mt-48'>
 					// 	<AvailabilityChart />
 					// </div>
-				)}
-				{secondaryTab === 1 && (
+				)*/}
+				{secondaryTab === 0 && (
 					<>
 						<Map />
 						<JourneyQuote quoteOptions={data[activeTab].quoteOptions} />
 					</>
 				)}
-				{secondaryTab === 2 ? <Scheduler /> : null}
-				{secondaryTab === 3 && <DriverSection />}
+				{secondaryTab === 1 ? <Scheduler /> : null}
+				{secondaryTab === 2 && <DriverSection />}
 			</Box>
 		</Box>
 	);

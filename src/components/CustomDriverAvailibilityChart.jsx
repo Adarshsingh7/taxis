@@ -249,7 +249,7 @@ const WrapperDiv = function () {
 						))}
 					</div>
 
-					<div className='h-full w-full flex justify-between gap-0.5'>
+					<div className='h-full w-full flex justify-evenly ml-0.5 gap-0.5'>
 						{data.map((driver, index) => (
 							<TimeBar
 								key={index}
