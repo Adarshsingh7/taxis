@@ -1,59 +1,9 @@
 /** @format */
 
+import { useEffect, useState } from 'react';
+import { getDriversAvailablity } from '../utils/apiReq';
+
 const data = [
-	{
-		userId: 8,
-		fullName: 'Peter Farrell',
-		date: '2024-08-15T00:00:00',
-		colorCode: '#333333ff',
-		vehicleType: 0,
-		availableHours: [
-			{
-				from: '11:00:00',
-				to: '12:00:00',
-				note: '',
-			},
-			{
-				from: '07:30:00',
-				to: '09:15:00',
-				note: 'AM School Run Only',
-			},
-			{
-				from: '14:30:00',
-				to: '16:15:00',
-				note: 'PM School Run Only',
-			},
-		],
-		unAvailableHours: [
-			{
-				from: '10:00:00',
-				to: '20:00:00',
-				note: '',
-			},
-		],
-		allocatedHours: [],
-	},
-	{
-		userId: 3,
-		fullName: 'Bex Sims',
-		date: '2024-08-15T00:00:00',
-		colorCode: '#d03a20ff',
-		vehicleType: 2,
-		availableHours: [
-			{
-				from: '11:00:00',
-				to: '12:00:00',
-				note: '',
-			},
-			{
-				from: '14:30:00',
-				to: '16:15:00',
-				note: 'PM School Run Only',
-			},
-		],
-		unAvailableHours: [],
-		allocatedHours: [],
-	},
 	{
 		userId: 4,
 		fullName: 'Paul Barber',
@@ -233,6 +183,22 @@ const getPercentage = (time) => {
 };
 
 const WrapperDiv = function () {
+	const [data, setData] = useState([]);
+
+	useEffect(() => {
+		async function getData() {
+			const response = await getDriversAvailablity(new Date().toISOString());
+			const result = Object.values(response);
+			result.pop();
+			if (response.status === 'success') {
+				setData(result);
+			}
+		}
+		getData();
+	}, []);
+
+	console.log(data);
+
 	return (
 		<>
 			<div className='h-[60vh] w-[300px]'>
@@ -258,23 +224,7 @@ const WrapperDiv = function () {
 						))}
 					</div>
 				</div>
-				{/* <div className='flex'>
-					{data.map((driver, i) => (
-						<span key={i}>{driver.fullName}</span>
-					))}
-				</div> */}
 			</div>
-			{/* <div className='flex w-[300px] justify-start ml-7'>
-				{data.map((driver, i) => (
-					<div
-						key={i}
-						className='text-xs text-center flex items-start rotate-[-90deg] '
-						style={{ width: `${100 / data.length}%` }}
-					>
-						<p className=''>{driver.fullName.split(' ')[0]}</p>
-					</div>
-				))}
-			</div> */}
 		</>
 	);
 };

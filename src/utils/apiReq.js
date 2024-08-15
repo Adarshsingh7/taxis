@@ -230,7 +230,7 @@ async function getDriverAvailability() {
 	return await handlePostReq(URL, { date: new Date().toISOString() });
 }
 
-async function getDriversAvailablity(dueDate = '2024-08-06T00:00:00') {
+async function getDriversAvailablity(dueDate) {
 	const URL = `${TEST}/api/Availability/General?date=${dueDate}`;
 	return await handleGetReq(URL);
 }
