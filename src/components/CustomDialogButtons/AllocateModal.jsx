@@ -115,7 +115,7 @@ function ConfirmAllocationModal({
 	const dispatch = useDispatch();
 	const user = useAuth();
 	const handleConfirmClick = async () => {
-		await dispatch(allocateBookingToDriver(user.currentUser.id));
+		dispatch(allocateBookingToDriver(user.currentUser.id));
 		setConfirmAllocation(false);
 		setAllocateModal(false);
 		closeDialog();

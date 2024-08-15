@@ -9,6 +9,7 @@ import {
 	bookingFindByKeyword,
 } from '../utils/apiReq';
 import { transformData } from '../utils/transformDataForBooking';
+import axios from 'axios';
 
 const schedulerSlice = createSlice({
 	name: 'scheduler',
@@ -114,6 +115,7 @@ export function allocateBookingToDriver(actionByUserId) {
 		const { bookings, currentlySelectedBookingIndex, selectedDriver } =
 			getState().scheduler;
 		const currentBooking = bookings[currentlySelectedBookingIndex];
+		const isActiveTestMode = getState().bookingForm.isActiveTestMode;
 
 		const requestBody = {
 			bookingId: currentBooking.bookingId,
@@ -122,8 +124,24 @@ export function allocateBookingToDriver(actionByUserId) {
 		};
 
 		const data = await allocateDriver(requestBody, activeTestMode);
-		if (data.status === 'success') {
-			console.log('allocated');
+		if (data.status === 'success' && isActiveTestMode) {
+			const notification = await axios.get(
+				`https://mobile-notifiation-registraion.onrender.com/${selectedDriver}`
+			);
+			console.log(notification);
+			if (notification.status === 200) {
+				const expoToken = notification.data.data.expoNotificationToken;
+				await axios.post(
+					'https://mobile-notifiation-registraion.onrender.com/send-notification',
+					{
+						to: expoToken,
+						title: 'Got a new booking',
+						body: 'You have been allocated a new booking. Please check the app for more details.',
+						data: currentBooking,
+					}
+				);
+			}
+
 			dispatch(getRefreshedBookings());
 		}
 		return data;
