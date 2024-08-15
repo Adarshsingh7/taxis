@@ -2,9 +2,11 @@
 
 import { Button } from '@mui/material';
 import { useRouteError } from 'react-router-dom';
+import * as Sentry from '@sentry/react';
 
 function ErrorPage() {
 	const error = useRouteError();
+	Sentry.captureException(error);
 	return (
 		<div className='min-h-screen flex flex-col items-center justify-center bg-background'>
 			<img
