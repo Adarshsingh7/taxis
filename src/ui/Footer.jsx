@@ -31,7 +31,7 @@ function Footer() {
 				</div>
 
 				<div className='flex justify-center items-center text-gray-200 gap-2 cursor-pointer'>
-					{isActiveTestMode && (
+					{/*isActiveTestMode && (
 						<div>
 							<span>sync driver📲</span>
 							<input
@@ -40,7 +40,7 @@ function Footer() {
 								onChange={() => setNotification(!notification)}
 							/>
 						</div>
-					)}
+					)*/}
 					<div className='border border-gray-500 px-1'>F1-Availability</div>
 					<div className='border border-gray-500 px-1'>F2-Map</div>
 					<div className='border border-gray-500 px-1'>F3-Scheduler</div>
