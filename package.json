@@ -19,6 +19,8 @@
 		"@mui/x-charts": "^7.12.1",
 		"@react-google-maps/api": "^2.19.3",
 		"@reduxjs/toolkit": "^2.2.7",
+		"@sentry/react": "^8.26.0",
+		"@sentry/tracing": "^7.114.0",
 		"@syncfusion/ej2-react-gantt": "^26.2.8",
 		"@syncfusion/ej2-react-schedule": "^26.1.40",
 		"@vis.gl/react-google-maps": "^1.1.0",

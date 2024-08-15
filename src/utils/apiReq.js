@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { formatDate } from './formatDate';
+import * as Sentry from '@sentry/react';
 // const BASE = 'https://abacusonline-001-site1.atempurl.com';
 const BASE = 'https://api.acetaxisdorset.co.uk';
 // const BASE = 'https://abacusonline-001-site1.atempurl.com';
@@ -97,6 +98,7 @@ async function handleGetReq(URL) {
 			return null;
 		}
 	} catch (err) {
+		Sentry.captureException(err.response);
 		console.error('Error in GET request:', err);
 		return {
 			...err.response,
@@ -120,6 +122,7 @@ async function handlePostReq(URL, data) {
 			return null;
 		}
 	} catch (err) {
+		Sentry.captureException(err.response);
 		return {
 			...err.response,
 			status: err.response.status > 499 ? 'error' : 'fail',
