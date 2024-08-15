@@ -8,7 +8,7 @@ function Footer() {
 	const user = useAuth();
 	// console.log('User', user);
 	const { isActiveTestMode } = useSelector((state) => state.bookingForm);
-	const [notification, setNotification] = useState(false);
+	// const [notification, setNotification] = useState(false);
 
 	const [time, setTime] = useState(new Date().toLocaleTimeString());
 	const [date, setDate] = useState(new Date().toDateString());
@@ -41,10 +41,10 @@ function Footer() {
 							/>
 						</div>
 					)*/}
-					<div className='border border-gray-500 px-1'>F1-Availability</div>
-					<div className='border border-gray-500 px-1'>F2-Map</div>
-					<div className='border border-gray-500 px-1'>F3-Scheduler</div>
-					<div className='border border-gray-500 px-1'>F4-Messages</div>
+					{/* <div className='border border-gray-500 px-1'>F1-Availability</div> */}
+					<div className='border border-gray-500 px-1'>F1-Map</div>
+					<div className='border border-gray-500 px-1'>F2-Scheduler</div>
+					<div className='border border-gray-500 px-1'>F3-Messages</div>
 					<div
 						className={` ${
 							isActiveTestMode ? 'text-[#fc3939]' : 'text-green-400'
