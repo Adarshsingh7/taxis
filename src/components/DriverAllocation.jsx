@@ -24,9 +24,14 @@ import './DriverAllocation.css';
 
 import isLightColor from '../utils/isLight';
 import { getDriverAvailability, getDriversAvailablity } from '../utils/apiReq';
-const DriverAllocation = ({ currentBookingDateTime }) => {
+import { useSelector } from 'react-redux';
+import { formatDate } from '../utils/formatDate';
+const DriverAllocation = () => {
 	const [data, setData] = useState([]);
 	const [employeeData, setEmployeeData] = useState([]);
+	const currentBookingDateTime = formatDate(
+		useSelector((state) => state.scheduler.activeDate)
+	);
 
 	const bookingTime = new Date(currentBookingDateTime + ':00').getTime();
 	// Get current time and end time (10 hours later)

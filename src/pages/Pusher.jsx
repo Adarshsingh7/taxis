@@ -32,6 +32,7 @@ import { openSnackbar } from '../context/snackbarSlice';
 import DriverSection from '../components/DriverSection';
 import { getRefreshedBookings } from '../context/schedulerSlice';
 import AvailabilityChart from '../components/AvailibiltyChart';
+import CustomDriverAvailibilityChart from '../components/CustomDriverAvailibilityChart';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -263,12 +264,10 @@ export default function Push() {
 					<Tab label='Messages' />
 				</Tabs>
 				{secondaryTab === 0 && (
-					// <DriverAllocation
-					// 	currentBookingDateTime={currentBookingDateTime.split(':')[0]}
-					// />
-					<div className='rotate-[90deg] mt-48'>
-						<AvailabilityChart />
-					</div>
+					<CustomDriverAvailibilityChart />
+					// <div className='rotate-[90deg] mt-48'>
+					// 	<AvailabilityChart />
+					// </div>
 				)}
 				{secondaryTab === 1 && (
 					<>
