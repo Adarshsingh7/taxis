@@ -14,6 +14,7 @@ import {
 	makeSearchInactive,
 } from '../context/schedulerSlice';
 import CancelIcon from '@mui/icons-material/Cancel';
+import LogoImg from '../assets/ace_taxis_v4.svg';
 
 const Navbar = () => {
 	const navigate = useNavigate();
@@ -38,9 +39,13 @@ const Navbar = () => {
 			<span className='flex gap-10'>
 				<Link
 					to='/pusher'
-					className='text-lg font-bold uppercase'
+					className='text-lg font-bold flex justify-center items-center space-x-2 uppercase'
 				>
-					create
+					<img
+						src={LogoImg}
+						className='flex h-8 w-8'
+					/>
+					<span>Ace Taxis</span>
 				</Link>
 			</span>
 
