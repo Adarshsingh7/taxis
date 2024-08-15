@@ -191,7 +191,7 @@ const data = [
 		availableHours: [
 			{
 				from: '10:30:00',
-				to: '22:00:00',
+				to: '24:00:00',
 				note: '',
 			},
 		],
@@ -237,7 +237,7 @@ const WrapperDiv = function () {
 		<>
 			<div className='h-[60vh] w-[300px]'>
 				<div className='flex h-full w-full'>
-					<div className='flex flex-col h-full w-10'>
+					<div className='flex flex-col h-full w-10 border-r border-r-black'>
 						{Array.from({ length: 24 }, (_, i) => (
 							<div
 								key={i}
@@ -249,17 +249,22 @@ const WrapperDiv = function () {
 						))}
 					</div>
 
-					<div className='h-full bg-gray-200 w-[300px] flex justify-between gap-0.5 border-l-black border-l-[1px]'>
+					<div className='h-full w-full flex justify-between gap-0.5'>
 						{data.map((driver, index) => (
 							<TimeBar
 								key={index}
-								availableHours={driver.availableHours}
+								driver={driver}
 							/>
 						))}
 					</div>
 				</div>
+				{/* <div className='flex'>
+					{data.map((driver, i) => (
+						<span key={i}>{driver.fullName}</span>
+					))}
+				</div> */}
 			</div>
-			<div className='flex w-[300px] justify-start ml-7'>
+			{/* <div className='flex w-[300px] justify-start ml-7'>
 				{data.map((driver, i) => (
 					<div
 						key={i}
@@ -269,16 +274,17 @@ const WrapperDiv = function () {
 						<p className=''>{driver.fullName.split(' ')[0]}</p>
 					</div>
 				))}
-			</div>
+			</div> */}
 		</>
 	);
 };
 
-const TimeBar = ({ availableHours }) => {
-	console.log(availableHours);
+const TimeBar = ({ driver }) => {
+	const availableHours = driver.availableHours;
+	const driverName = driver.fullName.split(' ')[0];
 	if (!availableHours) return null;
 	return (
-		<div className='relative h-full w-10'>
+		<div className='relative h-full w-full border-b border-black'>
 			{availableHours?.map((slot, index) => {
 				const fromPercent = getPercentage(slot.from);
 				const toPercent = getPercentage(slot.to);
@@ -293,11 +299,16 @@ const TimeBar = ({ availableHours }) => {
 							top: `${fromPercent}%`,
 							height: `${heightPercent}%`,
 							width: '100%',
-							backgroundColor: 'green',
+							backgroundColor: driver.colorCode,
 						}}
 					/>
 				);
 			})}
+			<div className='absolute w-full left-0 bottom-[-30px]'>
+				<div className='relative rotate-90 lowercase text-sm font-bold'>
+					{driverName}
+				</div>
+			</div>
 		</div>
 	);
 };
