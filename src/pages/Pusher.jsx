@@ -246,7 +246,7 @@ export default function Push() {
 					}}
 				>
 					<Tabs
-						value={activeTab}
+						value={0}
 						sx={{
 							'backgroundColor': '#e5e7eb',
 							'height': '50px',
