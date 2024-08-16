@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getDriversAvailablity } from '../utils/apiReq';
+import { useSelector } from 'react-redux';
 
 const data = [
 	{
@@ -527,11 +528,16 @@ const getPercentage = (time) => {
 };
 
 const WrapperDiv = function () {
-	const [data1, setData] = useState([]);
-
+	const [data, setData] = useState([]);
+	const { bookings, activeBookingIndex } = useSelector(
+		(state) => state.bookingForm
+	);
+	const date = bookings[activeBookingIndex].pickupDateTime;
 	useEffect(() => {
 		async function getData() {
-			const response = await getDriversAvailablity(new Date().toISOString());
+			const response = await getDriversAvailablity(
+				new Date(date).toISOString()
+			);
 			const result = Object.values(response);
 			result.pop();
 			if (response.status === 'success') {
@@ -539,7 +545,7 @@ const WrapperDiv = function () {
 			}
 		}
 		getData();
-	}, []);
+	}, [date]);
 
 	return (
 		<div
