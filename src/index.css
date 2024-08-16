@@ -29,13 +29,18 @@
 .base-Popper-root {
 	display: none;
 } */
+
+.available::-webkit-scrollbar-thumb {
+	background-color: #ffffff7c;
+}
+
 ::-webkit-scrollbar {
 	width: 2px; /* Width of the scrollbar */
 }
 
 /* Target the scrollbar thumb (the moving part) */
 ::-webkit-scrollbar-thumb {
-	background-color: #E5E7EB; /* Color of the scrollbar */
+	background-color: #e5e7eb; /* Color of the scrollbar */
 	border-radius: 10px; /* Make it rounded */
 }
 

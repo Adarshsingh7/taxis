@@ -32,7 +32,7 @@ const WrapperDiv = function () {
 
 	return (
 		<div
-			className={`h-full w-[250px] bg-gray-200 mx-auto mt-6 flex justify-center items-center shadow-lg`}
+			className={`h-full w-[250px] bg-gray-200 mx-auto mt-6 flex justify-center items-center shadow-lg rounded-md`}
 		>
 			<div className='flex h-full w-full'>
 				<div className='flex flex-col h-[75vh] w-10 border-r border-r-gray-400'>
@@ -42,12 +42,12 @@ const WrapperDiv = function () {
 							className='text-xs flex-grow border-t-[1px] border-t-gray-400 text-gray-600 w-full'
 							style={{ height: `${100 / 24}%` }}
 						>
-							<p>{i}:00</p>
+							<p>{i < 10 ? `0${i}` : i}:00</p>
 						</div>
 					))}
 				</div>
 
-				<div className='h-full w-full flex overflow-x-auto overflow-y-hidden ml-0.5'>
+				<div className='available h-full w-full flex overflow-x-auto overflow-y-hidden ml-0.5'>
 					<div className='flex h-[75vh] justify-evenly gap-0.5'>
 						{data.map((driver, index) => (
 							<TimeBar
