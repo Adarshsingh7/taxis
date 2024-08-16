@@ -17,8 +17,8 @@ const filterData = (data = {}) => ({
 	scope: data.Scope || 0,
 	phoneNumber: data.PhoneNumber || '',
 	pickupAddress: data.PickupAddress || '',
-	pickupDateTime: data.pickupDateTime
-		? formatDate(new Date(data.pickupDateTime))
+	pickupDateTime: data.PickupDateTime
+		? formatDate(new Date(data.PickupDateTime))
 		: formatDate(new Date()),
 	pickupPostCode: data.PickupPostCode || '',
 	destinationAddress: data.DestinationAddress || '',

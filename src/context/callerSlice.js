@@ -2,6 +2,7 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 import { convertKeysToCamelCase } from '../utils/casingConverter';
+import { formatDate } from '../utils/formatDate';
 
 const initialState = [];
 
@@ -27,7 +28,6 @@ export const addCallerToBooking = function (selectedRow, activeTab) {
 	return function (dispatch, getState) {
 		const type = activeTab === 'current-bookings' ? 'Current' : 'Previous';
 		let targetCallerData = getState().caller[0][type][selectedRow];
-		console.log(targetCallerData);
 
 		targetCallerData = {
 			...targetCallerData,
@@ -47,12 +47,10 @@ export const updateCurrentBookingWithLookup = function (
 	activeTab
 ) {
 	return function (dispatch, getState) {
-		console.log({ selectedRow, activeTab });
 		const type = activeTab === 'current-bookings' ? 'Current' : 'Previous';
 		let targetCallerData = convertKeysToCamelCase(
 			getState().caller[0][type][selectedRow]
 		);
-		console.log(targetCallerData);
 		const currentBooking =
 			getState().bookingForm.bookings[
 				getState().bookingForm.activeBookingIndex
@@ -60,6 +58,8 @@ export const updateCurrentBookingWithLookup = function (
 		const updatedBooking = {
 			...currentBooking,
 			...targetCallerData,
+			recurrenceRule: '',
+			pickupDateTime: formatDate(new Date()),
 		};
 		dispatch({
 			type: 'bookingForm/updateBookingData',
