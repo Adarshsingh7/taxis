@@ -287,7 +287,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	if (!bookingData) return null;
 
 	return (
-		<div className=' bg-background text-foreground p-4 m-auto'>
+		<div className='bg-background text-foreground p-4 m-auto'>
 			<form
 				autoComplete='off'
 				id='myForm'

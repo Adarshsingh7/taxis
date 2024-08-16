@@ -14,7 +14,7 @@ const data = [
 			{
 				from: '11:00:00',
 				to: '12:00:00',
-				note: '',
+				note: 'Available from 11:00 to 12:00',
 			},
 			{
 				from: '07:30:00',
@@ -542,13 +542,15 @@ const WrapperDiv = function () {
 	}, []);
 
 	return (
-		<div className={`h-[60vh] w-[250px] bg-gray-200 m-auto`}>
+		<div
+			className={`h-full w-[250px] bg-gray-200 mx-auto mt-6 flex justify-center items-center shadow-lg`}
+		>
 			<div className='flex h-full w-full'>
-				<div className='flex flex-col  w-10 border-r border-r-black'>
+				<div className='flex flex-col h-[75vh] w-10 border-r border-r-gray-400'>
 					{Array.from({ length: 24 }, (_, i) => (
 						<div
 							key={i}
-							className='text-xs flex-grow border-t-[1px] border-t-black w-full'
+							className='text-xs flex-grow border-t-[1px] border-t-gray-400 text-gray-600 w-full'
 							style={{ height: `${100 / 24}%` }}
 						>
 							<p>{i}:00</p>
@@ -557,7 +559,7 @@ const WrapperDiv = function () {
 				</div>
 
 				<div className='h-full w-full flex overflow-x-auto overflow-y-hidden ml-0.5'>
-					<div className=' flex justify-evenly gap-0.5'>
+					<div className='flex h-[75vh] justify-evenly gap-0.5'>
 						{data.map((driver, index) => (
 							<TimeBar
 								key={index}
@@ -595,11 +597,12 @@ const TimeBar = ({ driver }) => {
 				const fromPercent = getPercentage(slot.from);
 				const toPercent = getPercentage(slot.to);
 				const heightPercent = toPercent - fromPercent;
+				const toolTip = `${driver.fullName}\n(${slot.from} - ${slot.to})\n${slot.note}`;
 
 				return (
 					<div
 						key={index}
-						title={slot.note}
+						title={toolTip}
 						style={{
 							position: 'absolute',
 							top: `${fromPercent}%`,
@@ -607,6 +610,7 @@ const TimeBar = ({ driver }) => {
 							width: '100%',
 							backgroundColor: driver.colorCode,
 						}}
+						className='rounded-md'
 					/>
 				);
 			})}
