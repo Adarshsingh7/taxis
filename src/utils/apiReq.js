@@ -225,13 +225,15 @@ async function deleteSchedulerBooking(data, testMode = true) {
 	});
 }
 
-async function getDriverAvailability() {
-	const URL = `${BASE}/api/UserProfile/GetAvailability`;
-	return await handlePostReq(URL, { date: new Date().toISOString() });
-}
+// async function getDriverAvailability() {
+// 	const URL = `${BASE}/api/UserProfile/GetAvailability`;
+// 	return await handlePostReq(URL, { date: new Date().toISOString() });
+// }
 
-async function getDriversAvailablity(dueDate) {
-	const URL = `${TEST}/api/Availability/General?date=${dueDate}`;
+async function getDriverAvailability(dueDate, testMode = true) {
+	const URL = `${
+		testMode ? TEST : BASE
+	}/api/Availability/General?date=${dueDate}`;
 	return await handleGetReq(URL);
 }
 
@@ -301,7 +303,6 @@ export {
 	updateBooking,
 	deleteSchedulerBooking,
 	getDriverAvailability,
-	getDriversAvailablity,
 	getAddressSuggestions,
 	fireCallerEvent,
 	allocateDriver,

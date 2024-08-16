@@ -1,8 +1,8 @@
 /** @format */
 
 import { useEffect, useState } from 'react';
-import { getDriversAvailablity } from '../utils/apiReq';
 import { useSelector } from 'react-redux';
+import { getDriverAvailability } from '../utils/apiReq';
 
 const getPercentage = (time) => {
 	const [hours, minutes] = time.split(':').map(Number);
@@ -11,14 +11,15 @@ const getPercentage = (time) => {
 
 const WrapperDiv = function () {
 	const [data, setData] = useState([]);
-	const { bookings, activeBookingIndex } = useSelector(
+	const { bookings, activeBookingIndex, isActiveTestMode } = useSelector(
 		(state) => state.bookingForm
 	);
 	const date = bookings[activeBookingIndex].pickupDateTime;
 	useEffect(() => {
 		async function getData() {
-			const response = await getDriversAvailablity(
-				new Date(date).toISOString()
+			const response = await getDriverAvailability(
+				new Date(date).toISOString(),
+				isActiveTestMode
 			);
 			const result = Object.values(response);
 			result.pop();
@@ -27,7 +28,7 @@ const WrapperDiv = function () {
 			}
 		}
 		getData();
-	}, [date]);
+	}, [date, isActiveTestMode]);
 
 	return (
 		<div
