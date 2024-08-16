@@ -29,3 +29,17 @@
 .base-Popper-root {
 	display: none;
 } */
+::-webkit-scrollbar {
+	width: 2px; /* Width of the scrollbar */
+}
+
+/* Target the scrollbar thumb (the moving part) */
+::-webkit-scrollbar-thumb {
+	background-color: #E5E7EB; /* Color of the scrollbar */
+	border-radius: 10px; /* Make it rounded */
+}
+
+/* Target the scrollbar corner (when both vertical and horizontal scrollbars are visible) */
+::-webkit-scrollbar-corner {
+	background: transparent; /* Background for the corner */
+}

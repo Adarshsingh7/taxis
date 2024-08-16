@@ -287,7 +287,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	if (!bookingData) return null;
 
 	return (
-		<div className='bg-background text-foreground p-4 m-auto'>
+		<div className='bg-background text-foreground p-3 m-auto'>
 			<form
 				autoComplete='off'
 				id='myForm'
@@ -329,7 +329,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 					</Modal>
 					<SimpleSnackbar />
 				</>
-				<div className='max-w-3xl mx-auto bg-card p-6 rounded-lg shadow-lg'>
+				<div className='max-w-3xl mx-auto bg-card pb-4 px-4 rounded-lg shadow-lg'>
 					<div className='flex items-center justify-between mb-4'>
 						<div className='flex gap-5 flex-col md:flex-row'>
 							<input
@@ -651,25 +651,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 						</div>
 					</div>
 
-					<div className='mb-2 flex flex-col gap-4'>
-						{bookingData.scope === 1 ? (
-							<Input
-								type='number'
-								placeholder='Price Account'
-								value={bookingData.priceAccount}
-								onChange={(e) => {
-									const newValue = parseFloat(e.target.value);
-									if (e.target.value === '')
-										return updateData('priceAccount', '');
-									if (!isNaN(newValue) && newValue >= 0) {
-										return updateData('priceAccount', +e.target.value);
-									}
-								}}
-								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-							/>
-						) : null}
-					</div>
-
 					{currentUser?.isAdmin ? (
 						<>
 							{/* <p>options</p> */}
@@ -680,7 +661,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 									onChange={(e) => updateData('paymentStatus', +e.target.value)}
 									id='options'
 									value={bookingData.paymentStatus}
-									className='block w-full mt-1 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm'
+									className='block w-[75%] mt-1 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm'
 								>
 									<option value={0}>None</option>
 									<option value={2}>Paid</option>
@@ -692,7 +673,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 									id='options'
 									value={bookingData.scope}
 									onChange={(e) => updateData('scope', +e.target.value)}
-									className='block w-full mt-1 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm'
+									className='block w-[75%] mt-1 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm'
 								>
 									<option value={0}>Cash</option>
 									<option value={1}>Account</option>
@@ -701,33 +682,54 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								</select>
 							</div>
 							{bookingData.scope === 1 ? (
-								<div>
-									<p className='text-gray-700 text-sm capitalize'>
-										Account number
-									</p>
-									<select
-										name='account'
-										id='account'
-										value={bookingData.accountNumber}
-										onChange={(e) =>
-											updateData('accountNumber', +e.target.value)
-										}
-										className='mb-10 block w-full mt-1 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm'
-									>
-										{JSON.parse(localStorage.getItem('accounts')).map(
-											(el, i) => (
-												<Fragment key={i}>
-													{el.accountName && (
-														<option value={el.accNo}>
-															{el.accNo === 0
-																? 'select'
-																: `${el.accNo}-${el.accountName}`}
-														</option>
-													)}
-												</Fragment>
-											)
-										)}
-									</select>
+								<div className='flex justify-between items-center'>
+									<div className='flex justify-between items-center w-[48%]'>
+										<p className='text-gray-700 text-sm capitalize'>
+											Account number:
+										</p>
+										<select
+											name='account'
+											id='account'
+											value={bookingData.accountNumber}
+											onChange={(e) =>
+												updateData('accountNumber', +e.target.value)
+											}
+											className=' block w-[65%] mt-1 py-2 px-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm'
+										>
+											{JSON.parse(localStorage.getItem('accounts')).map(
+												(el, i) => (
+													<Fragment key={i}>
+														{el.accountName && (
+															<option value={el.accNo}>
+																{el.accNo === 0
+																	? 'select'
+																	: `${el.accNo}-${el.accountName}`}
+															</option>
+														)}
+													</Fragment>
+												)
+											)}
+										</select>
+									</div>
+
+									<div className='mb-2 w-[50%] flex flex-col gap-4'>
+										{bookingData.scope === 1 ? (
+											<Input
+												type='number'
+												placeholder='Price Account'
+												value={bookingData.priceAccount}
+												onChange={(e) => {
+													const newValue = parseFloat(e.target.value);
+													if (e.target.value === '')
+														return updateData('priceAccount', '');
+													if (!isNaN(newValue) && newValue >= 0) {
+														return updateData('priceAccount', +e.target.value);
+													}
+												}}
+												className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
+											/>
+										) : null}
+									</div>
 								</div>
 							) : null}
 						</>
