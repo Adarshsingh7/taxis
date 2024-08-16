@@ -31,8 +31,7 @@ import JourneyQuote from '../components/JourneyQuote';
 import { openSnackbar } from '../context/snackbarSlice';
 import DriverSection from '../components/DriverSection';
 import { getRefreshedBookings } from '../context/schedulerSlice';
-import AvailabilityChart from '../components/AvailibiltyChart';
-import CustomDriverAvailibilityChart from '../components/CustomDriverAvailibilityChart';
+import CustomDriverAvailabilityChart from '../components/CustomDriverAvailabilityChart';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -167,10 +166,9 @@ export default function Push() {
 				{/*  box containg the form*/}
 				<Box
 					sx={{
-						margin: '0 auto',
-
+						// margin: '0 auto',
 						overflow: 'hidden',
-						width: '100%',
+						width: '75%',
 						borderColor: '#e5e7eb',
 						borderWidth: '1px',
 					}}
@@ -221,20 +219,68 @@ export default function Push() {
 							);
 						})}
 					</Tabs>
-					<Box sx={{ display: 'flex', justifyContent: "space-evenly", margin: "auto", alignContent: "center" }}>
+					<Box
+						sx={{
+							display: 'flex',
+							justifyContent: 'space-evenly',
+							margin: 'auto',
+							alignContent: 'center',
+						}}
+					>
 						<Booking
 							bookingData={data[activeTab]}
 							key={activeTab}
 							id={activeTab}
 							onBookingUpload={handleBookingUpload}
 						/>
-						<CustomDriverAvailibilityChart />
 						<SimpleSnackbar />
+					</Box>
+				</Box>
+				<Box
+					sx={{
+						// margin: '0 auto',
+						overflow: 'hidden',
+						width: '25%',
+						borderColor: '#e5e7eb',
+						borderWidth: '1px',
+					}}
+				>
+					<Tabs
+						value={activeTab}
+						sx={{
+							'backgroundColor': '#e5e7eb',
+							'height': '50px',
+							'& .MuiTabs-flexContainer': {
+								height: '100%',
+							},
+							'& .MuiTab-root': {
+								minHeight: '50px',
+							},
+						}}
+						onChange={handleChange}
+						variant='scrollable'
+						scrollButtons
+						allowScrollButtonsMobile
+						aria-label='scrollable force tabs example'
+					>
+						<Tab
+							label="Availability"
+						/>
+					</Tabs>
+					<Box
+						sx={{
+							display: 'flex',
+							justifyContent: 'space-evenly',
+							margin: 'auto',
+							alignContent: 'center',
+						}}
+					>
+						<CustomDriverAvailabilityChart />
 					</Box>
 				</Box>
 			</ResizableBox>
 
-			{/* box containing the map and driver avialibility */}
+			{/* box containing the map and driver avialability */}
 			<Box
 				sx={{
 					margin: '0vh auto',
