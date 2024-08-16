@@ -542,9 +542,9 @@ const WrapperDiv = function () {
 	}, []);
 
 	return (
-		<div className='h-[60vh] w-[350px] bg-gray-200'>
+		<div className={`h-[60vh] w-[250px] bg-gray-200 m-auto`}>
 			<div className='flex h-full w-full'>
-				<div className='flex flex-col h-[58vh] w-10 border-r border-r-black'>
+				<div className='flex flex-col  w-10 border-r border-r-black'>
 					{Array.from({ length: 24 }, (_, i) => (
 						<div
 							key={i}
@@ -557,7 +557,7 @@ const WrapperDiv = function () {
 				</div>
 
 				<div className='h-full w-full flex overflow-x-auto overflow-y-hidden ml-0.5'>
-					<div className='h-[58vh] flex justify-evenly gap-0.5'>
+					<div className=' flex justify-evenly gap-0.5'>
 						{data.map((driver, index) => (
 							<TimeBar
 								key={index}
