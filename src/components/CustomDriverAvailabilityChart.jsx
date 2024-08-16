@@ -86,7 +86,7 @@ const TimeBar = ({ driver }) => {
 				const fromPercent = getPercentage(slot.from);
 				const toPercent = getPercentage(slot.to);
 				const heightPercent = toPercent - fromPercent;
-				const toolTip = `${driver.fullName}\n(${slot.from} - ${slot.to})\n${slot.note}`;
+				const toolTip = `(${driver.userId})${driver.fullName}\n(${slot.from} - ${slot.to})\n${slot.note}`;
 
 				return (
 					<div
