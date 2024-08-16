@@ -221,7 +221,7 @@ export default function Push() {
 							);
 						})}
 					</Tabs>
-					<Box sx={{ display: 'flex', gap: '5px', margin: 'auto' }}>
+					<Box sx={{ display: 'flex', gap: '5px', justifyContent: "space-evenly", margin: 'auto' }}>
 						<Booking
 							bookingData={data[activeTab]}
 							key={activeTab}
