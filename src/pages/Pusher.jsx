@@ -32,6 +32,7 @@ import { openSnackbar } from '../context/snackbarSlice';
 import DriverSection from '../components/DriverSection';
 import { getRefreshedBookings } from '../context/schedulerSlice';
 import CustomDriverAvailabilityChart from '../components/CustomDriverAvailabilityChart';
+import { loadGoogleMapsScript } from '../utils/googleMap';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -42,6 +43,7 @@ const channel = pusher.subscribe('my-channel');
 
 export default function Push() {
 	const data = useSelector((state) => state.bookingForm.bookings);
+	const [mapLoaded, setMapLoaded] = useState(false);
 	const activeTab = useSelector(
 		(state) => state.bookingForm.activeBookingIndex
 	);
@@ -105,6 +107,12 @@ export default function Push() {
 		};
 	}, [dispatch]);
 
+	useEffect(() => {
+		loadGoogleMapsScript((res) => {
+			setMapLoaded(Boolean(res));
+		}, mapLoaded);
+	}, [mapLoaded]);
+
 	const handleKeyDown = (event) => {
 		if (event.key === 'F1') {
 			event.preventDefault();
@@ -163,121 +171,121 @@ export default function Push() {
 				onResize={handleResize}
 				style={{ display: 'flex', overflow: 'hidden' }}
 			>
-				{/*  box containg the form*/}
-				<Box
-					sx={{
-						// margin: '0 auto',
-						overflow: 'auto',
-						width: '75%',
-						borderColor: '#e5e7eb',
-						borderWidth: '1px',
-					}}
-				>
-					<Tabs
-						value={activeTab}
-						sx={{
-							'backgroundColor': '#e5e7eb',
-							'height': '50px',
-							'& .MuiTabs-flexContainer': {
-								height: '100%',
-							},
-							'& .MuiTab-root': {
-								minHeight: '50px',
-							},
-						}}
-						onChange={handleChange}
-						variant='scrollable'
-						scrollButtons
-						allowScrollButtonsMobile
-						aria-label='scrollable force tabs example'
-					>
-						{data.map((item, index) => {
-							let label = index === 0 ? 'New Booking' : item.phoneNumber;
-							label +=
-								item.bookingType === 'Previous'
-									? ' (New)'
-									: item.bookingType === 'Current'
-									? ' (Edit)'
-									: '';
-							return (
-								<Tab
-									label={label}
-									icon={
-										index !== 0 ? (
-											<CancelIcon
-												color='error'
-												onClick={() => setIsConfirmationModalOpen(true)}
-											/>
-										) : null
-									}
-									iconPosition='end'
-									key={index}
-									style={{
-										color: item.formBusy ? '#B91C1C' : '',
-									}}
-								/>
-							);
-						})}
-					</Tabs>
+				<>
+					{/*  box containg the form*/}
 					<Box
 						sx={{
-							display: 'flex',
-							justifyContent: 'space-evenly',
-							margin: 'auto',
-							alignContent: 'center',
+							// margin: '0 auto',
+							overflow: 'auto',
+							width: '75%',
+							borderColor: '#e5e7eb',
+							borderWidth: '1px',
 						}}
 					>
-						<Booking
-							bookingData={data[activeTab]}
-							key={activeTab}
-							id={activeTab}
-							onBookingUpload={handleBookingUpload}
-						/>
-						<SimpleSnackbar />
+						<Tabs
+							value={activeTab}
+							sx={{
+								'backgroundColor': '#e5e7eb',
+								'height': '50px',
+								'& .MuiTabs-flexContainer': {
+									height: '100%',
+								},
+								'& .MuiTab-root': {
+									minHeight: '50px',
+								},
+							}}
+							onChange={handleChange}
+							variant='scrollable'
+							scrollButtons
+							allowScrollButtonsMobile
+							aria-label='scrollable force tabs example'
+						>
+							{data.map((item, index) => {
+								let label = index === 0 ? 'New Booking' : item.phoneNumber;
+								label +=
+									item.bookingType === 'Previous'
+										? ' (New)'
+										: item.bookingType === 'Current'
+										? ' (Edit)'
+										: '';
+								return (
+									<Tab
+										label={label}
+										icon={
+											index !== 0 ? (
+												<CancelIcon
+													color='error'
+													onClick={() => setIsConfirmationModalOpen(true)}
+												/>
+											) : null
+										}
+										iconPosition='end'
+										key={index}
+										style={{
+											color: item.formBusy ? '#B91C1C' : '',
+										}}
+									/>
+								);
+							})}
+						</Tabs>
+						<Box
+							sx={{
+								display: 'flex',
+								justifyContent: 'space-evenly',
+								margin: 'auto',
+								alignContent: 'center',
+							}}
+						>
+							<Booking
+								bookingData={data[activeTab]}
+								key={activeTab}
+								id={activeTab}
+								onBookingUpload={handleBookingUpload}
+							/>
+							<SimpleSnackbar />
+						</Box>
 					</Box>
-				</Box>
-				<Box
-					sx={{
-						// margin: '0 auto',
-						overflow: 'hidden',
-						width: '25%',
-						borderColor: '#e5e7eb',
-						borderWidth: '1px',
-					}}
-				>
-					<Tabs
-						value={0}
-						sx={{
-							'backgroundColor': '#e5e7eb',
-							'height': '50px',
-							'& .MuiTabs-flexContainer': {
-								height: '100%',
-							},
-							'& .MuiTab-root': {
-								minHeight: '50px',
-							},
-						}}
-						onChange={handleChange}
-						variant='scrollable'
-						scrollButtons
-						allowScrollButtonsMobile
-						aria-label='scrollable force tabs example'
-					>
-						<Tab
-							label="Availability"
-						/>
-					</Tabs>
 					<Box
 						sx={{
-							display: 'flex',
-							justifyContent: 'space-evenly',
-							margin: 'auto',
-							alignContent: 'center',
+							// margin: '0 auto',
+							overflow: 'hidden',
+							width: '25%',
+							borderColor: '#e5e7eb',
+							borderWidth: '1px',
 						}}
 					>
-						<CustomDriverAvailabilityChart />
+						<Tabs
+							value={0}
+							sx={{
+								'backgroundColor': '#e5e7eb',
+								'height': '50px',
+								'& .MuiTabs-flexContainer': {
+									height: '100%',
+								},
+								'& .MuiTab-root': {
+									minHeight: '50px',
+								},
+							}}
+							onChange={handleChange}
+							variant='scrollable'
+							scrollButtons
+							allowScrollButtonsMobile
+							aria-label='scrollable force tabs example'
+						>
+							<Tab label='Availability' />
+						</Tabs>
+						<Box
+							sx={{
+								display: 'flex',
+								justifyContent: 'space-evenly',
+								margin: 'auto',
+								alignContent: 'center',
+							}}
+						>
+							<CustomDriverAvailabilityChart />
+						</Box>
 					</Box>
-				</Box>
+				</>
 			</ResizableBox>
 
 			{/* box containing the map and driver avialability */}

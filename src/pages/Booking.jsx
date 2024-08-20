@@ -277,11 +277,12 @@ function Booking({ bookingData, id, onBookingUpload }) {
 
 			return date;
 		}
-		console.log(bookingData.pickupDateTime);
-		if (bookingData.pickupDateTime)
-			dispatch(
-				changeActiveDate(getDateWithZeroTime(bookingData.pickupDateTime))
-			);
+		if (bookingData.pickupDateTime) {
+			const date = new Date(
+				getDateWithZeroTime(bookingData.pickupDateTime)
+			).toISOString();
+			dispatch(changeActiveDate(date));
+		}
 	}, [bookingData.pickupDateTime, dispatch]);
 
 	if (!bookingData) return null;

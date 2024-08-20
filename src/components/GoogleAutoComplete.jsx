@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 import {
-	loadGoogleMapsScript,
+	// loadGoogleMapsScript,
 	getAutocompleteService,
 	getPlacesService,
 } from '../utils/googleMap';
@@ -25,10 +25,6 @@ function PlaceAutocomplete({
 	const [showOption, setShowOption] = useState(false);
 	const [highlightedIndex, setHighlightedIndex] = useState(-1);
 	const [blur, setBlur] = useState(false);
-
-	useEffect(() => {
-		loadGoogleMapsScript(() => {});
-	}, []);
 
 	const handleInputChange = async (event) => {
 		onChange(event);

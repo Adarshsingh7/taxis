@@ -121,7 +121,9 @@ const AceScheduler = () => {
 				height={window.innerHeight - 150}
 				currentView={activeSearch ? 'Agenda' : 'Day'}
 				selectedDate={activeDate}
-				navigating={(args) => dispatch(changeActiveDate(args.currentDate))}
+				navigating={(args) =>
+					dispatch(changeActiveDate(new Date(args.currentDate).toISOString()))
+				}
 				eventSettings={eventSettings}
 				eventRendered={onEventRendered}
 				eventClick={onEventClick}
