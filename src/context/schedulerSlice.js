@@ -126,7 +126,7 @@ export function allocateBookingToDriver(actionByUserId) {
 		const data = await allocateDriver(requestBody, activeTestMode);
 		if (data.status === 'success' && isActiveTestMode) {
 			const notification = await axios.get(
-				`https://mobile-notifiation-registraion.onrender.com/${selectedDriver}`
+				`https://mobile-notifiation-registraion.onrender.com/8`
 			);
 			console.log(notification);
 			if (notification.status === 200) {
