@@ -156,7 +156,7 @@ const AceScheduler = () => {
 			<div className='flex justify-end w-[10%] fixed top-[185px] right-[20px] z-[1000]'>
 				{!activeSearch && (
 					<span className='flex flex-row gap-2 items-center align-middle'>
-						<span className='select-none'>Completed</span>
+						<span className='select-none'>Show Completed</span>
 						<Switch
 							checked={activeComplete}
 							onChange={() => {

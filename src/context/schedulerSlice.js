@@ -70,9 +70,10 @@ export function getRefreshedBookings() {
 		if (response.status === 'success') {
 			let filteredBookings = [];
 			if (activeComplete) {
-				filteredBookings = response.bookings.filter(
-					(booking) => booking.status === 3
-				);
+				filteredBookings = response.bookings;
+				// filteredBookings = response.bookings.filter(
+				// 	(booking) => booking.status === 3
+				// );
 			} else {
 				filteredBookings = response.bookings.filter(
 					(booking) => booking.status !== 3
