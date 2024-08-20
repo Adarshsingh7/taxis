@@ -127,6 +127,7 @@ const AceScheduler = () => {
 				eventClick={onEventClick}
 				editorTemplate={null}
 				popupOpen={(args) => (args.cancel = true)}
+				views={['Day', 'Agenda']}
 			>
 				{dialogOpen && !viewBookingModal && (
 					<Modal
