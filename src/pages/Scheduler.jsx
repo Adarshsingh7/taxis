@@ -80,7 +80,20 @@ const AceScheduler = () => {
 			args.element.style.color = 'white';
 		}
 	}
-
+	function onDataBound(args) {
+		const agendaElements = document.querySelectorAll(
+			'.e-agenda-item, .e-agenda-cells, .e-agenda-cells div'
+		);
+		agendaElements.forEach((element) => {
+			const bgColor = element.style.backgroundColor;
+			if (bgColor && isLightColor(bgColor)) {
+				element.style.color = 'black';
+			} else {
+				element.style.color = 'white';
+			}
+		});
+	}
+	
 	// refresh the booking when activeTestMode, currentDate, dispatch, activeComplete changes
 	useEffect(() => {
 		async function helper() {
@@ -130,6 +143,7 @@ const AceScheduler = () => {
 				editorTemplate={null}
 				popupOpen={(args) => (args.cancel = true)}
 				views={['Day', 'Agenda']}
+				dataBound={onDataBound}
 			>
 				{dialogOpen && !viewBookingModal && (
 					<Modal
