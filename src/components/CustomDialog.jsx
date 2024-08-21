@@ -310,7 +310,7 @@ const BookingButton = ({ text, color, ...props }) => {
 	return (
 		<button
 			{...props}
-			className={`px-4 py-4 text-white bg-${color}-700 hover:bg-${color}-600 `}
+			className={`px-3 py-2 text-white bg-${color}-700 hover:bg-opacity-80 rounded-lg`}
 		>
 			{text}
 		</button>
