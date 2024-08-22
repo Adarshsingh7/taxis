@@ -47,6 +47,7 @@ export default function Push() {
 	const activeTab = useSelector(
 		(state) => state.bookingForm.activeBookingIndex
 	);
+	const { showDriverAvailability } = useSelector((state) => state.scheduler);
 	const dispatch = useDispatch();
 	const [secondaryTab, setSecondaryTab] = useState(1);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -177,7 +178,7 @@ export default function Push() {
 						sx={{
 							// margin: '0 auto',
 							overflow: 'auto',
-							width: '75%',
+							width: '100%',
 							borderColor: '#e5e7eb',
 							borderWidth: '1px',
 						}}
@@ -245,46 +246,48 @@ export default function Push() {
 							<SimpleSnackbar />
 						</Box>
 					</Box>
-					<Box
-						sx={{
-							// margin: '0 auto',
-							overflow: 'hidden',
-							width: '25%',
-							borderColor: '#e5e7eb',
-							borderWidth: '1px',
-						}}
-					>
-						<Tabs
-							value={0}
-							sx={{
-								'backgroundColor': '#e5e7eb',
-								'height': '50px',
-								'& .MuiTabs-flexContainer': {
-									height: '100%',
-								},
-								'& .MuiTab-root': {
-									minHeight: '50px',
-								},
-							}}
-							onChange={handleChange}
-							variant='scrollable'
-							scrollButtons
-							allowScrollButtonsMobile
-							aria-label='scrollable force tabs example'
-						>
-							<Tab label='Availability' />
-						</Tabs>
+					{showDriverAvailability && (
 						<Box
 							sx={{
-								display: 'flex',
-								justifyContent: 'space-evenly',
-								margin: 'auto',
-								alignContent: 'center',
+								// margin: '0 auto',
+								overflow: 'hidden',
+								width: '25%',
+								borderColor: '#e5e7eb',
+								borderWidth: '1px',
 							}}
 						>
-							<CustomDriverAvailabilityChart />
+							<Tabs
+								value={0}
+								sx={{
+									'backgroundColor': '#e5e7eb',
+									'height': '50px',
+									'& .MuiTabs-flexContainer': {
+										height: '100%',
+									},
+									'& .MuiTab-root': {
+										minHeight: '50px',
+									},
+								}}
+								onChange={handleChange}
+								variant='scrollable'
+								scrollButtons
+								allowScrollButtonsMobile
+								aria-label='scrollable force tabs example'
+							>
+								<Tab label='Availability' />
+							</Tabs>
+							<Box
+								sx={{
+									display: 'flex',
+									justifyContent: 'space-evenly',
+									margin: 'auto',
+									alignContent: 'center',
+								}}
+							>
+								<CustomDriverAvailabilityChart />
+							</Box>
 						</Box>
-					</Box>
+					)}
 				</>
 			</ResizableBox>
 

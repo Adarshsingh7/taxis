@@ -56,7 +56,7 @@ const Navbar = () => {
 				</Link>
 			</span>
 
-			<span className='flex gap-10'>
+			<span className='flex gap-10 uppercase text-sm'>
 				{!isAuth ? (
 					<></>
 				) : (
@@ -71,7 +71,7 @@ const Navbar = () => {
 							</Badge>
 						)}
 
-						<div className='flex justify-center items-center'>
+						<div className='flex justify-center items-center uppercase'>
 							<form
 								onSubmit={handleClick}
 								className='flex justify-center items-center gap-4'
@@ -102,7 +102,7 @@ const Navbar = () => {
 
 								<button
 									type='submit'
-									className='cursor-pointer'
+									className='cursor-pointer uppercase text-sm'
 								>
 									Search
 								</button>
@@ -118,7 +118,7 @@ const Navbar = () => {
 							/>
 						</span>
 						<button
-							className='bg-blue-500 text-white px-4 py-2 rounded-lg'
+							className='bg-blue-500 text-white px-4 py-2 rounded-lg uppercase text-sm'
 							onClick={() => {
 								logout();
 								navigate('/login');

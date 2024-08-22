@@ -21,6 +21,7 @@ const schedulerSlice = createSlice({
 		activeComplete: false,
 		activeSearch: false,
 		activeSearchResults: [],
+		showDriverAvailability: false,
 	},
 	reducers: {
 		insertBookings: (state, action) => {
@@ -57,6 +58,10 @@ const schedulerSlice = createSlice({
 			state.activeSearch = false;
 			state.activeSearchResults = [];
 		},
+		changeShowDriverAvailability: (state, action) => {
+        state.showDriverAvailability = action.payload;
+
+		}
 	},
 });
 
@@ -198,6 +203,7 @@ export const {
 	setActiveBookingIndex,
 	selectDriver,
 	makeSearchInactive,
+	changeShowDriverAvailability
 } = schedulerSlice.actions;
 
 export default schedulerSlice.reducer;
