@@ -7,6 +7,7 @@ import {
 	allocateDriver,
 	completeBookings,
 	bookingFindByKeyword,
+	bookingFindByTerm,
 } from '../utils/apiReq';
 import { transformData } from '../utils/transformDataForBooking';
 import axios from 'axios';
@@ -59,9 +60,8 @@ const schedulerSlice = createSlice({
 			state.activeSearchResults = [];
 		},
 		changeShowDriverAvailability: (state, action) => {
-        state.showDriverAvailability = action.payload;
-
-		}
+			state.showDriverAvailability = action.payload;
+		},
 	},
 });
 
@@ -192,8 +192,17 @@ export const handleSearchBooking = function (keyword) {
 			const results = transformData(
 				res.bookings.filter((booking) => booking.cancelled === false)
 			);
+			console.log(results);
 			dispatch(schedulerSlice.actions.makeSearchActive(results));
 		}
+		// const res = await bookingFindByTerm(keyword, activeTestMode);
+		// if (res.status === 'success') {
+		// 	const results = transformData(
+		// 		res.results.filter((booking) => booking.cancelled === false)
+		// 	);
+		// 	console.log(results);
+		// 	dispatch(schedulerSlice.actions.makeSearchActive(results));
+		// }
 	};
 };
 
@@ -203,7 +212,7 @@ export const {
 	setActiveBookingIndex,
 	selectDriver,
 	makeSearchInactive,
-	changeShowDriverAvailability
+	changeShowDriverAvailability,
 } = schedulerSlice.actions;
 
 export default schedulerSlice.reducer;

@@ -103,6 +103,7 @@ const bookingFormSlice = createSlice({
 				state.activeBookingIndex -= 1;
 			}
 		},
+		// this function simply updates the booking key value pair of the booking
 		updateBookingData(state, action) {
 			const currentBooking = state.bookings[state.activeBookingIndex];
 			state.bookings[state.activeBookingIndex] = {
@@ -113,11 +114,29 @@ const bookingFormSlice = createSlice({
 		setLoading(state, action) {
 			state.isLoading = action.payload;
 		},
+		// changes active tab which makes the flow of form data
 		setActiveTabChange(state, action) {
 			state.activeBookingIndex = action.payload;
 		},
+		// sets the mode of app from live to test or vice versa
 		setActiveTestMode(state, action) {
 			state.isActiveTestMode = action.payload;
+		},
+		// this controller if used to create new booking from scheduler free spaces
+		createBookingFromScheduler(state, action) {
+			const data = filterData({
+				PickupDateTime: action.payload,
+				bookingType: 'Previous',
+				FormBusy: true,
+			});
+			const formBusy = state.bookings[state.activeBookingIndex].formBusy;
+			if (!formBusy && state.activeBookingIndex === 0) {
+				data.bookingType = '';
+				state.bookings[state.activeBookingIndex] = data;
+			} else {
+				state.bookings.push(data);
+				state.activeBookingIndex = state.bookings.length - 1;
+			}
 		},
 	},
 });
@@ -187,6 +206,7 @@ export const {
 	setActiveTestMode,
 	updateBookingData,
 	addDataFromSchedulerInEditMode,
+	createBookingFromScheduler,
 } = bookingFormSlice.actions;
 
 export default bookingFormSlice.reducer;

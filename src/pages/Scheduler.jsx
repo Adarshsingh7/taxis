@@ -34,6 +34,7 @@ import {
 	getRefreshedBookings,
 	setActiveBookingIndex,
 } from '../context/schedulerSlice';
+import { createBookingFromScheduler } from '../context/bookingSlice';
 
 const AceScheduler = () => {
 	// taking our global states from the redux
@@ -80,19 +81,19 @@ const AceScheduler = () => {
 			args.element.style.color = 'white';
 		}
 	}
-	function onDataBound(args) {
-		const agendaElements = document.querySelectorAll(
-			'.e-agenda-item, .e-agenda-cells, .e-agenda-cells div'
-		);
-		agendaElements.forEach((element) => {
-			const bgColor = element.style.backgroundColor;
-			const hexColor = rgbaToHex(bgColor);
-			if (isLightColor(hexColor)) {
-				element.style.color = 'black';
-			} else {
-				element.style.color = 'white';
-			}
-		});
+
+	function onDataBound() {
+		setInterval(() => {
+			// Select all elements with the class 'e-subject' inside '.e-schedule .e-agenda-view'
+			const subjects = document.querySelectorAll(
+				'.e-schedule .e-agenda-view .e-subject'
+			);
+
+			// Iterate through each selected element and remove the 'color' property
+			subjects.forEach((subject) => {
+				subject.style.removeProperty('color');
+			});
+		}, 1000);
 	}
 
 	// refresh the booking when activeTestMode, currentDate, dispatch, activeComplete changes
@@ -128,6 +129,10 @@ const AceScheduler = () => {
 		dispatch(setActiveBookingIndex(args.event.bookingId));
 	};
 
+	const createBookingOnTimeStamp = function (args) {
+		dispatch(createBookingFromScheduler(args.startTime));
+	};
+
 	return (
 		<ProtectedRoute>
 			<Snackbar />
@@ -141,6 +146,7 @@ const AceScheduler = () => {
 				eventSettings={eventSettings}
 				eventRendered={onEventRendered}
 				eventClick={onEventClick}
+				cellClick={createBookingOnTimeStamp}
 				editorTemplate={null}
 				popupOpen={(args) => (args.cancel = true)}
 				views={['Day', 'Agenda']}

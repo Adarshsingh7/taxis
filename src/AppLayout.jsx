@@ -8,6 +8,7 @@ import CallerIdPopUp from './components/CallerIdPopUp';
 import { Provider } from 'react-redux';
 import store from './store';
 import Footer from './ui/Footer';
+
 function AppLayout() {
 	return (
 		<AuthProvider>
