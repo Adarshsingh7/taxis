@@ -26,7 +26,7 @@ import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
 import LocalTaxiOutlinedIcon from '@mui/icons-material/LocalTaxiOutlined';
 import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import isLightColor from '../utils/isLight';
+import isLightColor, { rgbaToHex } from '../utils/isLight';
 import { Switch } from '@mui/material';
 import {
 	changeActiveDate,
@@ -86,14 +86,15 @@ const AceScheduler = () => {
 		);
 		agendaElements.forEach((element) => {
 			const bgColor = element.style.backgroundColor;
-			if (bgColor && isLightColor(bgColor)) {
+			const hexColor = rgbaToHex(bgColor);
+			if ( isLightColor(hexColor)) {
 				element.style.color = 'black';
 			} else {
 				element.style.color = 'white';
 			}
 		});
 	}
-	
+
 	// refresh the booking when activeTestMode, currentDate, dispatch, activeComplete changes
 	useEffect(() => {
 		async function helper() {
@@ -167,7 +168,7 @@ const AceScheduler = () => {
 				<Inject services={[Day, Agenda]} />
 			</ScheduleComponent>
 			{/* Changed by Tanya - (9 Aug) */}
-			<div className='flex justify-end w-[10%] fixed top-[185px] right-[20px] z-[1000]'>
+			<div className='flex justify-end w-[10%] fixed top-[125px] right-[160px] z-[1000]'>
 				{!activeSearch && (
 					<span className='flex flex-row gap-2 items-center align-middle'>
 						<span className='select-none'>Show Completed</span>
