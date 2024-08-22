@@ -19,7 +19,7 @@ function ListDrivers({ setOpen }) {
 	// Fetch all drivers from the API
 	useEffect(() => {
 		getAllDrivers().then((res) => {
-			setData(res.users.filter((user) => user.roleString !== 'Admin'));
+			setData(res.users);
 		});
 		setLoading(true);
 		setLoading(false);
