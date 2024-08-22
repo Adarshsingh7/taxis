@@ -48,3 +48,7 @@
 ::-webkit-scrollbar-corner {
 	background: transparent; /* Background for the corner */
 }
+
+* {
+	font-family: 'roboto', sans-serif;
+}

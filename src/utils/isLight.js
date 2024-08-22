@@ -9,9 +9,9 @@ export default function isLightColor(hex) {
 	let g = parseInt(hex.substring(2, 4), 16);
 	let b = parseInt(hex.substring(4, 6), 16);
 
-	// Calculate the relative luminance
-	let luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+	// Calculate the brightness using the luminance formula
+	let brightness = r * 0.299 + g * 0.587 + b * 0.114;
 
 	// Determine if the color is light
-	return luminance > 0.5;
+	return brightness > 186;
 }
