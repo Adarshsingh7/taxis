@@ -26,3 +26,81 @@
 	top: 0;
 	z-index: 1;
 }
+
+.schedule-cell-dimension.e-schedule .e-vertical-view .e-date-header-wrap table col,
+.schedule-cell-dimension.e-schedule .e-vertical-view .e-content-wrap table col {
+  width: 80px;
+}
+
+.schedule-cell-dimension.e-schedule .e-vertical-view .e-time-cells-wrap table td,
+.schedule-cell-dimension.e-schedule .e-vertical-view .e-work-cells {
+  height: 50px;
+}
+
+.schedule-cell-dimension.e-schedule .e-month-view .e-work-cells,
+.schedule-cell-dimension.e-schedule .e-month-view .e-date-header-wrap table col {
+  width: 100px;
+}
+
+.schedule-cell-dimension.e-schedule .e-month-view .e-work-cells {
+  height: 80px;
+}
+
+.e-toolbar-item.e-add{
+  display: none;
+}
+
+.e-schedule.e-device .e-vertical-view .e-day-wrapper .e-appointment .e-subject{
+  font-size: 14px !important;
+  font-weight: 300;
+}
+
+.e-schedule.e-device .e-vertical-view .e-time-cells-wrap{
+  padding-left: 2px;
+}
+
+.e-schedule .e-agenda-view .e-subject,
+.e-schedule .e-agenda-view .e-date-time{
+  color: white;
+}
+
+.e-schedule .e-agenda-view .e-appointment{
+  border-left: 3px solid #00000042;
+}
+
+.e-schedule .e-agenda-view .e-appointment:hover,
+.e-schedule .e-agenda-view .e-appointment:active,
+.e-schedule .e-agenda-view .e-appointment:focus{
+  background-color: transparent;
+}
+
+.e-schedule .e-vertical-view .e-day-wrapper .e-appointment .e-appointment-details {
+  padding: 0 2px;
+}
+
+.e-schedule .e-vertical-view .e-day-wrapper .e-appointment{
+  border: none;
+  border-bottom: 1px solid #e8eaf6;
+  border-radius: 10px;
+  padding: 2px;
+}
+.e-date-header-container .e-current-day,
+.e-date-header-container .e-header-row .e-header-cells {
+  display: flex;
+  gap: 5px;
+}
+.e-schedule.e-device .e-vertical-view .e-header-cells .e-header-day,
+.e-schedule.e-device .e-vertical-view .e-header-cells .e-header-date,
+.e-schedule .e-vertical-view .e-header-cells .e-header-date,
+.e-schedule .e-vertical-view .e-header-cells .e-header-day{
+  font-size: 16px;
+}
+
+.e-schedule.e-device .e-vertical-view .e-header-cells .e-header-day{
+  text-transform: capitalize;
+}
+
+.e-schedule .e-vertical-view .e-header-cells{
+  max-height: 30px !important;
+  height: 30px !important;
+}

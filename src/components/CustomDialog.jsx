@@ -7,7 +7,8 @@ import AllocateModal from './CustomDialogButtons/AllocateModal';
 import CompleteBookingModal from './CustomDialogButtons/CompleteBookingModal';
 import DeleteBookingModal from './CustomDialogButtons/DeleteBookingModal';
 import DuplicateBookingModal from './CustomDialogButtons/DuplicateBookingModal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addDataFromSchedulerInEditMode } from '../context/bookingSlice';
 
 function CustomDialog({ closeDialog }) {
 	const [allocateModal, setAllocateModal] = useState(false);
@@ -15,10 +16,12 @@ function CustomDialog({ closeDialog }) {
 	const [editBookingModal, setEditBookingModal] = useState(false);
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [duplicateBookingModal, setDuplicateBookingModal] = useState(false);
+	const dispatch = useDispatch();
 	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
 		(state) => state.scheduler
 	);
 	const data = bookings[index];
+	console.log(data);
 
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
@@ -211,7 +214,18 @@ function CustomDialog({ closeDialog }) {
 						onClick={() => setAllocateModal(true)}
 					/>
 					<BookingButton
-						onClick={() => setEditBookingModal(true)}
+						onClick={() => {
+							if (data.recurrenceRule) setEditBookingModal(true);
+							else {
+								const filterData = {
+									...data,
+									recurrenceID: '',
+									recurrenceRule: '',
+								};
+								dispatch(addDataFromSchedulerInEditMode(filterData));
+								closeDialog(false);
+							}
+						}}
 						text='Edit Booking'
 						color='blue'
 					/>
@@ -254,15 +268,18 @@ function CustomDialog({ closeDialog }) {
 					closeDialog={closeDialog}
 				/>
 			</Modal>
-			<Modal
-				open={editBookingModal}
-				setOpen={setEditBookingModal}
-			>
-				<EditBookingModal
-					setEditBookingModal={setEditBookingModal}
-					closeDialog={closeDialog}
-				/>
-			</Modal>
+			{data.recurrenceRule && (
+				<Modal
+					open={editBookingModal}
+					setOpen={setEditBookingModal}
+				>
+					<EditBookingModal
+						setEditBookingModal={setEditBookingModal}
+						closeDialog={closeDialog}
+					/>
+				</Modal>
+			)}
+
 			<Modal
 				open={duplicateBookingModal}
 				setOpen={setDuplicateBookingModal}

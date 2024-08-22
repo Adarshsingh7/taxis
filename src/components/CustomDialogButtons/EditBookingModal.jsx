@@ -55,7 +55,8 @@ function EditBookingModal({ setEditBookingModal, closeDialog }) {
 						</Button>
 					</>
 				) : (
-					<Button
+					{
+						/* <Button
 						variant='contained'
 						color='error'
 						sx={{ paddingY: '0.5rem', marginTop: '4px' }}
@@ -63,7 +64,8 @@ function EditBookingModal({ setEditBookingModal, closeDialog }) {
 						onClick={handleEditOne}
 					>
 						Edit
-					</Button>
+					</Button> */
+					}
 				)}
 			</div>
 		</div>
