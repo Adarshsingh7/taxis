@@ -285,6 +285,14 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}
 	}, [bookingData.pickupDateTime, dispatch]);
 
+	function convertToOneHourLaterFromPickUp() {
+		const pickupDateTime = new Date(bookingData.pickupDateTime);
+		const oneHourLater = new Date(
+			pickupDateTime.getTime() + 1 * 60 * 60 * 1000
+		);
+		return formatDate(oneHourLater);
+	}
+
 	if (!bookingData) return null;
 
 	return (
@@ -375,7 +383,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 										!bookingData.returnBooking
 											? updateData(
 													'returnDateTime',
-													formatDate(Date.now() + 1 * 60 * 60 * 1000)
+													convertToOneHourLaterFromPickUp()
 													// eslint-disable-next-line no-mixed-spaces-and-tabs
 											  )
 											: null;
