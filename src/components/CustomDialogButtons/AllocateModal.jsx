@@ -22,7 +22,7 @@ export default function AllocateModal({ setAllocateModal, closeDialog }) {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		getAllDrivers().then((res) => {
-			setDriverData(res.users.filter((user) => user.roleString !== 'Admin'));
+			setDriverData(res.users);
 		});
 		setLoading(true);
 		setLoading(false);
