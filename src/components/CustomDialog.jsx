@@ -50,30 +50,36 @@ function CustomDialog({ closeDialog }) {
 								{/* <h3 className='text-xl absolute top-[-18px] bg-white text-red-700 flex justify-start items-center font-semibold'>
 									Journey
 								</h3> */}
-								<div className='flex justify-start items-center gap-2 w-full'>
-									<HomeIcon sx={{ fontSize: '32px', color: 'green' }} />
+								<div className='flex justify-center items-start gap-2 w-full'>
 									<div className='w-full'>
-										<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
-											Pickup
-										</h3>
+										<div className='w-full flex'>
+											<HomeIcon sx={{ fontSize: '32px', color: 'green' }} />
+											<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+												Pickup
+											</h3>
+										</div>
+
 										<BookingOption
 											text={getTodayInEnGbFormat(data.pickupDateTime)}
 											head='Booking Date'
 										/>
 										<BookingOption
 											text={`${data.pickupAddress}, ${data.pickupPostCode}`}
-											head='Pickup'
+											head='From'
 										/>
 									</div>
 								</div>
 							</div>
 							{data.vias.length > 0 && (
-								<div className='flex justify-start items-center gap-2 w-full border border-card p-4 shadow-md relative rounded-lg bg-[#F3F4F6]'>
-									<HomeIcon sx={{ fontSize: '32px', color: 'green' }} />
+								<div className='flex justify-center items-start gap-2 w-full border border-card p-4 shadow-md relative rounded-lg bg-[#F3F4F6]'>
 									<div className='w-full'>
-										<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
-											Vias
-										</h3>
+										<div className='flex w-full'>
+											<HomeIcon sx={{ fontSize: '32px', color: 'green' }} />
+											<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+												Vias
+											</h3>
+										</div>
+
 										{data.vias.length > 0 &&
 											data.vias.map((via, idx) => (
 												<BookingOption
@@ -86,24 +92,30 @@ function CustomDialog({ closeDialog }) {
 								</div>
 							)}
 
-							<div className='flex justify-start items-center gap-2 w-full border border-card p-4 shadow-md relative rounded-lg bg-[#F3F4F6]'>
-								<HomeIcon sx={{ fontSize: '32px', color: 'green' }} />
+							<div className='flex justify-center items-start gap-2 w-full border border-card p-4 shadow-md relative rounded-lg bg-[#F3F4F6]'>
 								<div className='w-full'>
-									<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
-										Destination
-									</h3>
+									<div className='w-full flex'>
+										<HomeIcon sx={{ fontSize: '32px', color: 'green' }} />
+										<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+											Destination
+										</h3>
+									</div>
+
 									<BookingOption
 										text={`${data.destinationAddress}, ${data.destinationPostCode}`}
-										head='Destination'
+										head='To'
 									/>
 								</div>
 							</div>
-							<div className='flex justify-start items-center gap-2 w-full border border-card p-4 shadow-md relative rounded-lg bg-[#F3F4F6]'>
-								<PersonIcon sx={{ fontSize: '32px', color: 'green' }} />
+							<div className='flex justify-center items-start gap-2 w-full border border-card p-4 shadow-md relative rounded-lg bg-[#F3F4F6]'>
 								<div className='w-full'>
-									<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
-										Passenger
-									</h3>
+									<div className='flex w-full'>
+										<PersonIcon sx={{ fontSize: '32px', color: 'green' }} />
+										<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+											Passenger
+										</h3>
+									</div>
+
 									<BookingOption
 										text={data.passengerName ? data.passengerName : 'NA'}
 										head='Passenger Name'
@@ -127,12 +139,17 @@ function CustomDialog({ closeDialog }) {
 					<div>
 						<div className='flex h-full flex-col w-full gap-4'>
 							<div className='flex justify-start items-start gap-2 w-full border border-card p-4 shadow-md relative rounded-lg bg-[#F3F4F6] h-full'>
-								<div className='w-full flex justify-center items-center gap-2'>
-									<TextSnippetIcon sx={{ fontSize: '32px', color: 'green' }} />
+								<div className='w-full flex justify-center items-start gap-2'>
 									<div className='w-full'>
-										<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
-											Details
-										</h3>
+										<div className='flex w-full'>
+											<TextSnippetIcon
+												sx={{ fontSize: '32px', color: 'green' }}
+											/>
+											<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+												Details
+											</h3>
+										</div>
+
 										<BookingOption
 											text={data.details ? data.details : 'NA'}
 											head='Details'
@@ -165,21 +182,20 @@ function CustomDialog({ closeDialog }) {
 											text={data.price ? `£${data.price}` : 'NA'}
 											head='Price'
 										/>
-										<div className='flex justify-start items-center gap-4'>
-											<BookingOption
-												text={
-													data.durationMinutes
-														? Math.floor(Number(data.durationMinutes) / 60) +
-														  ' Hour(s)'
-														: 'NA'
-												}
-												head='Time'
-											/>
-											<BookingOption
-												text={data.mileageText ? data.mileageText : 'NA'}
-												head='Distance'
-											/>
-										</div>
+										<BookingOption
+											text={
+												data.durationMinutes
+													? Math.floor(Number(data.durationMinutes) / 60) +
+													  ' Hour(s)'
+													: 'NA'
+											}
+											head='Time'
+										/>
+										<BookingOption
+											text={data.mileageText ? data.mileageText : 'NA'}
+											head='Distance'
+										/>
+
 										{data.isAllDay && (
 											<BookingOption
 												text={data.isAllDay ? '✅' : '❎'}
@@ -193,35 +209,36 @@ function CustomDialog({ closeDialog }) {
 												head='Repeat Booking'
 											/>
 										)}
-										<div className='flex justify-start items-center gap-4'>
-											<BookingOption
-												text={
-													data.paymentStatus === 0
-														? 'Not Paid'
-														: data.paymentStatus === 1
-														? 'Paid'
-														: data.paymentStatus === 2
-														? 'Awaiting payment'
-														: ''
-												}
-												head='Payment Status'
-											/>
-											<BookingOption
-												text={
-													data.confirmationStatus === 0
-														? 'NA'
-														: data.confirmationStatus === 1
-														? 'Confirmed'
-														: data.confirmationStatus
-														? 'Not Confirmed'
-														: 'NA'
-												}
-												head='Confirmation Status'
-											/>
-										</div>
+										<BookingOption
+											text={
+												data.paymentStatus === 0
+													? 'Not Paid'
+													: data.paymentStatus === 1
+													? 'Paid'
+													: data.paymentStatus === 2
+													? 'Awaiting payment'
+													: ''
+											}
+											head='Payment Status'
+										/>
+										<BookingOption
+											text={
+												data.confirmationStatus === 0
+													? 'NA'
+													: data.confirmationStatus === 1
+													? 'Confirmed'
+													: data.confirmationStatus
+													? 'Not Confirmed'
+													: 'NA'
+											}
+											head='Confirmation Status'
+										/>
+
 										<div>
-											<div className='flex items-center align-middle mb-4'>
-												<p className='text-md font-medium pr-2'>Booked By: </p>
+											<div className='flex w-full items-center align-middle mb-4'>
+												<p className='text-md font-medium pr-2 w-[30%] flex justify-end items-end'>
+													Booked By:{' '}
+												</p>
 												<span
 													className={`text-card dark:text-popover-foreground text-[1rem]`}
 												>
@@ -354,8 +371,12 @@ function getTodayInEnGbFormat(date) {
 const BookingOption = ({ text, head }) => {
 	return (
 		<div className='flex items-center align-middle mb-1'>
-			<p className='text-md font-medium pr-2 whitespace-nowrap'>{head}: </p>
-			<span className={`text-card dark:text-popover-foreground text-[1rem]`}>
+			<p className='text-md font-medium pr-2 whitespace-nowrap w-[30%] flex justify-end items-end'>
+				{head}:{' '}
+			</p>
+			<span
+				className={`text-card dark:text-popover-foreground text-[1rem] w-[70%] flex justify-start items-start`}
+			>
 				{text}
 			</span>
 		</div>
