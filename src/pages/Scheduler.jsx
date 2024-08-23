@@ -82,12 +82,16 @@ const AceScheduler = () => {
 				args.element.querySelector('.e-time').style.color = 'black';
 			if (args.element.querySelector('.e-date-time'))
 				args.element.querySelector('.e-date-time').style.color = 'black';
+			if (args.element.querySelector('.e-icons'))
+				args.element.querySelector('.e-icons').style.color = 'black';
 		} else {
 			args.element.querySelector('.e-subject').style.color = 'white';
 			if (args.element.querySelector('.e-time'))
 				args.element.querySelector('.e-time').style.color = 'white';
 			if (args.element.querySelector('.e-date-time'))
 				args.element.querySelector('.e-date-time').style.color = 'white';
+			if (args.element.querySelector('.e-icons'))
+				args.element.querySelector('.e-icons').style.color = 'white';
 		}
 	}
 
