@@ -54,7 +54,7 @@ function CustomDialog({ closeDialog }) {
 									<div className='w-full'>
 										<div className='w-full flex'>
 											<HomeIcon sx={{ fontSize: '32px', color: 'green' }} />
-											<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+											<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium mb-1'>
 												Pickup
 											</h3>
 										</div>
@@ -75,18 +75,23 @@ function CustomDialog({ closeDialog }) {
 									<div className='w-full'>
 										<div className='flex w-full'>
 											<HomeIcon sx={{ fontSize: '32px', color: 'green' }} />
-											<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+											<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium mb-1'>
 												Vias
 											</h3>
 										</div>
 
 										{data.vias.length > 0 &&
 											data.vias.map((via, idx) => (
-												<BookingOption
-													key={idx}
-													head={`Via ${idx + 1}`}
-													text={`${via.address}, ${via.postCode}`}
-												/>
+												<>
+													<div className='flex items-start mb-1 w-full'>
+														<p className='text-md font-medium pr-2 whitespace-nowrap w-[20%] flex justify-end items-end'>
+															{`Via ${idx + 1}:`}
+														</p>
+														<span className='text-card dark:text-popover-foreground text-[1rem] w-[80%] flex justify-start items-start'>
+															{`${via.address}, ${via.postCode}`}
+														</span>
+													</div>
+												</>
 											))}
 									</div>
 								</div>
@@ -96,22 +101,29 @@ function CustomDialog({ closeDialog }) {
 								<div className='w-full'>
 									<div className='w-full flex'>
 										<HomeIcon sx={{ fontSize: '32px', color: 'green' }} />
-										<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+										<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium mb-1'>
 											Destination
 										</h3>
 									</div>
-
-									<BookingOption
+									<div className='flex items-start mb-1 w-full'>
+										<p className='text-md font-medium pr-2 whitespace-nowrap w-[20%] flex justify-end items-end'>
+											To:
+										</p>
+										<span className='text-card dark:text-popover-foreground text-[1rem] w-[80%] flex justify-start items-start'>
+											{`${data.destinationAddress}, ${data.destinationPostCode}`}
+										</span>
+									</div>
+									{/* <BookingOption
 										text={`${data.destinationAddress}, ${data.destinationPostCode}`}
 										head='To'
-									/>
+									/> */}
 								</div>
 							</div>
 							<div className='flex justify-center items-start gap-2 w-full border border-card p-4 shadow-md relative rounded-lg bg-[#F3F4F6]'>
 								<div className='w-full'>
 									<div className='flex w-full'>
 										<PersonIcon sx={{ fontSize: '32px', color: 'green' }} />
-										<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+										<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium mb-1'>
 											Passenger
 										</h3>
 									</div>
@@ -145,7 +157,7 @@ function CustomDialog({ closeDialog }) {
 											<TextSnippetIcon
 												sx={{ fontSize: '32px', color: 'green' }}
 											/>
-											<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium'>
+											<h3 className='w-full border-b border-b-gray-300 py-1 text-md font-medium mb-1'>
 												Details
 											</h3>
 										</div>
@@ -235,7 +247,7 @@ function CustomDialog({ closeDialog }) {
 										/>
 
 										<div>
-											<div className='flex w-full items-center align-middle mb-4'>
+											<div className='flex w-full items-start mb-4'>
 												<p className='text-md font-medium pr-2 w-[30%] flex justify-end items-end'>
 													Booked By:{' '}
 												</p>
@@ -370,13 +382,11 @@ function getTodayInEnGbFormat(date) {
 
 const BookingOption = ({ text, head }) => {
 	return (
-		<div className='flex items-center align-middle mb-1'>
+		<div className='flex items-start mb-1 w-full'>
 			<p className='text-md font-medium pr-2 whitespace-nowrap w-[30%] flex justify-end items-end'>
 				{head}:{' '}
 			</p>
-			<span
-				className={`text-card dark:text-popover-foreground text-[1rem] w-[70%] flex justify-start items-start`}
-			>
+			<span className='text-card dark:text-popover-foreground text-[1rem] w-[70%] flex justify-start items-start'>
 				{text}
 			</span>
 		</div>
