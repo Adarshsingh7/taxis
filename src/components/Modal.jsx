@@ -21,7 +21,16 @@ export default function BasicModal({
 	disableMouseEvent = false,
 }) {
 	// const handleOpen = () => setOpen(true);
-	const handleClose = () => setOpen(false);
+	// const handleClose = () => setOpen(false);
+	const handleClose = (event, reason) => {
+		if (reason === 'backdropClick' && !disableMouseEvent) {
+			setOpen(false);
+		}
+
+		if (reason === 'escapeKeyDown' && !disableEscapeKeyDown) {
+			setOpen(false);
+		}
+	};
 
 	return (
 		<div>
@@ -31,14 +40,14 @@ export default function BasicModal({
 				disableEscapeKeyDown={disableEscapeKeyDown}
 				aria-labelledby='modal-modal-title'
 				aria-describedby='modal-modal-description'
-				BackdropProps={{
-					onClick: (event) => {
-						if (disableMouseEvent) {
-							event.preventDefault(); // Add this line
-							event.stopPropagation();
-						}
-					},
-				}}
+				// BackdropProps={{
+				// 	onClick: (event) => {
+				// 		if (disableMouseEvent) {
+				// 			event.preventDefault(); // Add this line
+				// 			event.stopPropagation();
+				// 		}
+				// 	},
+				// }}
 			>
 				<Box sx={style}>{children}</Box>
 			</Modal>
