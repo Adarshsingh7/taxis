@@ -264,9 +264,10 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				updateValueSilentMode(id, 'pickupDateTime', formatDate(new Date()))
 			);
 		}
+		if (bookingData.bookingType === 'Current') return;
 		const updateTimeInterval = setInterval(updateToCurrentTime, 1000);
 		return () => clearInterval(updateTimeInterval);
-	}, [dispatch, id, bookingData.formBusy]);
+	}, [dispatch, id, bookingData.formBusy, bookingData.bookingType]);
 
 	useEffect(() => {
 		function getDateWithZeroTime(input) {
