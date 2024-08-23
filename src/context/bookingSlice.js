@@ -90,7 +90,8 @@ const bookingFormSlice = createSlice({
 				...action.payload,
 				pickupDateTime: formatDate(action.payload.pickupDateTime),
 			};
-			state.bookings.push({ ...data, ...action.payload });
+
+			state.bookings.push({ ...data, ...action.payload, formBusy: true });
 			state.activeBookingIndex = state.bookings.length - 1;
 		},
 		// to remove a booking session from the booking form data and from the UI
