@@ -26,7 +26,7 @@ import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
 import LocalTaxiOutlinedIcon from '@mui/icons-material/LocalTaxiOutlined';
 import CurrencyPoundOutlinedIcon from '@mui/icons-material/CurrencyPoundOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import isLightColor, { rgbaToHex } from '../utils/isLight';
+import isLightColor from '../utils/isLight';
 import { Switch } from '@mui/material';
 import {
 	changeActiveDate,

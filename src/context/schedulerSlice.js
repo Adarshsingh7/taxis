@@ -7,7 +7,6 @@ import {
 	allocateDriver,
 	completeBookings,
 	bookingFindByKeyword,
-	bookingFindByTerm,
 } from '../utils/apiReq';
 import { transformData } from '../utils/transformDataForBooking';
 import axios from 'axios';

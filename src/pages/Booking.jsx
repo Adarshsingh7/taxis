@@ -281,9 +281,11 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			const date = new Date(
 				getDateWithZeroTime(bookingData.pickupDateTime)
 			).toISOString();
-			dispatch(changeActiveDate(date));
+			if (bookingData.formBusy) {
+				dispatch(changeActiveDate(date));
+			}
 		}
-	}, [bookingData.pickupDateTime, dispatch]);
+	}, [bookingData.formBusy, bookingData.pickupDateTime, dispatch]);
 
 	function convertToOneHourLaterFromPickUp() {
 		const pickupDateTime = new Date(bookingData.pickupDateTime);
