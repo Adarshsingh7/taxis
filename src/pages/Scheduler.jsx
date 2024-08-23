@@ -70,30 +70,25 @@ const AceScheduler = () => {
 	// syncfusion handler funtion for each render of syncfusion element on the screen
 	function onEventRendered(args) {
 		args.element;
-		args.element.style.backgroundColor = args.data.backgroundColorRGB;
-		args.element.style.borderRadius = '10px';
 		if (args.data.status === 1) {
 			args.element.style.background = `repeating-linear-gradient(-40deg,  ${args.data.backgroundColorRGB}, ${args.data.backgroundColorRGB} 10px, rgb(187, 187, 187) 20px, rgb(187, 187, 187) 20px) ${args.data.backgroundColorRGB}`;
 		}
+		args.element.style.backgroundColor = args.data.backgroundColorRGB;
+		args.element.style.borderRadius = '10px';
+
 		if (isLightColor(args.data.backgroundColorRGB)) {
-			args.element.style.color = 'black';
+			args.element.querySelector('.e-subject').style.color = 'black';
+			if (args.element.querySelector('.e-time'))
+				args.element.querySelector('.e-time').style.color = 'black';
+			if (args.element.querySelector('.e-date-time'))
+				args.element.querySelector('.e-date-time').style.color = 'black';
 		} else {
-			args.element.style.color = 'white';
+			args.element.querySelector('.e-subject').style.color = 'white';
+			if (args.element.querySelector('.e-time'))
+				args.element.querySelector('.e-time').style.color = 'white';
+			if (args.element.querySelector('.e-date-time'))
+				args.element.querySelector('.e-date-time').style.color = 'white';
 		}
-	}
-
-	function onDataBound() {
-		setInterval(() => {
-			// Select all elements with the class 'e-subject' inside '.e-schedule .e-agenda-view'
-			const subjects = document.querySelectorAll(
-				'.e-schedule .e-agenda-view .e-subject'
-			);
-
-			// Iterate through each selected element and remove the 'color' property
-			subjects.forEach((subject) => {
-				subject.style.removeProperty('color');
-			});
-		}, 1000);
 	}
 
 	// refresh the booking when activeTestMode, currentDate, dispatch, activeComplete changes
@@ -150,7 +145,6 @@ const AceScheduler = () => {
 				editorTemplate={null}
 				popupOpen={(args) => (args.cancel = true)}
 				views={['Day', 'Agenda']}
-				dataBound={onDataBound}
 			>
 				{dialogOpen && !viewBookingModal && (
 					<Modal
