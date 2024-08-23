@@ -358,7 +358,7 @@ function ConfirmDeleteBookingModal({
 				</h2>
 				<CloseIcon onClick={() => setIsConfirmationModalOpen(false)} />
 			</div>
-			<h2>Are you sure you want to delete this booking?</h2>
+			<h2>Are you sure you want to remove this booking?</h2>
 			<div className='flex justify-center items-center gap-2'>
 				<Button
 					variant='contained'
