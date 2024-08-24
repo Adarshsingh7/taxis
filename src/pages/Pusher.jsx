@@ -138,7 +138,7 @@ export default function Push() {
 	}, []);
 
 	// all for the slider between componenet
-	const [leftWidth, setLeftWidth] = useState(60);
+	const [leftWidth, setLeftWidth] = useState(50);
 
 	const handleResize = (event, { size }) => {
 		const newWidth = (size.width / window.innerWidth) * 100;
@@ -176,7 +176,7 @@ export default function Push() {
 					{/*  box containg the form*/}
 					<Box
 						sx={{
-							// margin: '0 auto',
+							margin: '0 auto',
 							overflow: 'auto',
 							width: '100%',
 							borderColor: '#e5e7eb',
@@ -249,9 +249,9 @@ export default function Push() {
 					{showDriverAvailability && (
 						<Box
 							sx={{
-								// margin: '0 auto',
+								margin: '0 auto',
 								overflow: 'hidden',
-								width: '25%',
+								width: '50%',
 								borderColor: '#e5e7eb',
 								borderWidth: '1px',
 							}}
