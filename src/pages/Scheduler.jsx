@@ -149,6 +149,7 @@ const AceScheduler = () => {
 				editorTemplate={null}
 				popupOpen={(args) => (args.cancel = true)}
 				views={['Day', 'Agenda']}
+				className='schedule-cell-dimension'
 			>
 				{dialogOpen && !viewBookingModal && (
 					<Modal

@@ -34,7 +34,7 @@
 
 .schedule-cell-dimension.e-schedule .e-vertical-view .e-time-cells-wrap table td,
 .schedule-cell-dimension.e-schedule .e-vertical-view .e-work-cells {
-  height: 50px;
+  height: 50px !important;
 }
 
 .schedule-cell-dimension.e-schedule .e-month-view .e-work-cells,
@@ -43,7 +43,7 @@
 }
 
 .schedule-cell-dimension.e-schedule .e-month-view .e-work-cells {
-  height: 80px;
+  height: 80px; 
 }
 
 .e-toolbar-item.e-add{
