@@ -157,9 +157,10 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			!bookingData.pickupPostCode ||
 			(!bookingData.destinationPostCode && bookingData.vias.length === 0) ||
 			bookingData.scope !== 0
-		) {
+		)
 			return;
-		}
+
+		if (!bookingData.formBusy) return;
 		makeBookingQuoteRequest({
 			pickupPostcode: bookingData.pickupPostCode,
 			viaPostcodes: bookingData.vias.map((via) => via.postCode),
