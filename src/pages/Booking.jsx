@@ -108,7 +108,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	async function findQuote() {
 		const quote = await makeBookingQuoteRequest({
 			pickupPostcode: bookingData.pickupPostCode,
-			viaPostcodes: bookingData.vias.map((via) => via.postcode),
+			viaPostcodes: bookingData.vias.map((via) => via.postCode),
 			destinationPostcode: bookingData.destinationPostCode,
 			pickupDateTime: bookingData.pickupDateTime,
 			passengers: bookingData.passengers,
@@ -162,7 +162,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}
 		makeBookingQuoteRequest({
 			pickupPostcode: bookingData.pickupPostCode,
-			viaPostcodes: bookingData.vias.map((via) => via.postcode),
+			viaPostcodes: bookingData.vias.map((via) => via.postCode),
 			destinationPostcode: bookingData.destinationPostCode,
 			pickupDateTime: bookingData.pickupDateTime,
 			passengers: bookingData.passengers,
