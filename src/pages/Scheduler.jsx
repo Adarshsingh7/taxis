@@ -63,7 +63,7 @@ const AceScheduler = () => {
 		startTime: { name: 'pickupDateTime' },
 		endTime: { name: 'endTime' },
 		OwnerColor: { name: 'backgroundColorRGB' },
-		recurrenceRule: { name: 'recurrenceRule' },
+		// recurrenceRule: { name: 'recurrenceRule' },
 		Readonly: { name: 'Readonly' },
 	};
 
@@ -119,6 +119,7 @@ const AceScheduler = () => {
 		allowAdding: false,
 		allowEditing: false,
 		allowDeleting: false,
+		recurrenceMode: 'Occurrence',
 	};
 
 	// handler funciton for each booking click
