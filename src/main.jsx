@@ -6,8 +6,8 @@ import App from './App.jsx';
 import './index.css';
 import 'leaflet/dist/leaflet.css';
 import * as Sentry from '@sentry/react';
-import '../src/setupConsole.js/setupLog.js';
-
+// import consoleMethods from '../src/setupConsole.js/setupLog.js';
+// consoleMethods()
 Sentry.init({
 	dsn: 'https://0a61cdd14e98097c6b21cb88fdaf4ec9@o4507779705733120.ingest.us.sentry.io/4507779708485632',
 	integrations: [

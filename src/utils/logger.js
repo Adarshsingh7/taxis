@@ -7,6 +7,7 @@ const storeLog = (level, message) => {
     logs.push(logEntry);
 
     localStorage.setItem('app_logs', JSON.stringify(logs));
+    console.log(message);
   };
   
   export const log = (message) => {
