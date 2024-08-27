@@ -13,6 +13,9 @@ export default function DuplicateBookingModal({
 	setDuplicateBookingModal,
 	closeDialog,
 }) {
+	const { isActiveTestMode: activeTestMode } = useSelector(
+		(state) => state.bookingForm
+	);
 	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
 		(state) => state.scheduler
 	);
@@ -34,7 +37,7 @@ export default function DuplicateBookingModal({
 		};
 		setDuplicateBookingModal(false);
 		closeDialog();
-		const res = await makeBooking(newData, true);
+		const res = await makeBooking(newData, activeTestMode);
 		if (res.status === 'success') {
 			dispatch(openSnackbar('Booking Created Successfully!', 'success'));
 		}
@@ -87,8 +90,8 @@ export default function DuplicateBookingModal({
 							updatedByName: user.currentUser.name,
 							status: null,
 							bookedByName: user.currentUser.name,
-							recurrenceID: null,
-							recurrenceRule: null,
+							recurrenceID: 0,
+							recurrenceRule: '',
 						})
 					}
 				>
