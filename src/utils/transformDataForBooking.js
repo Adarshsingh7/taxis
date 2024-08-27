@@ -15,6 +15,12 @@ function transformData(bookings) {
 		if (booking.scope === 1 && booking.status === 2) {
 			subjectString = `[R]:${booking.passengerName}`;
 		}
+		if (booking.scope === 2 && booking.status !== 2) {
+			subjectString = booking.passengerName;
+		}
+		if (booking.scope === 2 && booking.status === 2 ){
+			subjectString = `[R]:${booking.passengerName}`;
+		}
 		return {
 			...booking,
 			subject: subjectString,
