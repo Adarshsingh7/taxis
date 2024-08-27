@@ -2,7 +2,7 @@
 
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllDrivers } from '../../utils/apiReq';
 import {
 	allocateBookingToDriver,
@@ -15,11 +15,17 @@ import { useAuth } from '../../hooks/useAuth';
 
 // Allocate Driver Modal Structure
 export default function AllocateModal({ setAllocateModal, closeDialog }) {
+	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
+		(state) => state.scheduler
+	);
+	const data = bookings[index];
+	console.log('data to know', data);
 	const [loading, setLoading] = useState(false);
 	const [driverData, setDriverData] = useState([]);
 	const [confirmAllocation, setConfirmAllocation] = useState(false);
 	const [selectedDriver, setSelectedDriver] = useState(null);
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		getAllDrivers().then((res) => {
 			setDriverData(res.users);
@@ -44,7 +50,9 @@ export default function AllocateModal({ setAllocateModal, closeDialog }) {
 					<p className='font-medium '>Allocate Booking</p>
 				</div>
 				<div className='bg-[#16A34A] text-center font-medium text-white py-2 px-4 w-full rounded-sm'>
-					<p>Gillingham station -- Guys Marsh</p>
+					<p>
+						{data.subject ? data.subject : 'Gillingham station -- Guys Marsh'}
+					</p>
 				</div>
 
 				<div className='w-full flex justify-center items-center border-b-gray-300 border-b-[1px] p-1'>

@@ -23,7 +23,7 @@ function CustomDialog({ closeDialog }) {
 		(state) => state.scheduler
 	);
 	const data = bookings[index];
-	console.log(data);
+	// console.log(data);
 
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
