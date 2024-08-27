@@ -207,7 +207,7 @@ function CurrentTable({ bookings, selectedRow, selectRow }) {
 					{rows.map((row, index) => (
 						<th
 							key={index}
-							className='px-4 py-2 uppercase'
+							className='px-4 py-2 uppercase text-left'
 						>
 							{row}
 						</th>
