@@ -25,6 +25,7 @@ export default function CompleteBookingModal({
 	const dispatch = useDispatch();
 
 	const handleCompleteClick = async (e) => {
+		console.log(`${data.bookingId} is completed`)
 		e.preventDefault();
 		const completedBookingData = {
 			waitingTime,

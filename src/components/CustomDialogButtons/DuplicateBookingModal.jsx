@@ -35,6 +35,7 @@ export default function DuplicateBookingModal({
 			...data,
 			pickupDateTime: newDate,
 		};
+		console.log("Duplicate Booking created")
 		setDuplicateBookingModal(false);
 		closeDialog();
 		const res = await makeBooking(newData, activeTestMode);

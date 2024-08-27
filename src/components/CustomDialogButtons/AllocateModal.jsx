@@ -39,6 +39,7 @@ export default function AllocateModal({ setAllocateModal, closeDialog }) {
 	}, []);
 
 	function handleAttactDriver(driver) {
+		console.log(`${driver.id} Allocated to ${data.bookingId}`)
 		setConfirmAllocation(true);
 		setSelectedDriver(driver);
 		dispatch(selectDriver(driver.id));
