@@ -19,7 +19,11 @@ function ListDrivers({ setOpen }) {
 	// Fetch all drivers from the API
 	useEffect(() => {
 		getAllDrivers().then((res) => {
-			setData(res.users);
+			const driverUsers = [
+				{ id: 0, fullName: 'Unallocated', colorRGB: '#795548' },
+				...res.users,
+			];
+			setData(driverUsers);
 		});
 		setLoading(true);
 		setLoading(false);

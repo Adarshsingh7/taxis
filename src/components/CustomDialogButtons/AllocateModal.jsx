@@ -19,7 +19,7 @@ export default function AllocateModal({ setAllocateModal, closeDialog }) {
 		(state) => state.scheduler
 	);
 	const data = bookings[index];
-	console.log('data to know', data);
+
 	const [loading, setLoading] = useState(false);
 	const [driverData, setDriverData] = useState([]);
 	const [confirmAllocation, setConfirmAllocation] = useState(false);
@@ -28,7 +28,11 @@ export default function AllocateModal({ setAllocateModal, closeDialog }) {
 
 	useEffect(() => {
 		getAllDrivers().then((res) => {
-			setDriverData(res.users);
+			const driverUsers = [
+				{ id: 0, fullName: 'Unallocated', colorRGB: '#795548' },
+				...res.users,
+			];
+			setDriverData(driverUsers);
 		});
 		setLoading(true);
 		setLoading(false);
