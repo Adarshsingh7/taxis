@@ -20,7 +20,7 @@ function appendToLocalStorage(newObject, key = 'SentryLog') {
 	let dataArray = existingData ? JSON.parse(existingData) : [];
 
 	// Step 3: Append the new object to the array
-	dataArray.push(newObject);
+	dataArray.unshift(newObject);
 
 	// Step 4: Convert the updated array back to a string
 	const updatedData = JSON.stringify(dataArray);
