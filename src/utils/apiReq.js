@@ -115,17 +115,7 @@ async function handlePostReq(URL, data) {
 		const response = await axios.post(URL, data, {
 			headers: setHeaders(),
 		});
-		if (URL.split('/').at(-1) !== 'DateRange') {
-			sendLogs(
-				{
-					url: URL,
-					requestBody: data,
-					headers: setHeaders(),
-					response: response,
-				},
-				'info'
-			);
-		}
+
 		if (response.status >= 200 && response.status < 300) {
 			return { ...response.data, status: 'success' };
 		} else {
