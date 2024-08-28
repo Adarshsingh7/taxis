@@ -190,10 +190,10 @@ function RepeatBooking({ onSet }) {
 	// This useEffect will update the state depending on condition of the form
 	useEffect(() => {
 		if (repeatEnd === 'never') setRepeatEndValue('');
+		if (frequency !== 'daily' && frequency !== 'weekly') {
+			setRepeatEnd('never');
+		}
 		if (frequency === 'daily') {
-			if (frequency === 'none') {
-				setRepeatEnd('never');
-			}
 			setSelectedDays({
 				sun: false,
 				mon: false,
