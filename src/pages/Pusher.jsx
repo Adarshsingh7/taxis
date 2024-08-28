@@ -33,6 +33,7 @@ import DriverSection from '../components/DriverSection';
 import { getRefreshedBookings } from '../context/schedulerSlice';
 import CustomDriverAvailabilityChart from '../components/CustomDriverAvailabilityChart';
 import { loadGoogleMapsScript } from '../utils/googleMap';
+import { sendLogs } from '../utils/getLogs';
 
 const pusher = new Pusher('8d1879146140a01d73cf', {
 	cluster: 'eu',
@@ -98,6 +99,14 @@ export default function Push() {
 				} else {
 					dispatch(addCaller(parsedData));
 				}
+				sendLogs(
+					{
+						event: 'caller id event',
+						Telephone: PhoneNumber,
+						data: parsedData,
+					},
+					'info'
+				);
 			} catch (error) {
 				console.error('Failed to parse message data:', error);
 			}

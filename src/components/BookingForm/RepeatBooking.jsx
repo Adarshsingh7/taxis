@@ -90,7 +90,7 @@ function RepeatBooking({ onSet }) {
 	const dispatch = useDispatch();
 	const data = useSelector((state) => state.bookingForm.bookings);
 	const id = useSelector((state) => state.bookingForm.activeBookingIndex);
-	const { f, i, re, rev, sd } = parseRecurrenceRule(data[id].recurrenceRule);
+	const { f, re, rev, sd } = parseRecurrenceRule(data[id].recurrenceRule);
 
 	// setting local state for repeat booking
 	const [frequency, setFrequency] = useState(f);
