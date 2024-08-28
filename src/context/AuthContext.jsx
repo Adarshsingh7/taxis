@@ -3,6 +3,7 @@
 import { createContext, useState, useEffect } from 'react';
 import { getAccountList } from '../utils/apiReq';
 import { getAllDrivers } from '../utils/apiReq';
+import { sendLogs } from '../utils/getLogs';
 // const BASEURL = 'https://abacusonline-001-site1.atempurl.com';
 const BASEURL = 'https://api.acetaxisdorset.co.uk';
 
@@ -25,11 +26,20 @@ const AuthProvider = ({ children }) => {
 	const login = async (credentials) => {
 		setIsLoading(true);
 		try {
-			const response = await fetch(BASEURL + '/api/UserProfile/Login', {
+			const request = {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(credentials),
-			});
+			};
+			const response = await fetch(BASEURL + '/api/UserProfile/Login', request);
+			sendLogs(
+				{
+					url: 'https://api.acetaxisdorset.co.uk/api/UserProfile/Login',
+					requestBody: request,
+					response: response,
+				},
+				'info'
+			);
 
 			if (response.ok) {
 				const data = await response.json();
@@ -56,15 +66,24 @@ const AuthProvider = ({ children }) => {
 	const getUser = async (token, username) => {
 		setIsLoading(true);
 		try {
+			const request = {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`,
+				},
+			};
 			const response = await fetch(
 				BASEURL + `/api/UserProfile/GetUser?username=${username}`,
+				request
+			);
+			sendLogs(
 				{
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`,
-					},
-				}
+					url: 'https://api.acetaxisdorset.co.uk/api/UserProfile/GetUser?username=${username}',
+					requestBody: request,
+					response,
+				},
+				'info'
 			);
 
 			if (response.ok) {
