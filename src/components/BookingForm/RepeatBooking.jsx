@@ -6,7 +6,6 @@ import { RRule } from 'rrule';
 
 import { updateValue } from '../../context/bookingSlice';
 import LongButton from './LongButton';
-import { formatDate } from '../../utils/formatDate';
 
 // This function destructure the recurrence rule and return the days of the week, it will help to mark the days of the week in the repeat booking modal
 function parseRecurrenceRule(rule) {
@@ -92,14 +91,12 @@ function RepeatBooking({ onSet }) {
 	const data = useSelector((state) => state.bookingForm.bookings);
 	const id = useSelector((state) => state.bookingForm.activeBookingIndex);
 	const { f, i, re, rev, sd } = parseRecurrenceRule(data[id].recurrenceRule);
-	console.log({ f, i, rev, sd });
 
 	// setting local state for repeat booking
 	const [frequency, setFrequency] = useState(f);
 	const [repeatEnd, setRepeatEnd] = useState(re ? 'until' : 'never');
 	const [repeatEndValue, setRepeatEndValue] = useState(rev);
 	const [selectedDays, setSelectedDays] = useState(sd);
-	console.log({ frequency, repeatEnd, repeatEndValue, selectedDays });
 	const dayLabels = [
 		{ key: 'sun', label: 'S' },
 		{ key: 'mon', label: 'M' },
@@ -266,29 +263,16 @@ function RepeatBooking({ onSet }) {
 					>
 						Repeat End
 					</label>
-					{frequency !== 'none' ? (
-						<select
-							id='repeat-end'
-							className='border border-border rounded-md p-2 w-full bg-input text-foreground focus:ring-primary focus:border-primary '
-							value={repeatEnd}
-							onChange={(e) => setRepeatEnd(e.target.value)}
-						>
-							<option value='never'>Never</option>
-							<option value='until'>Until</option>
-						</select>
-					) : (
-						<select
-							disabled
-							required
-							id='repeat-end'
-							className='border border-border rounded-md p-2 w-full bg-input text-foreground focus:ring-primary focus:border-primary'
-							value={repeatEnd}
-							onChange={(e) => setRepeatEnd(e.target.value)}
-						>
-							<option value='never'>Never</option>
-							<option value='until'>Until</option>
-						</select>
-					)}
+					<select
+						disabled={frequency !== 'daily' && frequency !== 'weekly'}
+						id='repeat-end'
+						className='border border-border rounded-md p-2 w-full bg-input text-foreground focus:ring-primary focus:border-primary'
+						value={repeatEnd}
+						onChange={(e) => setRepeatEnd(e.target.value)}
+					>
+						<option value='never'>Never</option>
+						<option value='until'>Until</option>
+					</select>
 				</div>
 				<div>
 					<label
