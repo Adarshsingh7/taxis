@@ -8,7 +8,7 @@ import 'leaflet/dist/leaflet.css';
 import * as Sentry from '@sentry/react';
 
 Sentry.init({
-	dsn: 'https://0a61cdd14e98097c6b21cb88fdaf4ec9@o4507779705733120.ingest.us.sentry.io/4507779708485632',
+	dsn: 'https://03883b86000ffd6461d78fbc7deb246d@o4507848991375360.ingest.us.sentry.io/4507855087599616',
 	integrations: [
 		Sentry.browserTracingIntegration(),
 		Sentry.replayIntegration(),
