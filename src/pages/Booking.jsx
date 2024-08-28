@@ -479,32 +479,30 @@ function Booking({ bookingData, id, onBookingUpload }) {
 					</div>
 
 					<div className='grid grid-cols-1 md:grid-cols-4 place-content-center gap-4 mb-4 '>
-						{currentUser?.isAdmin && (
-							<div className='flex items-center gap-2'>
-								{/* <span>£</span> */}
-								<Input
-									type='number'
-									required={true}
-									placeholder='Driver Price (£)'
-									value={bookingData.price}
-									onChange={(e) =>
-										updateData(
-											'price',
-											(() => {
-												const value = parseFloat(e.target.value);
-												if (e.target.value === '') return '';
-												if (
-													(!isNaN(value) && value >= 0) ||
-													e.target.value === ''
-												) {
-													return value;
-												} else return bookingData.price;
-											})()
-										)
-									}
-								/>
-							</div>
-						)}
+						<div className='flex items-center gap-2'>
+							{/* <span>£</span> */}
+							<Input
+								type='number'
+								required={true}
+								placeholder='Driver Price (£)'
+								value={bookingData.price}
+								onChange={(e) =>
+									updateData(
+										'price',
+										(() => {
+											const value = parseFloat(e.target.value);
+											if (e.target.value === '') return '';
+											if (
+												(!isNaN(value) && value >= 0) ||
+												e.target.value === ''
+											) {
+												return value;
+											} else return bookingData.price;
+										})()
+									)
+								}
+							/>
+						</div>
 
 						<div className='flex items-center justify-center'>
 							<label className='mr-2'>Passengers</label>
