@@ -33,8 +33,10 @@ import {
 	completeActiveBookingStatus,
 	getRefreshedBookings,
 	setActiveBookingIndex,
+	updateBookingAtIndex,
 } from '../context/schedulerSlice';
 import { createBookingFromScheduler } from '../context/bookingSlice';
+import { findBookingById } from '../utils/apiReq';
 
 const AceScheduler = () => {
 	// taking our global states from the redux
@@ -123,10 +125,24 @@ const AceScheduler = () => {
 	};
 
 	// handler funciton for each booking click
-	const onEventClick = (args) => {
-		setSelectedBookingData(args.event);
+	const onEventClick = async (args) => {
+		if (activeSearch) {
+			const result = findBookingById(args.event.bookingId, activeTestMode);
+			if (result.status === 'success') {
+				console.log(result);
+				setSelectedBookingData(result.booking);
+				dispatch(
+					updateBookingAtIndex({
+						index: args.event.bookingId,
+						data: result.booking,
+					})
+				);
+			}
+		} else {
+			setSelectedBookingData(args.event);
+			dispatch(setActiveBookingIndex(args.event.bookingId));
+		}
 		setDialogOpen(true);
-		dispatch(setActiveBookingIndex(args.event.bookingId));
 	};
 
 	const createBookingOnTimeStamp = function (args) {
@@ -149,8 +165,8 @@ const AceScheduler = () => {
 				cellClick={createBookingOnTimeStamp}
 				editorTemplate={null}
 				popupOpen={(args) => (args.cancel = true)}
-				views={['Day', 'Agenda']}
 				className='schedule-cell-dimension'
+				views={[{ option: 'Day' }, { option: 'Agenda' }]}
 			>
 				{dialogOpen && !viewBookingModal && (
 					<Modal

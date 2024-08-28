@@ -7,9 +7,22 @@ import {
 	allocateDriver,
 	completeBookings,
 	bookingFindByKeyword,
+	bookingFindByTerm,
 } from '../utils/apiReq';
 import { transformData } from '../utils/transformDataForBooking';
 import axios from 'axios';
+
+const filterScheduledBookings = function (booking) {
+	return {
+		bookingId: booking.bookingId,
+		bookingTime: booking.bookingTime,
+		pickupDateTime: booking.pickupDate,
+		endTime: booking.endDate,
+		backgroundColorRGB: booking.color,
+		subject: booking.cellText,
+		...booking,
+	};
+};
 
 const schedulerSlice = createSlice({
 	name: 'scheduler',
@@ -60,6 +73,14 @@ const schedulerSlice = createSlice({
 		},
 		changeShowDriverAvailability: (state, action) => {
 			state.showDriverAvailability = action.payload;
+		},
+		updateBookingAtIndex: (state, action) => {
+			state.bookings.forEach((booking, index) => {
+				if (booking.bookingId === action.payload.bookingId) {
+					state.bookings[index] = action.payload;
+					return;
+				}
+			});
 		},
 	},
 });
@@ -186,22 +207,22 @@ export function handleCompleteBooking({
 export const handleSearchBooking = function (keyword) {
 	return async (dispatch, getState) => {
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
-		const res = await bookingFindByKeyword(keyword, activeTestMode);
-		if (res.status === 'success') {
-			const results = transformData(
-				res.bookings.filter((booking) => booking.cancelled === false)
-			);
-			console.log(results);
-			dispatch(schedulerSlice.actions.makeSearchActive(results));
-		}
-		// const res = await bookingFindByTerm(keyword, activeTestMode);
+		// const res = await bookingFindByKeyword(keyword, activeTestMode);
 		// if (res.status === 'success') {
 		// 	const results = transformData(
-		// 		res.results.filter((booking) => booking.cancelled === false)
+		// 		res.bookings.filter((booking) => booking.cancelled === false)
 		// 	);
 		// 	console.log(results);
 		// 	dispatch(schedulerSlice.actions.makeSearchActive(results));
 		// }
+		const res = await bookingFindByTerm(keyword, activeTestMode);
+		if (res.status === 'success') {
+			const results = res.results
+				.filter((booking) => booking.cancelled === false)
+				.map((el) => filterScheduledBookings(el));
+			console.log(results);
+			dispatch(schedulerSlice.actions.makeSearchActive(results));
+		}
 	};
 };
 
@@ -212,6 +233,7 @@ export const {
 	selectDriver,
 	makeSearchInactive,
 	changeShowDriverAvailability,
+	updateBookingAtIndex,
 } = schedulerSlice.actions;
 
 export default schedulerSlice.reducer;

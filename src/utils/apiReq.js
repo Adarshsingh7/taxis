@@ -388,6 +388,14 @@ async function bookingFindByKeyword(queryField, testMode = false) {
 
 	return res;
 }
+
+async function findBookingById(bookingId, testMode) {
+	const URL = `${
+		testMode ? TEST : BASE
+	}/api/Bookings/FindById/?bookingId=${bookingId}`;
+	return await handleGetReq(URL);
+}
+
 export {
 	getBookingData,
 	makeBooking,
@@ -405,4 +413,5 @@ export {
 	completeBookings,
 	bookingFindByTerm,
 	bookingFindByKeyword,
+	findBookingById,
 };
