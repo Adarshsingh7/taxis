@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { formatDate } from './formatDate';
-import * as Sentry from '@sentry/react';
+import { sendLogs } from './getLogs';
 // const BASE = 'https://abacusonline-001-site1.atempurl.com';
 const BASE = 'https://api.acetaxisdorset.co.uk';
 // const BASE = 'https://abacusonline-001-site1.atempurl.com';
@@ -91,6 +91,17 @@ function setHeaders() {
 async function handleGetReq(URL) {
 	try {
 		const response = await axios.get(URL, { headers: setHeaders() });
+		if (URL.split('/').at(-1) !== 'DateRange') {
+			sendLogs(
+				{
+					url: URL,
+					requestBody: null,
+					headers: setHeaders(),
+					response: response,
+				},
+				'info'
+			);
+		}
 		if (response.status >= 200 && response.status < 300) {
 			return { ...response.data, status: 'success' };
 		} else {
@@ -98,7 +109,7 @@ async function handleGetReq(URL) {
 			return null;
 		}
 	} catch (err) {
-		Sentry.captureException(err.response);
+		sendLogs(err.response, 'error');
 		console.error('Error in GET request:', err);
 		return {
 			...err.response,
@@ -115,6 +126,17 @@ async function handlePostReq(URL, data) {
 		const response = await axios.post(URL, data, {
 			headers: setHeaders(),
 		});
+		if (URL.split('/').at(-1) !== 'DateRange') {
+			sendLogs(
+				{
+					url: URL,
+					requestBody: data,
+					headers: setHeaders(),
+					response: response,
+				},
+				'info'
+			);
+		}
 		if (response.status >= 200 && response.status < 300) {
 			return { ...response.data, status: 'success' };
 		} else {
@@ -122,7 +144,7 @@ async function handlePostReq(URL, data) {
 			return null;
 		}
 	} catch (err) {
-		Sentry.captureException(err.response);
+		sendLogs(err.response, 'error');
 		return {
 			...err.response,
 			status: err.response.status > 499 ? 'error' : 'fail',
