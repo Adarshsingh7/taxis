@@ -1,5 +1,17 @@
 /** @format */
 import * as Sentry from '@sentry/react';
+
+export function checkPreviousLogs() {
+	const existingData = localStorage.getItem('SentryLog');
+	if (existingData) {
+		const dataArray = JSON.parse(existingData);
+		const filteredData = dataArray.filter(
+			(data) => data.logCreatedAt > Date.now() - 1000 * 60 * 60 * 24 * 7
+		);
+		localStorage.setItem('SentryLog', JSON.stringify(filteredData));
+	}
+}
+
 function appendToLocalStorage(newObject, key = 'SentryLog') {
 	// Step 1: Retrieve existing data from local storage
 	let existingData = localStorage.getItem(key);
