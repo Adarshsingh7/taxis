@@ -33,10 +33,9 @@ import {
 	completeActiveBookingStatus,
 	getRefreshedBookings,
 	setActiveBookingIndex,
-	updateBookingAtIndex,
+	setActiveSearchResult,
 } from '../context/schedulerSlice';
 import { createBookingFromScheduler } from '../context/bookingSlice';
-import { findBookingById } from '../utils/apiReq';
 
 const AceScheduler = () => {
 	// taking our global states from the redux
@@ -127,17 +126,7 @@ const AceScheduler = () => {
 	// handler funciton for each booking click
 	const onEventClick = async (args) => {
 		if (activeSearch) {
-			const result = findBookingById(args.event.bookingId, activeTestMode);
-			if (result.status === 'success') {
-				console.log(result);
-				setSelectedBookingData(result.booking);
-				dispatch(
-					updateBookingAtIndex({
-						index: args.event.bookingId,
-						data: result.booking,
-					})
-				);
-			}
+			dispatch(setActiveSearchResult(args.event.bookingId));
 		} else {
 			setSelectedBookingData(args.event);
 			dispatch(setActiveBookingIndex(args.event.bookingId));

@@ -8,6 +8,7 @@ import {
 	completeBookings,
 	bookingFindByKeyword,
 	bookingFindByTerm,
+	findBookingById,
 } from '../utils/apiReq';
 import { transformData } from '../utils/transformDataForBooking';
 import axios from 'axios';
@@ -34,6 +35,7 @@ const schedulerSlice = createSlice({
 		activeComplete: false,
 		activeSearch: false,
 		activeSearchResults: [],
+		activeSearchResult: null,
 		showDriverAvailability: false,
 	},
 	reducers: {
@@ -70,6 +72,9 @@ const schedulerSlice = createSlice({
 		makeSearchInactive: (state) => {
 			state.activeSearch = false;
 			state.activeSearchResults = [];
+		},
+		setActiveSearchResultClicked: (state, action) => {
+			state.activeSearchResult = action.payload;
 		},
 		changeShowDriverAvailability: (state, action) => {
 			state.showDriverAvailability = action.payload;
@@ -205,7 +210,6 @@ export function handleCompleteBooking({
 }
 
 export const handleSearchBooking = function (keyword) {
-	console.log('keyword', keyword);
 	return async (dispatch, getState) => {
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
 		// const res = await bookingFindByKeyword(keyword, activeTestMode);
@@ -218,11 +222,20 @@ export const handleSearchBooking = function (keyword) {
 		// }
 		const res = await bookingFindByTerm(keyword, activeTestMode);
 		if (res.status === 'success') {
-			console.log(res.results);
 			const results = res.results
 				.filter((booking) => booking.cancelled === false)
 				.map((el) => filterScheduledBookings(el));
 			dispatch(schedulerSlice.actions.makeSearchActive(results));
+		}
+	};
+};
+
+export const setActiveSearchResult = function (bookingId) {
+	return async (dispatch) => {
+		const data = await findBookingById(bookingId);
+		if (data.status === 'success') {
+			dispatch(schedulerSlice.actions.setActiveSearchResultClicked(data));
+			console.log(data);
 		}
 	};
 };
@@ -235,6 +248,7 @@ export const {
 	makeSearchInactive,
 	changeShowDriverAvailability,
 	updateBookingAtIndex,
+	setActiveSearchResultClicked,
 } = schedulerSlice.actions;
 
 export default schedulerSlice.reducer;

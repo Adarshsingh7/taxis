@@ -12,6 +12,7 @@ import { addDataFromSchedulerInEditMode } from '../context/bookingSlice';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import { setActiveSearchResultClicked } from '../context/schedulerSlice';
 function CustomDialog({ closeDialog }) {
 	const [allocateModal, setAllocateModal] = useState(false);
 	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
@@ -19,11 +20,17 @@ function CustomDialog({ closeDialog }) {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [duplicateBookingModal, setDuplicateBookingModal] = useState(false);
 	const dispatch = useDispatch();
-	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
-		(state) => state.scheduler
-	);
-	const data = bookings[index];
-	// console.log(data);
+	const {
+		bookings,
+		currentlySelectedBookingIndex: index,
+		activeSearch,
+		activeSearchResult,
+	} = useSelector((state) => state.scheduler);
+	let data = {};
+	data = bookings[index];
+	if (activeSearch) data = activeSearchResult;
+
+	if (!data?.bookingId) return null;
 
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
@@ -38,7 +45,10 @@ function CustomDialog({ closeDialog }) {
 
 					<button
 						className='rounded-full p-2'
-						onClick={closeDialog}
+						onClick={() => {
+							closeDialog();
+							dispatch(setActiveSearchResultClicked(null));
+						}}
 					>
 						<CancelRoundedIcon />
 					</button>
