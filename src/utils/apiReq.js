@@ -362,7 +362,7 @@ async function bookingFindByTerm(queryField, testMode = false) {
 				url: URL,
 				requestBody: queryField,
 				headers: setHeaders(),
-				response: res,
+				// response: res,
 			},
 			'info'
 		);

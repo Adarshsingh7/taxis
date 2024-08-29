@@ -25,7 +25,7 @@ const Navbar = () => {
 	);
 	const callerId = useSelector((state) => state.caller);
 	const [openSearchInput, setOpenSearchInput] = useState(false);
-	const [inputData, SetInputData] = useState('');
+	const [inputData, setInputData] = useState('');
 	const inputRef = useRef(null);
 	const handleClick = (e) => {
 		e.preventDefault();
@@ -83,14 +83,14 @@ const Navbar = () => {
 											className='rounded-lg w-64 focus:outline-none focus:ring-0 p-1 px-2 text-black bg-gray-200'
 											placeholder='Search Bookings...'
 											value={inputData}
-											onChange={(e) => SetInputData(e.target.value)}
+											onChange={(e) => setInputData(e.target.value)}
 											onKeyDown={handleKeyPress}
 										/>
 										<span className='absolute top-auto right-1 cursor-pointer'>
 											<CancelIcon
 												onClick={() => {
 													dispatch(makeSearchInactive());
-													SetInputData('');
+													setInputData('');
 													setOpenSearchInput(false);
 												}}
 												fontSize='small'

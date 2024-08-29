@@ -205,6 +205,7 @@ export function handleCompleteBooking({
 }
 
 export const handleSearchBooking = function (keyword) {
+	console.log('keyword', keyword);
 	return async (dispatch, getState) => {
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
 		// const res = await bookingFindByKeyword(keyword, activeTestMode);
@@ -217,10 +218,10 @@ export const handleSearchBooking = function (keyword) {
 		// }
 		const res = await bookingFindByTerm(keyword, activeTestMode);
 		if (res.status === 'success') {
+			console.log(res.results);
 			const results = res.results
 				.filter((booking) => booking.cancelled === false)
 				.map((el) => filterScheduledBookings(el));
-			console.log(results);
 			dispatch(schedulerSlice.actions.makeSearchActive(results));
 		}
 	};
