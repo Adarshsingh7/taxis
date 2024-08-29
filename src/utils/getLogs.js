@@ -31,11 +31,11 @@ function appendToLocalStorage(newObject, key = 'SentryLog') {
 
 export const sendLogs = (data, type) => {
 	appendToLocalStorage(
-		{ logType: type, ...data, logCreatedAt: Date.now(), },
+		{ logType: type, ...data, logCreatedAt: Date.now() },
 		'SentryLog'
 	);
 	if (type === 'info') {
-		Sentry.captureMessage(data, type);
+		Sentry.captureMessage(`Logs : ${data}`, type);
 	} else if (type === 'error') {
 		Sentry.captureException(data, type);
 	}
