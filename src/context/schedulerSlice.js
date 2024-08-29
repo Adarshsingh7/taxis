@@ -143,9 +143,16 @@ export function deleteSchedulerBooking(cancelBlock, fullName, id) {
 export function allocateBookingToDriver(actionByUserId) {
 	return async (dispatch, getState) => {
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
-		const { bookings, currentlySelectedBookingIndex, selectedDriver } =
-			getState().scheduler;
-		const currentBooking = bookings[currentlySelectedBookingIndex];
+		const {
+			bookings,
+			currentlySelectedBookingIndex,
+			selectedDriver,
+			activeSearch,
+			activeSearchResult,
+		} = getState().scheduler;
+		const currentBooking = activeSearch
+			? activeSearchResult
+			: bookings[currentlySelectedBookingIndex];
 		const isActiveTestMode = getState().bookingForm.isActiveTestMode;
 
 		const requestBody = {
