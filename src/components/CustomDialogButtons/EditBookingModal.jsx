@@ -6,10 +6,15 @@ import { addDataFromSchedulerInEditMode } from '../../context/bookingSlice';
 
 function EditBookingModal({ setEditBookingModal, closeDialog }) {
 	const dispatch = useDispatch();
-	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
-		(state) => state.scheduler
-	);
-	const data = bookings[index];
+	const {
+		bookings,
+		currentlySelectedBookingIndex: index,
+		activeSearchResult,
+		activeSearch,
+	} = useSelector((state) => state.scheduler);
+	let data = {};
+	data = bookings[index];
+	if (activeSearch) data = activeSearchResult;
 	function handleEditOne() {
 		const filterData = { ...data, recurrenceID: '', recurrenceRule: '' };
 		console.log(`Edit Single Bookings`);

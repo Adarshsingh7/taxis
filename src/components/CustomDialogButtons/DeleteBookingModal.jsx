@@ -10,13 +10,18 @@ import { useAuth } from '../../hooks/useAuth';
 
 export default function DeleteBookingModal({ setDeleteModal, closeDialog }) {
 	const dispatch = useDispatch();
-	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
-		(state) => state.scheduler
-	);
-	const data = bookings[index];
+	const {
+		bookings,
+		currentlySelectedBookingIndex: index,
+		activeSearchResult,
+		activeSearch,
+	} = useSelector((state) => state.scheduler);
+	let data = {};
+	data = bookings[index];
+	if (activeSearch) data = activeSearchResult;
 	const user = useAuth();
 	const handleSingleDelete = () => {
-		console.log("Single Delete Button Clicked" )
+		console.log('Single Delete Button Clicked');
 		dispatch(
 			deleteSchedulerBooking(
 				false,
@@ -29,7 +34,7 @@ export default function DeleteBookingModal({ setDeleteModal, closeDialog }) {
 	};
 
 	const handleDeleteAllRepeat = async () => {
-		console.log("Repeated Booking Delete All Button Clicked" )
+		console.log('Repeated Booking Delete All Button Clicked');
 		dispatch(
 			deleteSchedulerBooking(
 				true,

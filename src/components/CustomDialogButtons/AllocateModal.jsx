@@ -15,10 +15,15 @@ import { useAuth } from '../../hooks/useAuth';
 
 // Allocate Driver Modal Structure
 export default function AllocateModal({ setAllocateModal, closeDialog }) {
-	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
-		(state) => state.scheduler
-	);
-	const data = bookings[index];
+	const {
+		bookings,
+		currentlySelectedBookingIndex: index,
+		activeSearch,
+		activeSearchResult,
+	} = useSelector((state) => state.scheduler);
+	let data = {};
+	data = bookings[index];
+	if (activeSearch) data = activeSearchResult;
 
 	const [loading, setLoading] = useState(false);
 	const [driverData, setDriverData] = useState([]);
@@ -39,7 +44,9 @@ export default function AllocateModal({ setAllocateModal, closeDialog }) {
 	}, []);
 
 	function handleAttactDriver(driver) {
-		console.log(`Driver Id - ${driver.id} Allocated to Booking Id - ${data.bookingId}`)
+		console.log(
+			`Driver Id - ${driver.id} Allocated to Booking Id - ${data.bookingId}`
+		);
 		setConfirmAllocation(true);
 		setSelectedDriver(driver);
 		dispatch(selectDriver(driver.id));

@@ -13,10 +13,15 @@ export default function CompleteBookingModal({
 	setIsCompleteBookingModal,
 	closeDialog,
 }) {
-	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
-		(state) => state.scheduler
-	);
-	const data = bookings[index];
+	const {
+		bookings,
+		currentlySelectedBookingIndex: index,
+		activeSearchResult,
+		activeSearch,
+	} = useSelector((state) => state.scheduler);
+	let data = {};
+	data = bookings[index];
+	if (activeSearch) data = activeSearchResult;
 	const [accountPrice, setAccountPrice] = useState(data.priceAccount || 0);
 	const [waitingTime, setWaitingTime] = useState(data.waitingTime || 0);
 	const [parkingCharge, setParkingCharge] = useState(data.parkingCharge || 0);
@@ -25,7 +30,7 @@ export default function CompleteBookingModal({
 	const dispatch = useDispatch();
 
 	const handleCompleteClick = async (e) => {
-		console.log(`${data.bookingId} is completed`)
+		console.log(`${data.bookingId} is completed`);
 		e.preventDefault();
 		const completedBookingData = {
 			waitingTime,

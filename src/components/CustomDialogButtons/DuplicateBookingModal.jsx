@@ -16,10 +16,15 @@ export default function DuplicateBookingModal({
 	const { isActiveTestMode: activeTestMode } = useSelector(
 		(state) => state.bookingForm
 	);
-	const { bookings, currentlySelectedBookingIndex: index } = useSelector(
-		(state) => state.scheduler
-	);
-	const data = bookings[index];
+	const {
+		bookings,
+		currentlySelectedBookingIndex: index,
+		activeSearchResult,
+		activeSearch,
+	} = useSelector((state) => state.scheduler);
+	let data = {};
+	data = bookings[index];
+	if (activeSearch) data = activeSearchResult;
 	const user = useAuth();
 	const [isToggleTrue, setToggleTrue] = useState(true);
 	const [newDate, setNewDate] = useState(formatDate(data.pickupDateTime));
@@ -35,7 +40,7 @@ export default function DuplicateBookingModal({
 			...data,
 			pickupDateTime: newDate,
 		};
-		console.log("Duplicate Booking created")
+		console.log('Duplicate Booking created');
 		setDuplicateBookingModal(false);
 		closeDialog();
 		const res = await makeBooking(newData, activeTestMode);
