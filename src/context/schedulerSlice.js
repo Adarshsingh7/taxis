@@ -201,10 +201,16 @@ export function handleCompleteBooking({
 	driverPrice,
 }) {
 	return async (dispatch, getState) => {
-		const { bookings, currentlySelectedBookingIndex: index } =
-			getState().scheduler;
+		const {
+			bookings,
+			currentlySelectedBookingIndex: index,
+			activeSearch,
+			activeSearchResult,
+		} = getState().scheduler;
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
-		const bookingId = bookings[index].bookingId;
+		const bookingId = activeSearch
+			? activeSearchResult.bookingId
+			: bookings[index].bookingId;
 
 		const response = await completeBookings(
 			{

@@ -142,6 +142,7 @@ const AceScheduler = () => {
 		<ProtectedRoute>
 			<Snackbar />
 			<ScheduleComponent
+				firstDayOfWeek={1}
 				height={window.innerHeight - 150}
 				currentView={activeSearch ? 'Agenda' : 'Day'}
 				selectedDate={activeDate}
