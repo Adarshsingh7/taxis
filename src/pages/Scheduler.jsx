@@ -160,7 +160,7 @@ const AceScheduler = () => {
 					{ option: 'Day' },
 					{
 						option: 'Agenda',
-						allowVirtualScrolling: true,
+						allowVirtualScrolling: activeSearch ? true : false,
 						interval: 1,
 					},
 				]}
