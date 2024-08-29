@@ -119,11 +119,19 @@ export function getRefreshedBookings() {
 
 export function deleteSchedulerBooking(cancelBlock, fullName, id) {
 	return async (dispatch, getState) => {
-		const { bookings, currentlySelectedBookingIndex: index } =
-			getState().scheduler;
+		console.log({ cancelBlock, fullName, id });
+		const {
+			bookings,
+			currentlySelectedBookingIndex: index,
+			activeSearch,
+			activeSearchResult,
+		} = getState().scheduler;
 		const testMode = getState().bookingForm.isActiveTestMode;
-		if (index === -1) return;
-		const bookingId = bookings[index].bookingId;
+		if (index === -1 && !activeSearch) return;
+		const bookingId = activeSearch
+			? activeSearchResult.bookingId
+			: bookings[index].bookingId;
+		console.log({ bookingId });
 
 		const reqData = {
 			bookingId,
