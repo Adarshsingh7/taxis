@@ -156,8 +156,15 @@ const AceScheduler = () => {
 				editorTemplate={null}
 				popupOpen={(args) => (args.cancel = true)}
 				className='schedule-cell-dimension'
-				views={[{ option: 'Day' }, { option: 'Agenda' }]}
-				agendaDaysCount={365}
+				views={[
+					{ option: 'Day' },
+					{
+						option: 'Agenda',
+						allowVirtualScrolling: true,
+						interval: 1,
+					},
+				]}
+				// agendaDaysCount={365}
 			>
 				{dialogOpen && !viewBookingModal && (
 					<Modal
