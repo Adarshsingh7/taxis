@@ -230,9 +230,9 @@ export const handleSearchBooking = function (keyword) {
 	};
 };
 
-export const setActiveSearchResult = function (bookingId) {
+export const setActiveSearchResult = function (bookingId, activeTestMode) {
 	return async (dispatch) => {
-		const data = await findBookingById(bookingId);
+		const data = await findBookingById(bookingId, activeTestMode);
 		if (data.status === 'success') {
 			dispatch(schedulerSlice.actions.setActiveSearchResultClicked(data));
 			console.log(data);

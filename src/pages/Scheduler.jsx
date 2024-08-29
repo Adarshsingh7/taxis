@@ -126,7 +126,7 @@ const AceScheduler = () => {
 	// handler funciton for each booking click
 	const onEventClick = async (args) => {
 		if (activeSearch) {
-			dispatch(setActiveSearchResult(args.event.bookingId));
+			dispatch(setActiveSearchResult(args.event.bookingId, activeTestMode));
 		} else {
 			setSelectedBookingData(args.event);
 			dispatch(setActiveBookingIndex(args.event.bookingId));
