@@ -10,7 +10,6 @@ import {
 	bookingFindByTerm,
 	findBookingById,
 } from '../utils/apiReq';
-import { transformData } from '../utils/transformDataForBooking';
 import axios from 'axios';
 
 const filterScheduledBookings = function (booking) {
@@ -109,9 +108,7 @@ export function getRefreshedBookings() {
 					(booking) => booking.status !== 3
 				);
 			}
-			dispatch(
-				schedulerSlice.actions.insertBookings(transformData(filteredBookings))
-			);
+			dispatch(schedulerSlice.actions.insertBookings(filteredBookings));
 		}
 		return response;
 	};
@@ -174,7 +171,7 @@ export function allocateBookingToDriver(actionByUserId) {
 			const notification = await axios.get(
 				`https://mobile-notifiation-registraion.onrender.com/8`
 			);
-			console.log(notification);
+			// console.log(notification);
 			if (notification.status === 200) {
 				const expoToken = notification.data.data.expoNotificationToken;
 				await axios.post(
@@ -235,9 +232,9 @@ export const handleSearchBooking = function (keyword) {
 		const activeTestMode = getState().bookingForm.isActiveTestMode;
 		// const res = await bookingFindByKeyword(keyword, activeTestMode);
 		// if (res.status === 'success') {
-		// 	const results = transformData(
+		// 	const results =
 		// 		res.bookings.filter((booking) => booking.cancelled === false)
-		// 	);
+		// 	;
 		// 	console.log(results);
 		// 	dispatch(schedulerSlice.actions.makeSearchActive(results));
 		// }

@@ -59,7 +59,7 @@ const AceScheduler = () => {
 	// data that syncfusion requires for inside computation of the internal mapping
 	const fieldsData = {
 		id: 'bookingId',
-		subject: { name: 'subject' },
+		subject: { name: 'cellText' },
 		isAllDay: { name: 'isAllDay' },
 		startTime: { name: 'pickupDateTime' },
 		endTime: { name: 'endTime' },
