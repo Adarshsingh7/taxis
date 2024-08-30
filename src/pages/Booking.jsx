@@ -469,6 +469,13 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
 							value={bookingData.details}
 							onChange={(e) => updateData('details', e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									e.preventDefault();
+									const newValue = bookingData.details + '\n';
+									updateData('details', newValue);
+								}
+							}}
 						></textarea>
 					</div>
 
