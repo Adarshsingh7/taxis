@@ -24,7 +24,7 @@ const Navbar = () => {
 		(state) => state.bookingForm.isActiveTestMode
 	);
 	const callerId = useSelector((state) => state.caller);
-	const [openSearchInput, setOpenSearchInput] = useState(false);
+	const [openSearchInput, setOpenSearchInput] = useState(true);
 	const [inputData, setInputData] = useState('');
 	const inputRef = useRef(null);
 	const handleClick = (e) => {
@@ -76,6 +76,7 @@ const Navbar = () => {
 								onSubmit={handleClick}
 								className='flex justify-center items-center gap-4'
 							>
+								{openSearchInput && (
 									<div className='relative'>
 										<input
 											ref={inputRef}
@@ -85,18 +86,19 @@ const Navbar = () => {
 											onChange={(e) => setInputData(e.target.value)}
 											onKeyDown={handleKeyPress}
 										/>
-										{/* <span className='absolute top-auto right-1 cursor-pointer'>
+										<span className='absolute top-auto right-1 cursor-pointer'>
 											<CancelIcon
 												onClick={() => {
 													dispatch(makeSearchInactive());
 													setInputData('');
-													setOpenSearchInput(false);
+													setOpenSearchInput(true);
 												}}
 												fontSize='small'
 												color='error'
 											/>
-										</span> */}
+										</span>
 									</div>
+								)}
 
 								<button
 									type='submit'
