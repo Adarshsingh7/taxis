@@ -76,7 +76,6 @@ const Navbar = () => {
 								onSubmit={handleClick}
 								className='flex justify-center items-center gap-4'
 							>
-								{openSearchInput && (
 									<div className='relative'>
 										<input
 											ref={inputRef}
@@ -86,7 +85,7 @@ const Navbar = () => {
 											onChange={(e) => setInputData(e.target.value)}
 											onKeyDown={handleKeyPress}
 										/>
-										<span className='absolute top-auto right-1 cursor-pointer'>
+										{/* <span className='absolute top-auto right-1 cursor-pointer'>
 											<CancelIcon
 												onClick={() => {
 													dispatch(makeSearchInactive());
@@ -96,9 +95,8 @@ const Navbar = () => {
 												fontSize='small'
 												color='error'
 											/>
-										</span>
+										</span> */}
 									</div>
-								)}
 
 								<button
 									type='submit'
