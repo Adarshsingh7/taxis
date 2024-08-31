@@ -35,7 +35,9 @@ export default function DuplicateBookingModal({
 	const handleDateChange = (e) => {
 		setNewDate(e.target.value);
 	};
+	console.log(user);
 	const handleSave = async (data) => {
+		console.log(data);
 		const newData = {
 			...data,
 			pickupDateTime: newDate,
@@ -89,13 +91,12 @@ export default function DuplicateBookingModal({
 					onClick={() =>
 						handleSave({
 							...data,
-							backgroundColorRGB: '#795548',
 							bookingId: 0,
-							userId: null,
+							// userId: null,
 							actionByUserId: user.currentUser.id,
-							updatedByName: user.currentUser.name,
+							updatedByName: user.currentUser.fullName,
 							status: null,
-							bookedByName: user.currentUser.name,
+							bookedByName: user.currentUser.fullName,
 							recurrenceID: 0,
 							recurrenceRule: '',
 						})

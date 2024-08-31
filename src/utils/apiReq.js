@@ -58,6 +58,7 @@ function filterData(data) {
 		bookedByName: data.bookedByName || '',
 		bookingId: data.bookingId || null,
 		updatedByName: data.updatedByName || '',
+		actionByUserId: data.actionByUserId || null,
 	});
 }
 
