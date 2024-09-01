@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { formatDate } from './formatDate';
 import { sendLogs } from './getLogs';
+import { filterVias } from './filterVias';
 // const BASE = 'https://abacusonline-001-site1.atempurl.com';
 const BASE = 'https://api.acetaxisdorset.co.uk';
 // const BASE = 'https://abacusonline-001-site1.atempurl.com';
@@ -53,7 +54,7 @@ function filterData(data) {
 		chargeFromBase: data.chargeFromBase || false,
 		userId: data.userId || null,
 		returnDateTime: data.returnDateTime || null,
-		vias: data.vias || [],
+		vias: filterVias(data),
 		accountNumber: data.accountNumber,
 		bookedByName: data.bookedByName || '',
 		bookingId: data.bookingId || null,
