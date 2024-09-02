@@ -34,7 +34,7 @@ function CustomDialog({ closeDialog }) {
 
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
-			<div className='relative w-full max-w-7xl p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white'>
+			<div className='relative w-full max-w-7xl p-6 bg-card rounded-lg shadow-lg dark:bg-popover bg-white max-h-[75vh]'>
 				<div className='flex items-center justify-between mb-6'>
 					<h2 className='text-lg font-medium text-card'>
 						BookingId:{' '}
@@ -53,7 +53,7 @@ function CustomDialog({ closeDialog }) {
 						<CancelRoundedIcon />
 					</button>
 				</div>
-				<div className='p-4 grid grid-cols-2 place-content-between gap-4 mt-4 border border-card dark:border-popover'>
+				<div className='p-4 grid grid-cols-2 place-content-between gap-4 mt-4 border border-card dark:border-popover max-h-[55vh] overflow-scroll'>
 					<div className='w-[100%]'>
 						<div className='flex flex-col w-full gap-4'>
 							<div className='border border-card p-4 shadow-md rounded-lg bg-[#F3F4F6]'>
