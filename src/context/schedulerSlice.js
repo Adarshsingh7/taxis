@@ -246,7 +246,7 @@ export const handleSearchBooking = function (keyword) {
 		const res = await bookingFindByTerm(keyword, activeTestMode);
 		dispatch(schedulerSlice.actions.setLoading(false));
 		if (res.status === 'success') {
-			const results = res.results``
+			const results = res.results
 				.filter((booking) => booking.cancelled === false)
 				.map((el) => filterScheduledBookings(el));
 			dispatch(schedulerSlice.actions.makeSearchActive(results));

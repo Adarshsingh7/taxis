@@ -115,6 +115,8 @@ const AceScheduler = () => {
 		return () => clearInterval(refreshInterval);
 	}, [dispatch]);
 
+	console.log({ activeSearch, activeSearchResults });
+
 	const eventSettings = {
 		dataSource: activeSearch ? activeSearchResults : bookings,
 		fields: fieldsData,
