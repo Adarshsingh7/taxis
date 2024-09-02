@@ -17,7 +17,7 @@ const filterScheduledBookings = function (booking) {
 		bookingId: booking.bookingId,
 		bookingTime: booking.bookingTime,
 		pickupDateTime: booking.pickupDate,
-		endTime: booking.endDate,
+		endTime: booking.endDate || booking.pickupDate,
 		backgroundColorRGB: booking.color,
 		subject: booking.cellText,
 		...booking,
@@ -246,10 +246,8 @@ export const handleSearchBooking = function (keyword) {
 		const res = await bookingFindByTerm(keyword, activeTestMode);
 		dispatch(schedulerSlice.actions.setLoading(false));
 		if (res.status === 'success') {
-			const results = res.results
-				.filter(
-					(booking) => booking.cancelled === false && booking.endDate !== null
-				)
+			const results = res.results``
+				.filter((booking) => booking.cancelled === false)
 				.map((el) => filterScheduledBookings(el));
 			dispatch(schedulerSlice.actions.makeSearchActive(results));
 		}
