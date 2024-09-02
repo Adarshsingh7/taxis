@@ -276,7 +276,7 @@ function CustomDialog({ closeDialog }) {
 						</div>
 					</div>
 				</div>
-				<div className='mt-6 gap-4 flex flex-wrap items-center'>
+				<div className='my-auto pt-2 gap-4 flex flex-wrap justify-center items-center'>
 					{/* <BookingButton
 						text='View Booking'
 						color='blue'
