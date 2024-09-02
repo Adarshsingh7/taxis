@@ -113,7 +113,6 @@ const AceScheduler = () => {
 		return () => clearInterval(refreshInterval);
 	}, [dispatch]);
 
-	// mapping the remote data to syncfusion components
 	const eventSettings = {
 		dataSource: activeSearch ? activeSearchResults : bookings,
 		fields: fieldsData,

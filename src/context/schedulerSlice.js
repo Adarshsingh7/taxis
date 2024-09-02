@@ -28,6 +28,7 @@ const schedulerSlice = createSlice({
 	name: 'scheduler',
 	initialState: {
 		bookings: [],
+		loading: false,
 		currentlySelectedBookingIndex: -1,
 		selectedDriver: null,
 		activeDate: new Date().toISOString(),
@@ -85,6 +86,9 @@ const schedulerSlice = createSlice({
 					return;
 				}
 			});
+		},
+		setLoading: (state, action) => {
+			state.loading = action.payload;
 		},
 	},
 });
@@ -238,7 +242,9 @@ export const handleSearchBooking = function (keyword) {
 		// 	console.log(results);
 		// 	dispatch(schedulerSlice.actions.makeSearchActive(results));
 		// }
+		dispatch(schedulerSlice.actions.setLoading(true));
 		const res = await bookingFindByTerm(keyword, activeTestMode);
+		dispatch(schedulerSlice.actions.setLoading(false));
 		if (res.status === 'success') {
 			const results = res.results
 				.filter((booking) => booking.cancelled === false)
