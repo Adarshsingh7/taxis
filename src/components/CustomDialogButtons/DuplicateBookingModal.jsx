@@ -92,7 +92,7 @@ export default function DuplicateBookingModal({
 						handleSave({
 							...data,
 							bookingId: 0,
-							// userId: null,
+							userId: null,
 							actionByUserId: user.currentUser.id,
 							updatedByName: user.currentUser.fullName,
 							status: null,
