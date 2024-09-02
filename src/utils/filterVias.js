@@ -1,7 +1,7 @@
 /** @format */
 
 const filterVias = function (data) {
-	if (data?.Vias?.lengh) {
+	if (data?.Vias?.length) {
 		return data.Vias?.map((el) => ({
 			viaSequence: el.ViaSequence,
 			postcode: el.PostCode,
