@@ -36,6 +36,7 @@ import {
 	setActiveSearchResult,
 } from '../context/schedulerSlice';
 import { createBookingFromScheduler } from '../context/bookingSlice';
+import Loader from '../components/Loader';
 
 const AceScheduler = () => {
 	// taking our global states from the redux
@@ -45,6 +46,7 @@ const AceScheduler = () => {
 		activeDate,
 		activeSearch,
 		activeSearchResults,
+		loading: searchLoading,
 	} = useSelector((state) => state.scheduler);
 	const activeTestMode = useSelector(
 		(state) => state.bookingForm.isActiveTestMode
@@ -140,6 +142,7 @@ const AceScheduler = () => {
 	return (
 		<ProtectedRoute>
 			<Snackbar />
+			{searchLoading && <Loader />}
 			<ScheduleComponent
 				firstDayOfWeek={1}
 				height={window.innerHeight - 150}

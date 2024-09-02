@@ -247,7 +247,9 @@ export const handleSearchBooking = function (keyword) {
 		dispatch(schedulerSlice.actions.setLoading(false));
 		if (res.status === 'success') {
 			const results = res.results
-				.filter((booking) => booking.cancelled === false)
+				.filter(
+					(booking) => booking.cancelled === false && booking.endDate !== null
+				)
 				.map((el) => filterScheduledBookings(el));
 			dispatch(schedulerSlice.actions.makeSearchActive(results));
 		}
