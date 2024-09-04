@@ -15,7 +15,6 @@ function ListDrivers({ setOpen }) {
 
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(false);
-
 	// Fetch all drivers from the API
 	useEffect(() => {
 		getAllDrivers().then((res) => {
@@ -62,9 +61,22 @@ function ListDrivers({ setOpen }) {
 										style={{ backgroundColor: el.colorRGB }}
 										className={`h-5 w-5`}
 									></div>
-									<div className='flex flex-col w-[50%] justify-center items-start'>
+									<div className='flex flex-col w-[60%] justify-center items-start'>
 										<p className='text-[1rem]'>
-											({el?.id}) - {el?.fullName}
+											({el?.id}) - {el?.fullName}{" "} 
+											{el?.vehicleType === 0
+												? ''
+												: el?.vehicleType === 1
+												? '(Saloon)'
+												: el?.vehicleType === 2
+												? '(Estate)'
+												: el?.vehicleType === 3
+												? '(MPV)'
+												: el?.vehicleType === 4
+												? '(MPVPlus)'
+												: el?.vehicleType === 5
+												? '(SUV)'
+												: ''}
 										</p>
 										<p className='text-[.8rem]'>{el.regNo}</p>
 									</div>
