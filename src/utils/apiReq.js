@@ -34,8 +34,8 @@ function filterData(data) {
 	return JSON.stringify({
 		details: data.details,
 		email: data.email,
-		durationText: data.durationText + '',
-		durationMinutes: +data.durationText,
+		durationText: data.durationText ? data.durationText + '' : '0',
+		durationMinutes: data.durationText ? +data.durationText : 0,
 		isAllDay: data.isAllDay,
 		passengerName: data.passengerName,
 		passengers: data.passengers,
