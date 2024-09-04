@@ -193,7 +193,7 @@ const AceScheduler = () => {
 			<div className='flex justify-end w-[10%] fixed top-[125px] right-[160px] z-[1000]'>
 				{!activeSearch && (
 					<span className='flex flex-row gap-2 items-center align-middle'>
-						<span className='select-none text-sm uppercase font-normal'>
+						<span className='select-none whitespace-nowrap text-sm uppercase font-normal'>
 							Show Completed
 						</span>
 						<Switch

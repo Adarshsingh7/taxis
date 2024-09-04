@@ -542,15 +542,15 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							/>
 						</label> */}
 
-						<label className='flex items-center justify-center'>
-							<span className='mr-2'>All Day</span>
+						<div className='flex items-center justify-center'>
+							<span className='mr-2 select-none'>All Day</span>
 							<input
 								type='checkbox'
 								checked={bookingData.isAllDay}
 								onChange={(e) => updateData('isAllDay', e.target.checked)}
 								className='form-checkbox h-5 w-5 text-primary'
 							/>
-						</label>
+						</div>
 						<div className='flex justify-center items-center'>
 							{bookingData.scope !== 1 && (
 								<>
