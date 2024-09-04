@@ -29,7 +29,7 @@ const AddAndEditVia = ({ onSet }) => {
 				...prevVias,
 				{
 					address: newViaAddress,
-					postcode: newViaPostcode,
+					postCode: newViaPostcode,
 					viaSequence: prevVias.length,
 				},
 			]);
@@ -126,17 +126,17 @@ const AddAndEditVia = ({ onSet }) => {
 // Each Strip of VIA which has been added of exist are displayed by this component
 function VIABar({ data, onEdit, isEditing, setEditingItem }) {
 	const [newAddress, setNewAddress] = useState(data.address);
-	const [newPostcode, setNewPostcode] = useState(data.postcode);
+	const [newPostcode, setNewPostcode] = useState(data.postCode);
 
 	useEffect(() => {
 		setNewAddress(data.address);
-		setNewPostcode(data.postcode);
+		setNewPostcode(data.postCode);
 	}, [data]);
 
 	// This function is used to edit the via point independently
 	const handleEdit = () => {
 		if (!newAddress && !newPostcode) return;
-		onEdit({ ...data, address: newAddress, postcode: newPostcode });
+		onEdit({ ...data, address: newAddress, postCode: newPostcode });
 	};
 
 	return (
@@ -156,7 +156,7 @@ function VIABar({ data, onEdit, isEditing, setEditingItem }) {
 				</div>
 			) : (
 				<span>
-					{data.address} {data.postcode}
+					{data.address} {data.postCode}
 				</span>
 			)}
 			<div className='space-x-2 m-auto'>

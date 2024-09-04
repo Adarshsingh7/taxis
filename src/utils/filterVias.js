@@ -12,7 +12,7 @@ const filterVias = function (data) {
 	if (data.vias?.length) {
 		return data.vias?.map((el) => ({
 			viaSequence: el.viaSequence,
-			postcode: el.postcode,
+			postCode: el.postCode,
 			address: el.address,
 			// id: el.Id,
 		}));
