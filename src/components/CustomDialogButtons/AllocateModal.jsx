@@ -91,15 +91,15 @@ export default function AllocateModal({ setAllocateModal, closeDialog }) {
 									className='bg-gray-200 flex justify-center w-full items-center mx-auto cursor-pointer gap-4 mb-2'
 								>
 									<div
-										className='w-full mx-auto flex justify-center items-center'
+										className='w-full mx-auto flex gap-4 justify-center items-center'
 										onClick={() => handleAttactDriver(el)}
 									>
 										<div
 											style={{ backgroundColor: el.colorRGB }}
-											className={`h-5 w-5 rounded-full`}
+											className={`h-5 w-5`}
 										></div>
-										<div className='flex flex-col w-[50%] justify-center items-center'>
-											<p className='text-xl'>{el?.fullName}</p>
+										<div className='flex flex-col w-[50%] justify-center items-start'>
+											<p className='text-[1rem]'>({el?.id}) - {el?.fullName}</p>
 											<p className='text-[.8rem]'>{el.regNo}</p>
 										</div>
 									</div>

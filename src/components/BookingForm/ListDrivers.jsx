@@ -42,12 +42,12 @@ function ListDrivers({ setOpen }) {
 					<p className='text-5xl'>
 						<AccountCircleIcon fontSize='35px' />
 					</p>
-					<p className='m-5 font-bold uppercase'>allocate driver</p>
+					<p className='m-3 font-bold uppercase'>allocate driver</p>
 				</div>
 				<div>
 					<p className='text-2xl font-bold uppercase'>select driver</p>
 				</div>
-				<div className='m-auto w-full h-[50vh] overflow-auto relative'>
+				<div className='mx-auto w-full h-[50vh] overflow-auto relative'>
 					{loading ? (
 						<Loader />
 					) : (
@@ -57,14 +57,18 @@ function ListDrivers({ setOpen }) {
 								className='bg-gray-200 mb-2 cursor-pointer'
 								onClick={() => handleAttactDriver(el)}
 							>
-								<div className='flex m-auto justify-center items-center align-middle gap-5'>
+								<div className='flex mx-auto justify-center items-center align-middle gap-4'>
 									<div
 										style={{ backgroundColor: el.colorRGB }}
-										className={`h-5 w-5 rounded-full`}
+										className={`h-5 w-5`}
 									></div>
-									<p className='text-2xl'>{el?.fullName}</p>
+									<div className='flex flex-col w-[50%] justify-center items-start'>
+										<p className='text-[1rem]'>
+											({el?.id}) - {el?.fullName}
+										</p>
+										<p className='text-[.8rem]'>{el.regNo}</p>
+									</div>
 								</div>
-								<p>{el.regNo}</p>
 							</div>
 						))
 					)}
