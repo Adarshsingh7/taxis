@@ -310,8 +310,16 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	}, [bookingData.formBusy, bookingData.pickupDateTime, dispatch]);
 
 	useEffect(() => {
-		updateData('hours', Math.floor(bookingData.durationText / 60));
-		updateData('minutes', Math.floor(bookingData.durationText % 60));
+		updateValueSilentMode(
+			id,
+			'hours',
+			Math.floor(bookingData.durationText / 60)
+		);
+		updateValueSilentMode(
+			id,
+			'minutes',
+			Math.floor(bookingData.durationText % 60)
+		);
 	}, [bookingData.durationText]);
 
 	function convertToOneHourLaterFromPickUp() {

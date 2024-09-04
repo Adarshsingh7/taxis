@@ -118,7 +118,7 @@ function Direction({ mapRef }) {
 		}
 
 		const waypoints = vias.map((via) => ({
-			location: `${via.address}, ${via.postcode}`,
+			location: `${via.address}, ${via.postCode}`,
 		}));
 
 		directionService
