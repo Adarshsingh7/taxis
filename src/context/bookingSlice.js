@@ -3,7 +3,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { makeBooking, updateBooking } from './../utils/apiReq';
 import { formatDate } from './../utils/formatDate';
-import { filterVias } from '../utils/filterVias';
 
 // Filter data to avoid undefined values and make the data structure consistent
 const filterData = (data = {}) => ({
@@ -30,7 +29,7 @@ const filterData = (data = {}) => ({
 	chargeFromBase: true,
 	userId: data.UserId || null,
 	returnDateTime: data.ReturnDateTime || null,
-	vias: filterVias(data),
+	vias: data.Vias || [],
 	accountNumber: data.AccountNumber || 0,
 	bookedByName: data.BookedByName || '',
 	returnBooking: data.ReturnBooking || false,

@@ -580,50 +580,51 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								placeholder='Hours'
 								required
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-								value={Math.floor(bookingData.durationText / 60)}
-								onChange={(e) =>
-									updateData(
-										'hours',
-										(() => {
-											const value = parseInt(e.target.value, 10);
-											if (!isNaN(value) && value >= 0 && value <= 99) {
-												updateData(
-													'durationText',
-													String(value * 60 + bookingData.minutes)
-												);
-												return value;
-											} else if (e.target.value === '') {
-												return '';
-											} else return bookingData.hours;
-										})()
-									)
-								}
+								value={bookingData.hours === null ? '' : bookingData.hours}
+								onChange={(e) => {
+									const value = e.target.value;
+									if (value === '') {
+										updateData('hours', null); // Set hours to null when the input is empty
+										updateData('durationText', String(bookingData.minutes)); // Adjust durationText accordingly
+									} else {
+										const intValue = parseInt(value, 10);
+										if (!isNaN(intValue) && intValue >= 0 && intValue <= 99) {
+											updateData('hours', intValue);
+											updateData(
+												'durationText',
+												String(intValue * 60 + bookingData.minutes)
+											);
+										}
+									}
+								}}
 							/>
 							<Input
 								type='number'
 								required
 								placeholder='Minutes'
-								value={Math.floor(bookingData.durationText % 60)}
-								onChange={(e) =>
-									updateData(
-										'minutes',
-										(() => {
-											const value = parseInt(e.target.value, 10);
-											if (!isNaN(value) && value >= 0 && value <= 59) {
-												updateData(
-													'durationText',
-													String(bookingData.hours * 60 + value)
-												);
-												return value;
-											} else if (e.target.value === '') {
-												return '';
-											} else {
-												// If value is greater than 59, keep it unchanged
-												return Math.min(59, Math.max(0, value)); // Clamp value between 0 and 59
-											}
-										})()
-									)
-								}
+								value={bookingData.minutes === null ? '' : bookingData.minutes}
+								onChange={(e) => {
+									const value = e.target.value;
+									if (value === '') {
+										updateData('minutes', null); // Set minutes to null when the input is empty
+										updateData('durationText', String(bookingData.hours * 60)); // Adjust durationText accordingly
+									} else {
+										const intValue = parseInt(value, 10);
+										if (!isNaN(intValue) && intValue >= 0 && intValue <= 59) {
+											updateData('minutes', intValue);
+											updateData(
+												'durationText',
+												String(bookingData.hours * 60 + intValue)
+											);
+										} else {
+											// If the input is invalid or out of range, keep the minutes unchanged but clamp the value between 0 and 59
+											updateData(
+												'minutes',
+												Math.min(59, Math.max(0, intValue))
+											);
+										}
+									}
+								}}
 							/>
 						</div>
 					</div>
