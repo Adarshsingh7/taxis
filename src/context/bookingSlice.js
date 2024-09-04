@@ -35,7 +35,7 @@ const filterData = (data = {}) => ({
 	returnBooking: data.ReturnBooking || false,
 	isReturn: data.IsReturn || false,
 	hours: data.Hours || 0,
-	minutes: data.Minutes || 20,
+	minutes: data.Minutes || 0,
 	repeatBooking: data.RepeatBooking || false,
 	frequency: data.Frequency || 'none',
 	repeatEnd: data.RepeatEnd || 'never',

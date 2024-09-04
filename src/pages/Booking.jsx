@@ -65,6 +65,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	// Submit the form data to the Puser Component
 	async function handleSubmit(e) {
 		e.preventDefault();
+
 		if (bookingData.returnDateTime) {
 			const pickup = new Date(bookingData.pickupDateTime).getTime();
 			const returnTime = new Date(bookingData.returnDateTime).getTime();
@@ -76,6 +77,25 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				return;
 			}
 		}
+
+		// const { hours, minutes } = bookingData;
+		const hours = +bookingData.hours;
+		const minutes = +bookingData.minutes;
+
+		if (
+			hours < 0 ||
+			hours > 100 ||
+			isNaN(hours) ||
+			minutes < 0 ||
+			minutes > 59 ||
+			isNaN(minutes)
+		) {
+			dispatch(openSnackbar('invalid duration range', 'error'));
+			return;
+		}
+
+		updateData('durationText', hours * 60 + minutes);
+
 		setFormSubmitLoading(true);
 		await onBookingUpload(id);
 		setFormSubmitLoading(false);
@@ -289,6 +309,11 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}
 	}, [bookingData.formBusy, bookingData.pickupDateTime, dispatch]);
 
+	useEffect(() => {
+		updateData('hours', Math.floor(bookingData.durationText / 60));
+		updateData('minutes', Math.floor(bookingData.durationText % 60));
+	}, [bookingData.durationText]);
+
 	function convertToOneHourLaterFromPickUp() {
 		const pickupDateTime = new Date(bookingData.pickupDateTime);
 		const oneHourLater = new Date(
@@ -298,8 +323,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	}
 
 	if (!bookingData) return null;
-
-	console.log('bookingData', bookingData);
 
 	return (
 		<div className='bg-background text-foreground p-3 m-auto'>
@@ -582,51 +605,15 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								placeholder='Hours'
 								required
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-								value={bookingData.hours === null ? '' : bookingData.hours}
-								onChange={(e) => {
-									const value = e.target.value;
-									if (value === '') {
-										updateData('hours', null); // Set hours to null when the input is empty
-										updateData('durationText', String(bookingData.minutes)); // Adjust durationText accordingly
-									} else {
-										const intValue = parseInt(value, 10);
-										if (!isNaN(intValue) && intValue >= 0 && intValue <= 99) {
-											updateData('hours', intValue);
-											updateData(
-												'durationText',
-												String(intValue * 60 + bookingData.minutes)
-											);
-										}
-									}
-								}}
+								value={bookingData.hours}
+								onChange={(e) => updateData('hours', e.target.value)}
 							/>
 							<Input
 								type='number'
 								required
 								placeholder='Minutes'
-								value={bookingData.minutes === null ? '' : bookingData.minutes}
-								onChange={(e) => {
-									const value = e.target.value;
-									if (value === '') {
-										updateData('minutes', null); // Set minutes to null when the input is empty
-										updateData('durationText', String(bookingData.hours * 60)); // Adjust durationText accordingly
-									} else {
-										const intValue = parseInt(value, 10);
-										if (!isNaN(intValue) && intValue >= 0 && intValue <= 59) {
-											updateData('minutes', intValue);
-											updateData(
-												'durationText',
-												String(bookingData.hours * 60 + intValue)
-											);
-										} else {
-											// If the input is invalid or out of range, keep the minutes unchanged but clamp the value between 0 and 59
-											updateData(
-												'minutes',
-												Math.min(59, Math.max(0, intValue))
-											);
-										}
-									}
-								}}
+								value={bookingData.minutes}
+								onChange={(e) => updateData('minutes', e.target.value)}
 							/>
 						</div>
 					</div>
