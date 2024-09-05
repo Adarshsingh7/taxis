@@ -12,7 +12,11 @@ import { addDataFromSchedulerInEditMode } from '../context/bookingSlice';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import { setActiveSearchResultClicked } from '../context/schedulerSlice';
+import {
+	deleteSchedulerBooking,
+	setActiveSearchResultClicked,
+} from '../context/schedulerSlice';
+import { useAuth } from '../hooks/useAuth';
 function CustomDialog({ closeDialog }) {
 	const [allocateModal, setAllocateModal] = useState(false);
 	const [isCompleteBookingModal, setIsCompleteBookingModal] = useState(false);
@@ -26,11 +30,23 @@ function CustomDialog({ closeDialog }) {
 		activeSearch,
 		activeSearchResult,
 	} = useSelector((state) => state.scheduler);
+	const user = useAuth();
 	let data = {};
 	data = bookings[index];
 	if (activeSearch) data = activeSearchResult;
 
 	if (!data?.bookingId) return null;
+
+	const handleCancelOnArrival = () => {
+		dispatch(
+			deleteSchedulerBooking(
+				false,
+				user.currentUser.fullName,
+				user.currentUser.id,
+				true
+			)
+		);
+	};
 
 	return (
 		<div className='fixed left-[-35vw] inset-0 w-[70vw] mx-auto z-50 flex items-center justify-center p-4 bg-background bg-opacity-50'>
@@ -318,6 +334,13 @@ function CustomDialog({ closeDialog }) {
 						color='green'
 						onClick={() => setIsCompleteBookingModal(true)}
 					/>
+					{data.scope === 1 && (
+						<BookingButton
+							text='Cancel On Arrival'
+							color='red'
+							onClick={handleCancelOnArrival}
+						/>
+					)}
 					<BookingButton
 						text='Cancel Booking'
 						color='red'

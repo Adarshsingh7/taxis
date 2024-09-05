@@ -259,7 +259,7 @@ async function deleteSchedulerBooking(data, testMode = true) {
 		cancelledByName: data.cancelledByName,
 		actionByUserId: data.actionByUserId,
 		cancelBlock: data.cancelBlock,
-		cancelledOnArrival: false,
+		cancelledOnArrival: data.cancelledOnArrival,
 	});
 	if (res.status === 'success')
 		sendLogs(

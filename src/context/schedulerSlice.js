@@ -118,7 +118,12 @@ export function getRefreshedBookings() {
 	};
 }
 
-export function deleteSchedulerBooking(cancelBlock, fullName, id) {
+export function deleteSchedulerBooking(
+	cancelBlock,
+	fullName,
+	id,
+	cancelledOnArrival = false
+) {
 	return async (dispatch, getState) => {
 		console.log({ cancelBlock, fullName, id });
 		const {
@@ -139,6 +144,7 @@ export function deleteSchedulerBooking(cancelBlock, fullName, id) {
 			cancelledByName: fullName,
 			actionByUserId: id,
 			cancelBlock,
+			cancelledOnArrival: cancelledOnArrival,
 		};
 
 		const data = await deleteBooking(reqData, testMode);
