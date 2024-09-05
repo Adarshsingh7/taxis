@@ -46,6 +46,7 @@ function CustomDialog({ closeDialog }) {
 				true
 			)
 		);
+		closeDialog();
 	};
 
 	return (

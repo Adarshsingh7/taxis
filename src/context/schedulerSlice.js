@@ -148,7 +148,7 @@ export function deleteSchedulerBooking(
 		};
 
 		const data = await deleteBooking(reqData, testMode);
-		if (data.status === 'success') {
+		if (data.status === 'success' && cancelledOnArrival === false) {
 			dispatch({ type: 'scheduler/removeBooking', payload: index });
 		}
 		return data;
