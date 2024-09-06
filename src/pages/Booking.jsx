@@ -54,8 +54,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	const [isQuoteDialogActive, setIsQuoteDialogActive] = useState(false);
 	const [quote, setQuote] = useState(null);
 	const [formSubmitLoading, setFormSubmitLoading] = useState(false);
-	const [hours, setHours] = useState(0);
-	const [minutes, setMinutes] = useState(0);
 
 	// working for 🔁 button basically toggles between pickup and destination addresses
 	function toggleAddress() {
@@ -81,7 +79,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			}
 		}
 
-		// const { hours, minutes } = bookingData;
+		const { hours, minutes } = bookingData;
 
 		if (
 			hours < 0 ||
@@ -311,9 +309,23 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	}, [bookingData.formBusy, bookingData.pickupDateTime, dispatch]);
 
 	useEffect(() => {
-		setHours(Math.floor(bookingData.durationText / 60));
-		setMinutes(Math.floor(bookingData.durationText % 60));
-	}, [bookingData.durationText]);
+		console.log('updating the hours and minutes');
+		dispatch(
+			updateValueSilentMode(
+				id,
+				'hours',
+				Math.floor(bookingData.durationText / 60)
+			)
+		);
+		dispatch(
+			updateValueSilentMode(
+				id,
+				'minutes',
+				Math.floor(bookingData.durationText % 60)
+			)
+		);
+	}, [bookingData.durationText, id, dispatch]);
+	console.log(bookingData.durationText, bookingData.hours, bookingData.minutes);
 
 	function convertToOneHourLaterFromPickUp() {
 		const pickupDateTime = new Date(bookingData.pickupDateTime);
@@ -613,15 +625,15 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								placeholder='Hours'
 								required
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-								value={hours}
-								onChange={(e) => setHours(e.target.value)}
+								value={bookingData.hours}
+								onChange={(e) => updateData('hours', e.target.value)}
 							/>
 							<Input
 								type='number'
 								required
 								placeholder='Minutes'
-								value={minutes}
-								onChange={(e) => setMinutes(e.target.value)}
+								value={bookingData.minutes}
+								onChange={(e) => updateData('minutes', e.target.value)}
 							/>
 						</div>
 					</div>

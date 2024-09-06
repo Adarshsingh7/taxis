@@ -9,7 +9,7 @@ const filterData = (data = {}) => ({
 	details: data.Details || '',
 	email: data.Email || '',
 	bookingId: data.Id || null,
-	durationText: data.DurationText || '20',
+	durationText: Number(data.durationText) ? String(data.durationText) : '20',
 	isAllDay: data.IsAllDay || false,
 	passengerName: data.PassengerName || '',
 	passengers: data.Passengers || 1,
@@ -43,8 +43,8 @@ const filterData = (data = {}) => ({
 	isLoading: data.IsLoading || false,
 	bookingType: data.bookingType || 'New',
 	quoteOptions: null,
-	hours: data.Hours || 0, //must be deleted no use
-	minutes: data.Minutes || 0, //must be deleted no use
+	hours: data.Hours ?? 0,
+	minutes: data.Minutes ?? 20,
 });
 
 const initialState = {
