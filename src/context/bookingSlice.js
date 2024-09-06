@@ -34,8 +34,6 @@ const filterData = (data = {}) => ({
 	bookedByName: data.BookedByName || '',
 	returnBooking: data.ReturnBooking || false,
 	isReturn: data.IsReturn || false,
-	hours: data.Hours || 0,
-	minutes: data.Minutes || 0,
 	repeatBooking: data.RepeatBooking || false,
 	frequency: data.Frequency || 'none',
 	repeatEnd: data.RepeatEnd || 'never',
@@ -45,6 +43,8 @@ const filterData = (data = {}) => ({
 	isLoading: data.IsLoading || false,
 	bookingType: data.bookingType || 'New',
 	quoteOptions: null,
+	hours: data.Hours || 0, //must be deleted no use
+	minutes: data.Minutes || 0, //must be deleted no use
 });
 
 const initialState = {

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeBooking } from '../../utils/apiReq';
 import { openSnackbar } from '../../context/snackbarSlice';
+import { getRefreshedBookings } from '../../context/schedulerSlice';
 // Duplicate Booking button Modal
 export default function DuplicateBookingModal({
 	setDuplicateBookingModal,
@@ -46,6 +47,9 @@ export default function DuplicateBookingModal({
 		setDuplicateBookingModal(false);
 		closeDialog();
 		const res = await makeBooking(newData, activeTestMode);
+		if (res.status === 'success') {
+			dispatch(getRefreshedBookings());
+		}
 		if (res.status === 'success') {
 			dispatch(openSnackbar('Booking Created Successfully!', 'success'));
 		}
