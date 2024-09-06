@@ -4,6 +4,7 @@ import { Switch, TextField } from '@mui/material';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import { useEffect, useState, Fragment, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { isValidDate } from '../utils/isValidDate';
 
 // Context And Hooks imports for data flow and management
 import {
@@ -382,8 +383,15 @@ function Booking({ bookingData, id, onBookingUpload }) {
 								required
 								type='datetime-local'
 								className='w-full bg-input text-foreground p-2 rounded-lg border border-border'
-								value={formatDate(bookingData.pickupDateTime)}
+								value={bookingData.pickupDateTime}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter') {
+										pickupRef.current.focus();
+										pickupRef.current.select();
+									}
+								}}
 								onChange={(e) => {
+									if (!isValidDate(e.target.value)) return;
 									updateData('pickupDateTime', e.target.value);
 									return e.target.value;
 								}}
