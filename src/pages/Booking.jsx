@@ -82,8 +82,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}
 
 		// const { hours, minutes } = bookingData;
-		const hours = hours;
-		const minutes = minutes;
 
 		if (
 			hours < 0 ||
