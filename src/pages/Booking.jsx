@@ -79,7 +79,9 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			}
 		}
 
-		const { hours, minutes } = bookingData;
+		// const { hours, minutes } = bookingData;
+		const hours = Number(bookingData.hours);
+		const minutes = Number(bookingData.minutes);
 
 		if (
 			hours < 0 ||
@@ -325,7 +327,6 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			)
 		);
 	}, [bookingData.durationText, id, dispatch, bookingData.formBusy]);
-	console.log(bookingData.durationText, bookingData.hours, bookingData.minutes);
 
 	function convertToOneHourLaterFromPickUp() {
 		const pickupDateTime = new Date(bookingData.pickupDateTime);
