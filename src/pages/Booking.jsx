@@ -309,7 +309,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 	}, [bookingData.formBusy, bookingData.pickupDateTime, dispatch]);
 
 	useEffect(() => {
-		console.log('updating the hours and minutes');
+		if (bookingData.formBusy) return;
 		dispatch(
 			updateValueSilentMode(
 				id,
@@ -324,7 +324,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 				Math.floor(bookingData.durationText % 60)
 			)
 		);
-	}, [bookingData.durationText, id, dispatch]);
+	}, [bookingData.durationText, id, dispatch, bookingData.formBusy]);
 	console.log(bookingData.durationText, bookingData.hours, bookingData.minutes);
 
 	function convertToOneHourLaterFromPickUp() {
