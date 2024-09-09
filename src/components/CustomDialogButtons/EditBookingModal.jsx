@@ -23,8 +23,8 @@ function EditBookingModal({ setEditBookingModal, closeDialog }) {
 		setEditBookingModal(false);
 	}
 	function handleEditAll() {
-		console.log(`Edit All Bookings`);
-		dispatch(addDataFromSchedulerInEditMode(data));
+		console.log('Handle edit all booking Data', data);
+		dispatch(addDataFromSchedulerInEditMode({ ...data, userId: null }));
 		closeDialog(false);
 		setEditBookingModal(false);
 	}
