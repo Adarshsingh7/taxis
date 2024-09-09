@@ -335,7 +335,7 @@ function CustomDialog({ closeDialog }) {
 						color='green'
 						onClick={() => setIsCompleteBookingModal(true)}
 					/>
-					{data.scope === 1 && (
+					{data.scope === 1 && user.currentUser?.isAdmin && (
 						<BookingButton
 							text='Cancel On Arrival'
 							color='red'

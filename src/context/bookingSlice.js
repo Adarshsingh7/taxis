@@ -30,7 +30,7 @@ const filterData = (data = {}) => ({
 	userId: data.UserId || null,
 	returnDateTime: data.ReturnDateTime || null,
 	vias: data.Vias || [],
-	accountNumber: data.AccountNumber || 0,
+	accountNumber: data.AccountNumber || 9999,
 	bookedByName: data.BookedByName || '',
 	returnBooking: data.ReturnBooking || false,
 	isReturn: data.IsReturn || false,
