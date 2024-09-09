@@ -20,7 +20,6 @@ function EditBookingModal({ setEditBookingModal, closeDialog }) {
 			...data,
 			recurrenceID: '',
 			recurrenceRule: '',
-			userId: null,
 		};
 		console.log(`Edit Single Bookings`);
 		dispatch(addDataFromSchedulerInEditMode(filterData));
@@ -29,7 +28,7 @@ function EditBookingModal({ setEditBookingModal, closeDialog }) {
 	}
 	function handleEditAll() {
 		console.log('Handle edit all booking Data', data);
-		dispatch(addDataFromSchedulerInEditMode({ ...data, userId: null }));
+		dispatch(addDataFromSchedulerInEditMode({ ...data }));
 		closeDialog(false);
 		setEditBookingModal(false);
 	}
