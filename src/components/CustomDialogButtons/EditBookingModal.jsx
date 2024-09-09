@@ -16,7 +16,12 @@ function EditBookingModal({ setEditBookingModal, closeDialog }) {
 	data = bookings[index];
 	if (activeSearch) data = activeSearchResult;
 	function handleEditOne() {
-		const filterData = { ...data, recurrenceID: '', recurrenceRule: '' };
+		const filterData = {
+			...data,
+			recurrenceID: '',
+			recurrenceRule: '',
+			userId: null,
+		};
 		console.log(`Edit Single Bookings`);
 		dispatch(addDataFromSchedulerInEditMode(filterData));
 		closeDialog(false);
