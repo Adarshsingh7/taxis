@@ -65,6 +65,9 @@ const WrapperDiv = function () {
 const TimeBar = ({ driver }) => {
 	const availableHours = driver.availableHours;
 	const driverName = driver.fullName.split(' ')[0];
+	const driverId = driver.userId;
+	const driverColor = driver.colorCode;
+	const vehicleType = driver.vehicleType;
 	if (!availableHours) return null;
 
 	return (
@@ -106,8 +109,32 @@ const TimeBar = ({ driver }) => {
 
 			{/* Driver Name */}
 			<div className='absolute w-full left-0 bottom-8 transform translate-y-full'>
-				<div className='rotate-[-90deg] lowercase text-sm text-gray-400 font-bold'>
-					{driverName}
+				<div className='flex items-center rotate-[-90deg] text-sm text-gray-400 font-bold uppercase'>
+					<div
+						style={{
+							position: 'absolute',
+							backgroundColor: driverColor,
+							height: '15px',
+							width: '15px',
+						}}
+					/>
+					<span className='ml-5'>({driverId})</span>
+					<div className='ml-1'>{driverName}</div>
+					<div className='ml-1'>
+						{vehicleType === 0
+							? ''
+							: vehicleType === 1
+							? '(Saloon)'
+							: vehicleType === 2
+							? '(Estate)'
+							: vehicleType === 3
+							? '(MPV)'
+							: vehicleType === 4
+							? '(MPVPlus)'
+							: vehicleType === 5
+							? '(SUV)'
+							: ''}
+					</div>
 				</div>
 			</div>
 		</div>

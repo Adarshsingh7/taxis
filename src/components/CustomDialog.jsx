@@ -338,7 +338,7 @@ function CustomDialog({ closeDialog }) {
 					{data.scope === 1 && user.currentUser?.isAdmin && (
 						<BookingButton
 							text='Cancel On Arrival'
-							color='red'
+							color='orange'
 							onClick={handleCancelOnArrival}
 						/>
 					)}

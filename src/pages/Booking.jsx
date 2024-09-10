@@ -562,7 +562,7 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							<select
 								value={bookingData.passengers}
 								onChange={(e) => updateData('passengers', e.target.value)}
-								className='w-[30%] bg-input text-foreground p-2 rounded-lg border border-border'
+								className='min-w-[45%] bg-input text-foreground p-2 rounded-lg border border-border'
 							>
 								<option value={1}>1</option>
 								<option value={2}>2</option>
