@@ -91,11 +91,11 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			minutes > 59 ||
 			isNaN(minutes)
 		) {
-			dispatch(openSnackbar('invalid duration range', 'error'));
+			dispatch(openSnackbar('Invalid duration range', 'error'));
 			return;
 		}
 
-		updateData('durationText', hours * 60 + minutes);
+		updateData('durationMinutes', hours * 60 + minutes);
 
 		setFormSubmitLoading(true);
 		await onBookingUpload(id);
@@ -316,17 +316,17 @@ function Booking({ bookingData, id, onBookingUpload }) {
 			updateValueSilentMode(
 				id,
 				'hours',
-				Math.floor(bookingData.durationText / 60)
+				Math.floor(bookingData.durationMinutes / 60)
 			)
 		);
 		dispatch(
 			updateValueSilentMode(
 				id,
 				'minutes',
-				Math.floor(bookingData.durationText % 60)
+				Math.floor(bookingData.durationMinutes % 60)
 			)
 		);
-	}, [bookingData.durationText, id, dispatch, bookingData.formBusy]);
+	}, [bookingData.durationMinutes, id, dispatch, bookingData.formBusy]);
 
 	function convertToOneHourLaterFromPickUp() {
 		const pickupDateTime = new Date(bookingData.pickupDateTime);

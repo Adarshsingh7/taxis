@@ -10,6 +10,7 @@ const filterData = (data = {}) => ({
 	email: data.Email || '',
 	bookingId: data.Id || null,
 	durationText: Number(data.durationText) ? String(data.durationText) : '20',
+	durationMinutes: data.durationMinutes || 0,
 	isAllDay: data.IsAllDay || false,
 	passengerName: data.PassengerName || '',
 	passengers: data.Passengers || 1,
@@ -84,6 +85,7 @@ const bookingFormSlice = createSlice({
 				...action.payload,
 				pickupDateTime: formatDate(action.payload.pickupDateTime),
 			};
+			console.log(action.payload);
 
 			state.bookings.push({ ...data, ...action.payload});
 			state.activeBookingIndex = state.bookings.length - 1;
