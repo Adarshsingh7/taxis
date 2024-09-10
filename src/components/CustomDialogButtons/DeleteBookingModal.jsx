@@ -21,7 +21,6 @@ export default function DeleteBookingModal({ setDeleteModal, closeDialog }) {
 	if (activeSearch) data = activeSearchResult;
 	const user = useAuth();
 	const handleSingleDelete = () => {
-		console.log('Single Delete Button Clicked');
 		dispatch(
 			deleteSchedulerBooking(
 				false,
@@ -34,7 +33,6 @@ export default function DeleteBookingModal({ setDeleteModal, closeDialog }) {
 	};
 
 	const handleDeleteAllRepeat = async () => {
-		console.log('Repeated Booking Delete All Button Clicked');
 		dispatch(
 			deleteSchedulerBooking(
 				true,

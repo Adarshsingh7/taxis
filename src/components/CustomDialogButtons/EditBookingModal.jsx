@@ -21,7 +21,6 @@ function EditBookingModal({ setEditBookingModal, closeDialog }) {
 			recurrenceID: '',
 			recurrenceRule: '',
 		};
-		console.log(`Edit Single Bookings`);
 		dispatch(addDataFromSchedulerInEditMode(filterData));
 		closeDialog(false);
 		setEditBookingModal(false);
