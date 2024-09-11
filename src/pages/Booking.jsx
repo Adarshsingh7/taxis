@@ -172,6 +172,11 @@ function Booking({ bookingData, id, onBookingUpload }) {
 		}
 	}
 
+	function handleClick(event, ref) {
+		ref.current.focus();
+		ref.current.select();
+	}
+
 	// auto calculate the quotes based on Pickup and destination
 	useEffect(() => {
 		if (
@@ -451,9 +456,18 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							placeholder='Pickup Address'
 							value={bookingData.pickupAddress}
 							onPushChange={handleAddPickup}
-							onChange={(e) => updateData('pickupAddress', e.target.value)}
+							onChange={(e) => {
+								const addressValue = e.target.value;
+								updateData('pickupAddress', addressValue);
+
+								// Clear pickupPostCode if pickupAddress is empty
+								if (!addressValue) {
+									updateData('pickupPostCode', '');
+								}
+							}}
 							inputRef={pickupRef}
 							handleChangeRef={(e) => handleChangeFocus(e, destinationRef)}
+							handleClickRef={(e) => handleClick(e, pickupRef)}
 						/>
 						<Autocomplete
 							type='postal'
@@ -493,9 +507,17 @@ function Booking({ bookingData, id, onBookingUpload }) {
 							placeholder='Destination Address'
 							value={bookingData.destinationAddress}
 							onPushChange={handleAddDestination}
-							onChange={(e) => updateData('destinationAddress', e.target.value)}
+							onChange={(e) => {
+								const addressValue = e.target.value;
+								updateData('destinationAddress', addressValue);
+
+								if (!addressValue) {
+									updateData('destinationPostCode', '');
+								}
+							}}
 							inputRef={destinationRef}
 							handleChangeRef={(e) => handleChangeFocus(e, userNameRef)}
+							handleClickRef={(e) => handleClick(e, destinationRef)}
 						/>
 						<Autocomplete
 							required={false}

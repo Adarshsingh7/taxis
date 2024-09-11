@@ -20,6 +20,7 @@ function PlaceAutocomplete({
 	onPushChange,
 	inputRef,
 	handleChangeRef,
+	handleClickRef,
 }) {
 	const [suggestions, setSuggestions] = useState([]);
 	const [showOption, setShowOption] = useState(false);
@@ -165,6 +166,7 @@ function PlaceAutocomplete({
 				id={Math.random().toString(36).substring(7)}
 				className='px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 w-full'
 				inputRef={inputRef}
+				onClick={handleClickRef}
 			/>
 			{showOption && !blur && (
 				<ul className='absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-[40vh] overflow-auto'>
