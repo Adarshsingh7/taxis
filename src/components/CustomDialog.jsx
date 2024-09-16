@@ -302,7 +302,7 @@ function CustomDialog({ closeDialog }) {
 
 					<BookingButton
 						text='Allocate Booking'
-						color='blue'
+						color='bg-blue-700'
 						onClick={() => setAllocateModal(true)}
 					/>
 					<BookingButton
@@ -319,32 +319,32 @@ function CustomDialog({ closeDialog }) {
 							}
 						}}
 						text='Edit Booking'
-						color='blue'
+						color='bg-blue-700'
 					/>
 					<BookingButton
 						text='Duplicate Booking'
-						color='blue'
+						color='bg-blue-700'
 						onClick={() => setDuplicateBookingModal(true)}
 					/>
 					<BookingButton
 						text='Driver Arrived'
-						color='blue'
+						color='bg-blue-700'
 					/>
 					<BookingButton
 						text='Complete Booking'
-						color='green'
+						color='bg-green-700'
 						onClick={() => setIsCompleteBookingModal(true)}
 					/>
 					{data.scope === 1 && user.currentUser?.isAdmin && (
 						<BookingButton
 							text='Cancel On Arrival'
-							color='orange'
+							color='bg-orange-700'
 							onClick={handleCancelOnArrival}
 						/>
 					)}
 					<BookingButton
 						text='Cancel Booking'
-						color='red'
+						color='bg-red-700'
 						onClick={() => setDeleteModal(true)}
 					/>
 				</div>
@@ -431,7 +431,7 @@ const BookingButton = ({ text, color, ...props }) => {
 	return (
 		<button
 			{...props}
-			className={`px-3 py-2 text-white bg-${color}-700 hover:bg-opacity-80 rounded-lg`}
+			className={`px-3 py-2 text-white ${color} hover:bg-opacity-80 rounded-lg`}
 		>
 			{text}
 		</button>
